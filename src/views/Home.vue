@@ -1,17 +1,21 @@
 <template>
   <div class="home">
-    <Navbar></Navbar>
+    <Hero />
+
+    <div style="height: 200vh" class="has-text-centered is-size-1 is-light">
+      DEBUG DIV
+    </div>
   </div>
 </template>
 
 <script>
-import Navbar from "@/components/header/Navbar.vue";
+import Hero from '@/components/gallery/Hero.vue';
 
 export default {
-  name: "home",
+  name: 'home',
   components: {
-    Navbar
-  }
+    Hero,
+  },
 };
 </script>
 

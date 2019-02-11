@@ -1,4 +1,4 @@
-# site
+# puppr.
 
 ## Project setup
 ```

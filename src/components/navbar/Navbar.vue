@@ -24,7 +24,7 @@
               <a class="button is-black">
                 <strong>Sign up</strong>
               </a>
-              <a class="button is-light">
+              <a class="button is-light" v-on:click="navigate()">
                 Log in
               </a>
             </div>
@@ -38,6 +38,7 @@
 
 <script>
 import brand from '@/assets/logo.png';
+import router from '../../router';
 
 export default {
   name: '',
@@ -45,6 +46,11 @@ export default {
     return {
       image: brand,
     };
+  },
+  methods: {
+    navigate() {
+      router.push({ name: 'Login' });
+    },
   },
 };
 </script>

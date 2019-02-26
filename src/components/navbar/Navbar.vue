@@ -24,7 +24,7 @@
               <a class="button is-black">
                 <strong>Sign up</strong>
               </a>
-              <a class="button is-light" v-on:click="navigate()">
+              <a class="button is-light" v-on:click="login()">
                 Log in
               </a>
             </div>
@@ -48,7 +48,7 @@ export default {
     };
   },
   methods: {
-    navigate() {
+    login() {
       router.push({ name: 'Login' });
     },
   },

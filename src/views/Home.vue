@@ -9,7 +9,7 @@
 <script>
 import Navbar from '@/components/navbar/Navbar.vue';
 import Hero from '@/components/Hero.vue';
-import Searchbar from '@/components/Searchbar.vue'
+import Searchbar from '@/components/Searchbar.vue';
 
 
 export default {

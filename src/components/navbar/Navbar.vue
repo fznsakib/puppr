@@ -21,7 +21,7 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-black">
+              <a class="button is-black" v-on:click="register()">
                 <strong>Sign up</strong>
               </a>
               <a class="button is-light" v-on:click="login()">
@@ -50,6 +50,9 @@ export default {
   methods: {
     login() {
       router.push({ name: 'login' });
+    },
+    register() {
+      router.push({ name: 'register' });
     },
   },
 };

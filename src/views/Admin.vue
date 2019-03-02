@@ -6,13 +6,13 @@
 </template>
 
 <script>
-    export default {
-        data () {
-            return {
-                msg: 'The superheros'
-            }
-        }
-    }
+export default {
+  data() {
+    return {
+      msg: 'The superheros',
+    };
+  },
+};
 </script>
 <style scoped>
     h1, h2 {

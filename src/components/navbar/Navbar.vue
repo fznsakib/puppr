@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     login() {
-      router.push({ name: 'Login' });
+      router.push({ name: 'login' });
     },
   },
 };

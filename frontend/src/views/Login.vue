@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div>
-                <button type="submit" @click="handleSubmit">
+                <button type="submit" @click.prevent="handleSubmit">
                     Login
                 </button>
             </div>
@@ -31,7 +31,6 @@ export default {
   },
   methods: {
     handleSubmit(e) {
-      e.preventDefault();
       if (this.password.length > 0) {
         this.$http.post('http://localhost:3000/login', {
           email: this.email,

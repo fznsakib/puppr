@@ -7,13 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "server": "node server/app"
+    "server": "node app"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",
+    "express": "^4.16.4",
     "jsonwebtoken": "^8.5.0",
     "sqlite3": "^4.0.6"
   }

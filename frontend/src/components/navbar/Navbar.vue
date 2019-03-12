@@ -21,10 +21,10 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-black">
+              <a class="button is-black" v-on:click="register()">
                 <strong>Sign up</strong>
               </a>
-              <a class="button is-light">
+              <a class="button is-light" v-on:click="login()">
                 Log in
               </a>
             </div>
@@ -38,6 +38,7 @@
 
 <script>
 import brand from '@/assets/logo.png';
+import router from '../../router';
 
 export default {
   name: '',
@@ -45,6 +46,14 @@ export default {
     return {
       image: brand,
     };
+  },
+  methods: {
+    login() {
+      router.push({ name: 'login' });
+    },
+    register() {
+      router.push({ name: 'register' });
+    },
   },
 };
 </script>

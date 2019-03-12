@@ -8,14 +8,38 @@ class Db {
     }
 
     createTable() {
-        const sql = `
+        const createUser = `
             CREATE TABLE IF NOT EXISTS user (
-                id integer PRIMARY KEY,
+                id integer PRIMARY KEY AUTOINCREMENT,
                 name text,
                 email text UNIQUE,
-                user_pass text,
-                is_admin integer)`
-        return this.db.run(sql);
+                username text UNIQUE,
+                password text,
+                question text,
+                answer text)
+            `
+        const createPost = `
+            CREATE TABLE IF NOT EXISTS post (
+                id integer PRIMARY KEY AUTOINCREMENT,
+                user_id integer,
+                date text,
+                likes integer,
+                dislikes integer,
+                CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES user(id)
+            )`
+        const createComment = `
+            CREATE TABLE IF NOT EXISTS comment (
+                id integer PRIMARY KEY AUTOINCREMENT,
+                user_id integer,
+                post_id interger,
+                body text,
+                date text,
+                CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES user(id),
+                CONSTRAINT fk_posts FOREIGN KEY (post_id) REFERENCES post(id)
+            )`
+        this.db.run(createUser);
+        this.db.run(createPost);
+        return this.db.run(createComment);
     }
 
     selectByEmail(email, callback) {
@@ -28,7 +52,7 @@ class Db {
 
     insertAdmin(user, callback) {
         return this.db.run(
-            'INSERT INTO user (name,email,user_pass,is_admin) VALUES (?,?,?,?)',
+            'INSERT INTO user (name,email,password) VALUES (?,?,?)',
             user, (err) => {
                 callback(err)
             })
@@ -42,7 +66,7 @@ class Db {
 
     insert(user, callback) {
         return this.db.run(
-            'INSERT INTO user (name,email,user_pass) VALUES (?,?,?)',
+            'INSERT INTO user (name,email,password) VALUES (?,?,?)',
             user, (err) => {
                 callback(err)
             })

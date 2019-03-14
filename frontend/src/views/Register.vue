@@ -39,8 +39,7 @@ export default {
       name: '',
       email: '',
       password: '',
-      password_confirmation: '',
-      is_admin: null,
+      password_confirmation: ''
     };
   },
   methods: {

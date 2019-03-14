@@ -27,6 +27,9 @@
               <a class="button is-light" v-on:click="login()">
                 Log in
               </a>
+              <a class="button is-light" v-on:click="logout()">
+                Log out
+              </a>
             </div>
           </div>
         </div>
@@ -54,6 +57,9 @@ export default {
     register() {
       router.push({ name: 'register' });
     },
+    logout() {
+      const a = 0
+    }
   },
 };
 </script>

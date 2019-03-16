@@ -1,24 +1,15 @@
 <template>
-    <div>
-        <h4>Login</h4>
-        <form>
-            <label for="email" >E-Mail Address</label>
-            <div>
-                <input id="email" type="email" v-model="email" required autofocus>
-            </div>
-            <div>
-                <label for="password" >Password</label>
-                <div>
-                    <input id="password" type="password" v-model="password" required>
-                </div>
-            </div>
-            <div>
-                <button type="submit" @click.prevent="handleSubmit">
-                    Login
-                </button>
-            </div>
-        </form>
-    </div>
+ <div>
+   <form class="login" @submit.prevent="login">
+     <h1>Sign in</h1>
+     <label>Email</label>
+     <input required v-model="email" type="email" placeholder="Name"/>
+     <label>Password</label>
+     <input required v-model="password" type="password" placeholder="Password"/>
+     <hr/>
+     <button type="submit">Login</button>
+   </form>
+ </div>
 </template>
 
 <script>
@@ -30,29 +21,12 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
-      if (this.password.length > 0) {
-        this.$http.post('http://localhost:3000/login', {
-          email: this.email,
-          password: this.password,
-        })
-          .then((response) => {
-            localStorage.setItem('user', JSON.stringify(response.data.user));
-            localStorage.setItem('jwt', response.data.token);
-
-            if (localStorage.getItem('jwt') != null) {
-              this.$emit('loggedIn');
-              if (this.$route.params.nextUrl != null) {
-                this.$router.push(this.$route.params.nextUrl);
-              } else {
-                this.$router.push('dashboard');
-              }
-            }
-          })
-          .catch((error) => {
-            console.error(error.response);
-          });
-      }
+    login() {
+      const email = this.email;
+      const password = this.password;
+      this.$store.dispatch('login', { email, password })
+        .then(() => this.$router.push('/'))
+        .catch(err => console.log(err));
     },
   },
 };

@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import Store from './store/store';
 import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Register from './views/Register.vue';
-import UserBoard from './views/UserBoard.vue';
-import Admin from './views/Admin.vue';
+import Profile from './views/Profile.vue';
 
 Vue.use(Router);
 
@@ -34,20 +34,11 @@ const router = new Router({
       },
     },
     {
-      path: '/dashboard',
-      name: 'userboard',
-      component: UserBoard,
+      path: '/profile',
+      name: 'profile',
+      component: Profile,
       meta: {
         requiresAuth: true,
-      },
-    },
-    {
-      path: '/admin',
-      name: 'admin',
-      component: Admin,
-      meta: {
-        requiresAuth: true,
-        is_admin: true,
       },
     },
   ],
@@ -55,29 +46,11 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (localStorage.getItem('jwt') == null) {
-      next({
-        path: '/login',
-        params: { nextUrl: to.fullPath },
-      });
-    } else {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (to.matched.some(record => record.meta.is_admin)) {
-        if (user.is_admin == 1) {
-          next();
-        } else {
-          next({ name: 'userboard' });
-        }
-      } else {
-        next();
-      }
-    }
-  } else if (to.matched.some(record => record.meta.guest)) {
-    if (localStorage.getItem('jwt') == null) {
+    if (Store.getters.isLoggedIn) {
       next();
-    } else {
-      next({ name: 'userboard' });
+      return;
     }
+    next('/login');
   } else {
     next();
   }

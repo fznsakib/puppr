@@ -5,8 +5,12 @@ import router from './router';
 import store from './store/store';
 
 Vue.prototype.$http = Axios;
-
 Vue.config.productionTip = false;
+
+const token = localStorage.getItem('token');
+if (token) {
+  Vue.prototype.$http.defaults.headers.common.Authorization = token;
+}
 
 new Vue({
   router,

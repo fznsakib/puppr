@@ -21,14 +21,17 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-black" v-on:click="register()">
+              <a v-if="!isLoggedIn" class="button is-black" v-on:click="register()">
                 <strong>Sign up</strong>
               </a>
-              <a class="button is-light" v-on:click="login()">
+              <a v-if="!isLoggedIn" class="button is-light" v-on:click="login()">
                 Log in
               </a>
-              <a class="button is-light" v-on:click="logout()">
+              <a v-if="isLoggedIn" class="button is-light" v-on:click="logout()">
                 Log out
+              </a>
+              <a v-if="isLoggedIn" class="button is-primary" v-on:click="profile()">
+                Profile
               </a>
             </div>
           </div>
@@ -58,8 +61,17 @@ export default {
       router.push({ name: 'register' });
     },
     logout() {
-      const a = 0
-    }
+      this.$store.dispatch('logout')
+        .then(() => {
+          this.$router.push('/');
+        });
+    },
+    profile() {
+      router.push({ name: 'profile' });
+    },
+  },
+  computed: {
+    isLoggedIn() { return this.$store.getters.isLoggedIn; },
   },
 };
 </script>

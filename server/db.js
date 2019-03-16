@@ -42,19 +42,11 @@ class Db {
         return this.db.run(createComment);
     }
 
-    selectByEmail(email, callback) {
+    selectUserByEmail(email, callback) {
         return this.db.get(
             `SELECT * FROM user WHERE email = ?`,
             [email],function(err,row){
                 callback(err,row)
-            })
-    }
-
-    insertAdmin(user, callback) {
-        return this.db.run(
-            'INSERT INTO user (name,email,password) VALUES (?,?,?)',
-            user, (err) => {
-                callback(err)
             })
     }
 
@@ -64,7 +56,7 @@ class Db {
         })
     }
 
-    insert(user, callback) {
+    insertUser(user, callback) {
         return this.db.run(
             'INSERT INTO user (name,email,password) VALUES (?,?,?)',
             user, (err) => {

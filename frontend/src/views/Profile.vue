@@ -11,19 +11,22 @@
                 <img class="is-rounded" src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
               </figure>
             </div>
-            <div class="file has-name is-primary is-centered" style="padding-top: 1rem; margin: 0 auto;">
+            <div class="file is-centered" style="padding-top: 1rem; margin: 0 auto;" @change="onProfilePictureSelected">
               <label class="file-label">
                 <input class="file-input" type="file" name="resume">
                 <span class="file-cta">
                   <span class="file-label">
-                    Upload
+                    Choose a picture
                   </span>
                 </span>
-                <span class="file-name">
-                  Profile Picture
-                </span>
               </label>
+              <a v-if="selectedProfilePicture == null" class="button is-primary" style="margin-left: 1rem;" disabled>Submit</a>
+              <a v-else @click="onProfilePictureUpload" class="button is-primary" style="margin-left: 1rem;">Upload</a>
+
+
             </div>
+
+
             <div class="card-content">
               <div class="media">
 <!--                 <div class="media-left">
@@ -66,10 +69,19 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'profile',
+  data() {
+    return {
+      selectedProfilePicture: null
+    }
+  },
   methods: {
-    // home() {
-    // this.$router.push({ name: 'home' });
-    // },
+    onProfilePictureSelected(event) {
+      this.selectedProfilePicture = event.target.files[0]
+      console.log(this.selectedProfilePicture)
+    },
+    onProfilePictureUpload() {
+
+    }
   },
   computed: {
     ...mapGetters({

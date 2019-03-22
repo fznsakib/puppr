@@ -1,21 +1,26 @@
 <template>
   <div>
-    <router-view></router-view>
+    <Navbar />
+    <router-view :key="$route.fullPath" />
   </div>
 </template>
 
 <script>
+import Navbar from '@/components/Navbar.vue';
 import { mapActions } from 'vuex';
 
 export default {
   name: 'app',
+  components: {
+    Navbar,
+  },
   methods: {
     ...mapActions({
-      fetchAccessToken: 'user/fetchAccessToken',
+      checkActiveSession: 'account/checkActiveSession',
     }),
   },
   created() {
-    this.fetchAccessToken();
+    this.checkActiveSession();
   },
 };
 </script>

@@ -1,4 +1,4 @@
-<template functional>
+<template>
   <section class="hero is-primary is-medium is-clear">
     <div class="hero-body">
       <div class="container">

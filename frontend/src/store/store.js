@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import * as user from '@/store/modules/user';
+import * as account from '@/store/modules/account';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
-    user,
+    account,
   },
   state: {},
   mutations: {},

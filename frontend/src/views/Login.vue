@@ -1,6 +1,6 @@
 <template>
  <div>
-   <form class="login" @submit.prevent="login">
+   <form class="login" @submit.prevent="loginSubmit">
      <h1>Sign in</h1>
      <label>Email</label>
      <input required v-model="email" type="email" placeholder="Name"/>
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import store from '@/store/store';
+import { mapActions } from 'vuex';
 
 export default {
   data() {
@@ -23,12 +23,20 @@ export default {
     };
   },
   methods: {
-    login() {
+    loginSubmit() {
       const { email, password } = this;
-      store.dispatch('login', { email, password })
-        .then(() => this.$router.push('/'))
-        .catch(err => console.log(err));
+      this.login({ email, password });
+      this.$router.push('/');
     },
+    ...mapActions({
+      'login': 'user/login',
+    })
+    // login() {
+    //   const { email, password } = this;
+    //   store.dispatch('login', { email, password })
+    //     .then(() => this.$router.push('/'))
+    //     .catch(err => console.log(err));
+    // },
   },
 };
 </script>

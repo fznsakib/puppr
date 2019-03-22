@@ -20,7 +20,7 @@
                   </figure>
                 </div> -->
                 <div class="media-content">
-                  <p class="title is-4">{{ userData.name }}</p>
+                  <p class="title is-4">{{ userData.firstname }} {{ userData.lastname }}</p>
                   <p class="subtitle is-6">@johnsmith</p>
                 </div>
               </div>

@@ -27,6 +27,7 @@ export default {
 
 
   registerUser(userData) {
+    console.log(userData);
     return apiClient.post('/register', userData);
   },
   login(userData) {

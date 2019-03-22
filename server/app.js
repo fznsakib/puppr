@@ -30,11 +30,17 @@ router.post('/register', function(req, res) {
         bcrypt.hashSync(req.body.password, 8)
     ],
     function (err) {
-        if (err) return res.status(500).send("There was a problem registering the user.")
+        if (err) {
+            console.log("Error registering for some reason");
+            return res.status(500).send("There was a problem registering the user.")
+        }
         db.selectUserByEmail(req.body.email, (err,user) => {
-            if (err) return res.status(500).send("There was a problem getting user")
-            let token = jwt.sign({ id: user.id }, config.secret, { expiresIn: 600 }); // expires in 24 hours
-            res.status(200).send({ auth: true, token: token, user: user });
+            if (err) {
+                console.log("Select User By Email Error");
+                return res.status(500).send("There was a problem getting user")
+            }
+            let accessToken = jwt.sign({ id: user.id }, config.secret, { expiresIn: 600 }); // expires in 24 hours
+            res.status(200).send({ auth: true, accessToken: accessToken, user: user });
         });
     });
 });
@@ -44,9 +50,9 @@ router.post('/login', (req, res) => {
         if (err) return res.status(500).send('Error on the server.');
         if (!user) return res.status(404).send('No user found.');
         let passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-        if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
-        let token = jwt.sign({ id: user.id }, config.secret, { expiresIn: 600 }); // expires in 24 hours
-        res.status(200).send({ auth: true, token: token, user: user });
+        if (!passwordIsValid) return res.status(401).send({ auth: false, accessToken: null });
+        let accessToken = jwt.sign({ id: user.id }, config.secret, { expiresIn: 600 }); // expires in 24 hours
+        res.status(200).send({ auth: true, accessToken: accessToken, user: user });
     });
 })
 

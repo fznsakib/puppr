@@ -30,12 +30,15 @@
 </template>
 
 <script>
+import store from '@/store/store';
+
 export default {
   data() {
     return {
       name: '',
       email: '',
       password: '',
+      password_confirmation: '',
     };
   },
   methods: {
@@ -45,9 +48,13 @@ export default {
         email: this.email,
         password: this.password,
       };
-      this.$store.dispatch('register', data)
-        .then(() => this.$router.push('/'))
-        .catch(err => console.log(err));
+      store.dispatch('user/register', data)
+        .then(() => {
+          this.$router.push('/');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

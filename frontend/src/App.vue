@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
 import Navbar from '@/components/Navbar.vue';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'app',
@@ -16,11 +16,11 @@ export default {
   },
   methods: {
     ...mapActions({
-      fetchAccessToken: 'user/fetchAccessToken',
+      checkActiveSession: 'account/checkActiveSession',
     }),
   },
   created() {
-    this.fetchAccessToken();
+    this.checkActiveSession();
   },
 };
 </script>

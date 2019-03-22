@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import store from './store/store';
+// import store from './store/store';
 import Home from './views/Home.vue';
 
 Vue.use(Router);
@@ -42,13 +42,18 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
+  const isUserLoggedIn = router.app.$session.get('accessToken');
+
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters['user/isLoggedIn']) {
+    if (isUserLoggedIn) {
+      console.log('User logged in && needs auth');
       next();
       return;
     }
+    console.log('Needs auth but not logged in.');
     next('/login');
   } else {
+    console.log('else');
     next();
   }
 });

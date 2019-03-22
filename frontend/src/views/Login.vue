@@ -29,7 +29,7 @@ export default {
       this.$router.push('/');
     },
     ...mapActions({
-      login: 'user/login',
+      login: 'account/login',
     }),
   },
 };

@@ -14,23 +14,15 @@ const apiClient = axios.create({
 });
 
 export default {
-  setAccessToken(token) {
+  setAuthToken(token) {
     if (token) {
       apiClient.defaults.headers.common.Authorization = token;
     } else {
       apiClient.defaults.headers.common.Authorization = null;
     }
   },
-  removeAccessToken() {
+  removeAuthToken() {
     apiClient.defaults.headers.common.Authorization = null;
-  },
-  checkTokenValid() {
-    apiClient.interceptors.response.use(undefined, (err) => {
-      if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
-        return false;
-      }
-      throw err;
-    });
   },
 
 

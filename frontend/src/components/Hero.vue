@@ -9,7 +9,7 @@
     <div class="hero-footer">
       <div class="container">
         <h1 class="hero-brand">
-          BIN
+          puppr.
         </h1>
         </div>
       </div>

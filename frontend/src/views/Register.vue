@@ -48,7 +48,7 @@ export default {
         email: this.email,
         password: this.password,
       };
-      store.dispatch('user/register', data)
+      store.dispatch('account/register', data)
         .then(() => {
           this.$router.push('/');
         })

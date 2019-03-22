@@ -82,12 +82,12 @@ export default {
       }, 500);
     },
     ...mapActions({
-      logoutUser: 'user/logout',
+      logoutUser: 'account/logout',
     }),
   },
   computed: {
     ...mapGetters({
-      isLoggedIn: 'user/isLoggedIn',
+      isLoggedIn: 'account/isLoggedIn',
     }),
   },
 };

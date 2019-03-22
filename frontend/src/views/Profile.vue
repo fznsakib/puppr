@@ -71,4 +71,8 @@ export default {
 .profile {
   margin-top: 2rem;
 }
+
+.card-image {
+  padding: 1rem;
+}
 </style>

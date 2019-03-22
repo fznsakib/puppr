@@ -4,7 +4,7 @@ export const namespaced = true;
 
 export const state = {
   status: {},
-  user: {}
+  user: {},
 };
 
 export const mutations = {

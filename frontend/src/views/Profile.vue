@@ -11,6 +11,19 @@
                 <img class="is-rounded" src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
               </figure>
             </div>
+            <div class="file has-name is-primary is-centered" style="padding-top: 1rem; margin: 0 auto;">
+              <label class="file-label">
+                <input class="file-input" type="file" name="resume">
+                <span class="file-cta">
+                  <span class="file-label">
+                    Upload
+                  </span>
+                </span>
+                <span class="file-name">
+                  Profile Picture
+                </span>
+              </label>
+            </div>
             <div class="card-content">
               <div class="media">
 <!--                 <div class="media-left">

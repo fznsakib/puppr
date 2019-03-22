@@ -53,6 +53,7 @@ export const actions = {
     ApiService.registerUser(userToRegister)
       .then((res) => {
         const { accessToken, user } = res.data;
+        console.log(`Registering. Accesstoken: ${accessToken}`);
         localStorage.setItem('accessToken', accessToken);
         ApiService.setAccessToken(accessToken);
         commit('LOGIN_STOP', null);

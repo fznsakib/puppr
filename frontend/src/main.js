@@ -1,16 +1,14 @@
 import Vue from 'vue';
-import Axios from 'axios';
 import App from './App.vue';
 import router from './router';
 import store from './store/store';
 
-Vue.prototype.$http = Axios;
 Vue.config.productionTip = false;
 
-const token = localStorage.getItem('token');
-if (token) {
-  Vue.prototype.$http.defaults.headers.common.Authorization = token;
-}
+// const token = localStorage.getItem('token');
+
+// console.log(`Login token: ${token}`);
+// ApiService.setAuthTokenIfValid(token);
 
 new Vue({
   router,

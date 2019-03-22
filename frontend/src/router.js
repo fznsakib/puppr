@@ -2,9 +2,6 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Store from './store/store';
 import Home from './views/Home.vue';
-import Login from './views/Login.vue';
-import Register from './views/Register.vue';
-import Profile from './views/Profile.vue';
 
 Vue.use(Router);
 
@@ -20,7 +17,7 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: Login,
+      component: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
       meta: {
         guest: true,
       },
@@ -28,7 +25,7 @@ const router = new Router({
     {
       path: '/register',
       name: 'register',
-      component: Register,
+      component: () => import(/* webpackChunkName: "register" */ './views/Register.vue'),
       meta: {
         guest: true,
       },
@@ -36,7 +33,7 @@ const router = new Router({
     {
       path: '/profile',
       name: 'profile',
-      component: Profile,
+      component: () => import(/* webpackChunkName: "profile" */ './views/Profile.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -65,6 +62,6 @@ export default router;
     path: "/route",
     name: "componentToLoad",
     component: () =>
-       import(/* webpackChunkName: "componentToLoad"  "./views/ComponentToLoad.vue")
+       import(/* webpackChunkName: "componentToLoad" "./views/ComponentToLoad.vue")
   }
 */

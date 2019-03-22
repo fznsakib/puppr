@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import store from '@/store/store';
+
 export default {
   data() {
     return {
@@ -22,9 +24,8 @@ export default {
   },
   methods: {
     login() {
-      const email = this.email;
-      const password = this.password;
-      this.$store.dispatch('login', { email, password })
+      const { email, password } = this;
+      store.dispatch('login', { email, password })
         .then(() => this.$router.push('/'))
         .catch(err => console.log(err));
     },

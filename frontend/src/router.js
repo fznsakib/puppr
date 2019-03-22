@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Store from './store/store';
+import store from './store/store';
 import Home from './views/Home.vue';
 
 Vue.use(Router);
@@ -43,7 +43,8 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (Store.getters.isLoggedIn) {
+    if (store.getters['user/isLoggedIn']) {
+      console.log('Inside user logged in thing.');
       next();
       return;
     }
@@ -54,14 +55,3 @@ router.beforeEach((to, from, next) => {
 });
 
 export default router;
-
-/*
-  Method allows for lazy-loading of components.
-
-  {
-    path: "/route",
-    name: "componentToLoad",
-    component: () =>
-       import(/* webpackChunkName: "componentToLoad" "./views/ComponentToLoad.vue")
-  }
-*/

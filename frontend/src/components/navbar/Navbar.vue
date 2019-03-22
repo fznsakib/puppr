@@ -2,37 +2,45 @@
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="container">
       <div class="navbar-brand">
-        <a class="navbar-item">
+        <button class="navbar-item">
           <img class="image is-48x48"
                :src="image"
                width="112"
                height="28">
-        </a>
+        </button>
 
-        <a role="button" class="navbar-burger burger"
+        <button role="button" class="navbar-burger burger"
         aria-label="menu" aria-expanded="false" data-target="navbar">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
-        </a>
+        </button>
       </div>
 
       <div id="navbar" class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a v-if="!isLoggedIn" class="button is-black" v-on:click="register()">
+              <button v-if="!isLoggedIn" class="button is-black" @click="showRegisterView">
                 <strong>Sign up</strong>
-              </a>
-              <a v-if="!isLoggedIn" class="button is-light" v-on:click="login()">
+              </button>
+              <button v-if="!isLoggedIn"
+                @click="showLoginView"
+                class="button is-light">
                 Log in
-              </a>
-              <a v-if="isLoggedIn" class="button is-light" v-on:click="logout()">
-                Log out
-              </a>
-              <a v-if="isLoggedIn" class="button is-primary" v-on:click="profile()">
+              </button>
+              <button v-if="isLoggedIn"
+                      @click="showProfileView"
+                      :disabled="loggingOut"
+                      class="button is-primary">
                 Profile
-              </a>
+              </button>
+              <button v-if="isLoggedIn"
+                      @click="logout"
+                      :class="{ 'is-loading': loggingOut }"
+                      class="button is-light">
+                Log out
+              </button>
             </div>
           </div>
         </div>
@@ -44,34 +52,43 @@
 
 <script>
 import brand from '@/assets/logo.png';
-import router from '../../router';
+import { mapGetters, mapActions } from 'vuex';
+
 
 export default {
   name: '',
   data() {
     return {
+      loggingOut: false,
       image: brand,
     };
   },
   methods: {
-    login() {
-      router.push({ name: 'login' });
+    showLoginView() {
+      this.$router.push({ name: 'login' });
     },
-    register() {
-      router.push({ name: 'register' });
+    showRegisterView() {
+      this.$router.push({ name: 'register' });
+    },
+    showProfileView() {
+      this.$router.push({ name: 'profile' });
     },
     logout() {
-      this.$store.dispatch('logout')
-        .then(() => {
-          this.$router.push('/');
-        });
+      this.loggingOut = true;
+      setTimeout(() => {
+        this.logoutUser();
+        this.$router.push('/');
+        this.loggingOut = false;
+      }, 500)
     },
-    profile() {
-      router.push({ name: 'profile' });
-    },
+    ...mapActions({
+      'logoutUser': 'user/logout'
+    }),
   },
   computed: {
-    isLoggedIn() { return this.$store.getters.isLoggedIn; },
+    ...mapGetters({
+      'isLoggedIn': 'user/isLoggedIn'
+    })
   },
 };
 </script>

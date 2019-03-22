@@ -1,4 +1,4 @@
-<template functional>
+<template>
   <section class="hero is-primary is-medium is-clear">
     <div class="hero-body">
       <div class="container">
@@ -9,7 +9,7 @@
     <div class="hero-footer">
       <div class="container">
         <h1 class="hero-brand">
-          puppr.
+          BIN
         </h1>
         </div>
       </div>

@@ -29,14 +29,8 @@ export default {
       this.$router.push('/');
     },
     ...mapActions({
-      'login': 'user/login',
-    })
-    // login() {
-    //   const { email, password } = this;
-    //   store.dispatch('login', { email, password })
-    //     .then(() => this.$router.push('/'))
-    //     .catch(err => console.log(err));
-    // },
+      login: 'user/login',
+    }),
   },
 };
 </script>

@@ -44,7 +44,6 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (store.getters['user/isLoggedIn']) {
-      console.log('Inside user logged in thing.');
       next();
       return;
     }

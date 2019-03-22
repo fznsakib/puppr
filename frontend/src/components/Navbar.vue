@@ -2,19 +2,19 @@
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="container">
       <div class="navbar-brand">
-        <button class="navbar-item">
+        <a class="navbar-item">
           <img class="image is-48x48"
                :src="image"
                width="112"
                height="28">
-        </button>
+        </a>
 
-        <button role="button" class="navbar-burger burger"
+        <a role="button" class="navbar-burger burger"
         aria-label="menu" aria-expanded="false" data-target="navbar">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
-        </button>
+        </a>
       </div>
 
       <div id="navbar" class="navbar-menu">
@@ -79,20 +79,22 @@ export default {
         this.logoutUser();
         this.$router.push('/');
         this.loggingOut = false;
-      }, 500)
+      }, 500);
     },
     ...mapActions({
-      'logoutUser': 'user/logout'
+      logoutUser: 'user/logout',
     }),
   },
   computed: {
     ...mapGetters({
-      'isLoggedIn': 'user/isLoggedIn'
-    })
+      isLoggedIn: 'user/isLoggedIn',
+    }),
   },
 };
 </script>
 
 <style scoped>
-
+.navbar {
+  background-color: lightgrey;
+}
 </style>

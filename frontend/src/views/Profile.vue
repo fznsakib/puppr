@@ -71,17 +71,17 @@ export default {
   name: 'profile',
   data() {
     return {
-      selectedProfilePicture: null
-    }
+      selectedProfilePicture: null,
+    };
   },
   methods: {
     onProfilePictureSelected(event) {
-      this.selectedProfilePicture = event.target.files[0]
-      console.log(this.selectedProfilePicture)
+      this.selectedProfilePicture = event.target.files[0];
+      console.log(this.selectedProfilePicture);
     },
     onProfilePictureUpload() {
 
-    }
+    },
   },
   computed: {
     ...mapGetters({

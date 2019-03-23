@@ -5,6 +5,7 @@ const config = require('./config');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
+const firebase = require('firebase');
 
 const db = new DB("database")
 const app = express();
@@ -12,6 +13,14 @@ const router = express.Router();
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
+
+// Initialise Firebase
+var config = {
+  apiKey: "AIzaSyCZGF3FJ7noduTbOvpZ5Oq_tawuzai4_NU",
+  authDomain: "puppr420.firebaseapp.com",
+  storageBucket: "gs://puppr420.appspot.com",
+};
+firebase.initializeApp(config);
 
 // CORS middleware
 const allowCrossDomain = function(req, res, next) {
@@ -55,6 +64,8 @@ router.post('/login', (req, res) => {
         res.status(200).send({ auth: true, accessToken: accessToken, user: user });
     });
 })
+
+
 
 app.use(router)
 

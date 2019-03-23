@@ -11,7 +11,8 @@ class Db {
         const createUser = `
             CREATE TABLE IF NOT EXISTS user (
                 id integer PRIMARY KEY AUTOINCREMENT,
-                name text,
+                firstname text,
+                lastname text,
                 email text UNIQUE,
                 username text UNIQUE,
                 password text,
@@ -57,8 +58,9 @@ class Db {
     }
 
     insertUser(user, callback) {
+        console.log(`Insert user: ${user}`);
         return this.db.run(
-            'INSERT INTO user (name,email,password) VALUES (?,?,?)',
+            'INSERT INTO user (firstname,lastname,email,username,password) VALUES (?,?,?,?,?)',
             user, (err) => {
                 callback(err)
             })

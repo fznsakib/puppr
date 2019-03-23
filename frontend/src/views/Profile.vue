@@ -36,7 +36,7 @@
                   </figure>
                 </div> -->
                 <div class="media-content">
-                  <p class="title is-4">{{ userData.name }}</p>
+                  <p class="title is-4">{{ userData.firstname }} {{ userData.lastname }}</p>
                   <p class="subtitle is-6">@johnsmith</p>
                 </div>
               </div>
@@ -95,5 +95,9 @@ export default {
 <style scoped>
 .profile {
   margin-top: 2rem;
+}
+
+.card-image {
+  padding: 1rem;
 }
 </style>

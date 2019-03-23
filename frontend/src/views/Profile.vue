@@ -20,7 +20,7 @@
                   </span>
                 </span>
               </label>
-              <a v-if="selectedProfilePicture == null" class="button is-primary" style="margin-left: 1rem;" disabled>Submit</a>
+              <a v-if="selectedProfilePicture == null" class="button is-primary" style="margin-left: 1rem;" disabled>Upload</a>
               <a v-else @click="onProfilePictureUpload" class="button is-primary" style="margin-left: 1rem;">Upload</a>
 
 

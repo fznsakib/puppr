@@ -25,18 +25,18 @@ app.use(allowCrossDomain)
 
 router.post('/register', function(req, res) {
     db.insertUser([
-        req.body.name,
+        req.body.firstname,
+        req.body.lastname,
         req.body.email,
+        req.body.username,
         bcrypt.hashSync(req.body.password, 8)
     ],
     function (err) {
         if (err) {
-            console.log("Error registering for some reason");
             return res.status(500).send("There was a problem registering the user.")
         }
         db.selectUserByEmail(req.body.email, (err,user) => {
             if (err) {
-                console.log("Select User By Email Error");
                 return res.status(500).send("There was a problem getting user")
             }
             let accessToken = jwt.sign({ id: user.id }, config.secret, { expiresIn: 600 }); // expires in 24 hours

@@ -1,61 +1,150 @@
 <template>
-  <div>
-    <h4>Register</h4>
-    <form @submit.prevent="register">
-      <label for="name">Name</label>
-      <div>
-          <input id="name" type="text" v-model="name" required autofocus>
-      </div>
+  <div id="register">
+    <div class="container is-flex">
+      <div class="box">
+        <h4 class="title is-bold has-text-centered">Register</h4>
+        <form @submit.prevent="register">
+          <div class="columns">
+            <div class="column">
+              <!-- first name -->
+              <div class="field">
+                  <label for="firstname" class="label">First Name</label>
 
-      <label for="email" >E-Mail Address</label>
-      <div>
-          <input id="email" type="email" v-model="email" required>
-      </div>
+                  <div class="control">
+                      <input type="text" name="firstname" class="input"
+                             placeholder="John" v-model="firstname" autofocus>
+                  </div>
+              </div>
+            </div>
 
-      <label for="password">Password</label>
-      <div>
-          <input id="password" type="password" v-model="password" required>
-      </div>
+            <div class="column">
+              <!-- last name -->
+              <div class="field">
+                  <label for="lastname" class="label">Last Name</label>
 
-      <label for="password-confirm">Confirm Password</label>
-      <div>
-          <input id="password-confirm" type="password" v-model="password_confirmation" required>
-      </div>
+                  <div class="control">
+                      <input type="text" name="lastname" class="input"
+                             placeholder="Smith" v-model="lastname" autofocus>
+                  </div>
+              </div>
+            </div>
+          </div>
 
-      <div>
-          <button type="submit">Register</button>
+          <!-- username -->
+          <div class="field">
+              <label for="username" class="label">Username</label>
+
+              <div class="control">
+                  <input type="text" name="username" class="input"
+                         placeholder="Username" v-model="username">
+              </div>
+          </div>
+
+          <!-- email -->
+          <div class="field">
+              <label for="email" class="label">Email</label>
+
+              <div class="control">
+                  <input type="email" name="email" class="input"
+                         placeholder="example@mail.com" v-model="email">
+              </div>
+          </div>
+
+          <!-- password -->
+          <div class="field">
+              <label for="password" class="label">Password</label>
+
+              <div class="control">
+                  <input type="password" name="password" class="input"
+                         v-model="password">
+              </div>
+          </div>
+
+          <!-- password confirm -->
+          <div class="field">
+              <label for="passwordConfirm" class="label">Confirm Password</label>
+
+              <div class="control">
+                  <input type="password" name="passwordConfirm" class="input"
+                         v-model="passwordConfirm">
+              </div>
+          </div>
+
+          <div class="columns is-vcentered">
+            <!-- submit -->
+            <div class="column">
+              <div class="field">
+                  <div class="control">
+                      <button type="submit" class="button is-link">Sign Up</button>
+                  </div>
+              </div>
+            </div>
+
+            <div class="column">
+              <router-link :to="{ name: 'login' }"
+                           class="is-pulled-right">Sign in instead</router-link>
+            </div>
+          </div>
+        </form>
       </div>
-    </form>
+    </div><!-- container -->
   </div>
 </template>
 
 <script>
-import store from '@/store/store';
+import { mapActions } from 'vuex';
 
 export default {
+  name: 'sign-up',
   data() {
     return {
-      name: '',
+      firstname: '',
+      lastname: '',
+      username: '',
       email: '',
       password: '',
-      password_confirmation: '',
+      passwordConfirm: '',
     };
   },
   methods: {
     register() {
-      const data = {
-        name: this.name,
+      const newUserData = {
+        firstname: this.firstname,
+        lastname: this.lastname,
+        username: this.username,
         email: this.email,
         password: this.password,
       };
-      store.dispatch('account/register', data)
-        .then(() => {
-          this.$router.push('/');
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      this.registerUser(newUserData);
+      this.$router.push('/');
     },
+    ...mapActions({
+      registerUser: 'account/register',
+    }),
   },
 };
 </script>
+
+<style scoped>
+#register {
+  font-family: 'Montserrat', sans-serif;
+  width: 100vw;
+  height: calc(100vh - 52px);
+  background-color: #fafafa;
+}
+.container {
+  height: 100%;
+  max-width: 500px;
+  justify-content: center;
+  -ms-align-items: center;
+  align-items: center;
+}
+.box {
+  padding: 2.5rem 2rem;
+  padding-top: 2rem;
+}
+
+input:active, input:focus {
+  box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
+}
+</style>

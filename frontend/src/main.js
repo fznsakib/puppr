@@ -7,7 +7,7 @@ import App from './App.vue';
 Vue.use(VueSession, { persist: true });
 Vue.config.productionTip = false;
 
-const vm = new Vue({
+new Vue({
   router,
   store,
   render: h => h(App),

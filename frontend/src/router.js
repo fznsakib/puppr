@@ -46,14 +46,11 @@ router.beforeEach((to, from, next) => {
 
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (isUserLoggedIn) {
-      console.log('User logged in && needs auth');
       next();
       return;
     }
-    console.log('Needs auth but not logged in.');
     next('/login');
   } else {
-    console.log('else');
     next();
   }
 });

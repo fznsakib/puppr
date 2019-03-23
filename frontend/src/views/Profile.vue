@@ -5,42 +5,12 @@
 
         <!-- Profile Card -->
         <div class="column is-3">
-          <div class="card" style="border-radius: 10px">
-            <div class="card-image">
-              <figure class="image is-square">
-                <img class="is-rounded" src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
-              </figure>
-            </div>
-            <div class="card-content">
-              <div class="media">
-<!--                 <div class="media-left">
-                  <figure class="image is-48x48">
-                    <img class="is-rounded"
-                    src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-                  </figure>
-                </div> -->
-                <div class="media-content">
-                  <p class="title is-4">{{ userData.firstname }} {{ userData.lastname }}</p>
-                  <p class="subtitle is-6">@johnsmith</p>
-                </div>
-              </div>
-
-              <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Phasellus nec iaculis mauris. <a>@bulmaio</a>.
-                <a href="#">#css</a> <a href="#">#responsive</a>
-                <br>
-                <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-              </div>
-            </div>
-          </div>
+          <ProfileCard :user="user"/>
         </div>
 
         <!-- Profile Uploads -->
-        <div class="column is-8">
-          <h1 class="title is-bold">
-            Your password is {{ userData.password }}
-          </h1>
+        <div class="column is-9">
+          <ProfileGallery :user="user"/>
         </div>
 
       </div><!-- columns -->
@@ -50,29 +20,27 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import ProfileCard from '@/components/ProfileCard.vue';
+import ProfileGallery from '@/components/ProfileGallery.vue';
 
 export default {
   name: 'profile',
-  methods: {
-    // home() {
-    // this.$router.push({ name: 'home' });
-    // },
+  components: {
+    ProfileCard,
+    ProfileGallery,
   },
   computed: {
     ...mapGetters({
-      userData: 'account/getUser',
+      user: 'account/getUser',
     }),
   },
 };
-
 </script>
 
 <style scoped>
 .profile {
-  margin-top: 2rem;
-}
-
-.card-image {
-  padding: 1rem;
+  background-color: #ECF0F3;
+  padding-top: 2rem;
+  min-height: 100vh;
 }
 </style>

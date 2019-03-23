@@ -32,7 +32,7 @@
               <button v-if="isLoggedIn"
                       @click="showProfileView"
                       :disabled="loggingOut"
-                      class="button is-primary">
+                      class="button is-black">
                 Profile
               </button>
               <button v-if="isLoggedIn"

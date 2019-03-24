@@ -15,14 +15,14 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
 // Initialize Firebase
-  var firebaseConfig = {
-    apiKey: "AIzaSyCZGF3FJ7noduTbOvpZ5Oq_tawuzai4_NU",
-    authDomain: "puppr420.firebaseapp.com",
-    databaseURL: "https://puppr420.firebaseio.com",
-    projectId: "puppr420",
-    storageBucket: "puppr420.appspot.com",
-    messagingSenderId: "10141626857"
-  };
+var firebaseConfig = {
+    apiKey: "AIzaSyC5SnkTNBFjGvnBa7YhWVEilOvcS5oA99Q",
+    authDomain: "puppr-8727d.firebaseapp.com",
+    databaseURL: "https://puppr-8727d.firebaseio.com",
+    projectId: "puppr-8727d",
+    storageBucket: "puppr-8727d.appspot.com",
+    messagingSenderId: "764093981772"
+    };
 firebase.initializeApp(firebaseConfig);
 
 // CORS middleware

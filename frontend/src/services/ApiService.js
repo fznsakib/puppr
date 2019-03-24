@@ -33,4 +33,7 @@ export default {
   login(userData) {
     return apiClient.post('/login', userData);
   },
+  uploadProfilePicture(image) {
+    return apiClient.post('/uploadProfilePicture', image)
+  }
 };

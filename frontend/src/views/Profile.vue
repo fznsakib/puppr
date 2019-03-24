@@ -65,7 +65,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import ApiService from '@/services/ApiService';
 
 export default {
   name: 'profile',
@@ -80,8 +81,11 @@ export default {
       console.log(this.selectedProfilePicture);
     },
     onProfilePictureUpload() {
-
+      this.uploadProfilePicture(this.selectedProfilePicture)
     },
+    ...mapActions({
+      uploadProfilePicture: 'account/uploadPictureToUser'
+    })
   },
   computed: {
     ...mapGetters({

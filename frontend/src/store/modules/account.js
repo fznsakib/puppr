@@ -33,6 +33,13 @@ export const mutations = {
   REGISTER_FAILURE: (state) => {
     state.status = { };
   },
+
+  UPLOAD_PP_REQUEST: (state) => {
+    state.status = { isUploadingPP: true }
+  },
+  UPLOAD_PP_SUCCESS: (state, imageurl) => {
+    state.user.profilePic = { imageurl }
+  },
 };
 
 
@@ -86,6 +93,21 @@ export const actions = {
       commit('LOGIN_FAILURE');
     }
   },
+  uploadPictureToUser({ commit, state }, image ) {
+    console.log('upload commit')
+    const session = this._vm.$session;
+    commit('UPLOAD_PP_REQUEST');
+    ApiService.uploadProfilePicture(image)
+      .then((res) => {
+        console.log('upload then')
+        commit('UPLOAD_PP_SUCCESS', res.data.imageurl)
+        session.set('user', state.user)
+        console.log(session.get('user'))
+      })
+      .catch(() => {
+
+      })
+  }
 };
 
 

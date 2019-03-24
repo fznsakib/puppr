@@ -16,6 +16,7 @@ class Db {
                 email text UNIQUE,
                 username text UNIQUE,
                 password text,
+                pp_url text,
                 question text,
                 answer text)
             `

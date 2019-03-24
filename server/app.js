@@ -11,16 +11,27 @@ const db = new DB("database")
 const app = express();
 const router = express.Router();
 
-router.use(bodyParser.urlencoded({ extended: false }));
-router.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
+
+// router.use(bodyParser.json({ limit: '50mb' }));
+// router.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
+
+// router.use(bodyParser.urlencoded({ extended: false }));
+// router.use(bodyParser.json());
+
+// bodyParser = {
+//   json: {limit: '50mb', extended: true},
+//   urlencoded: {limit: '50mb', extended: true}
+// };
 
 // Initialise Firebase
-var config = {
+var firebaseConfig = {
   apiKey: "AIzaSyCZGF3FJ7noduTbOvpZ5Oq_tawuzai4_NU",
   authDomain: "puppr420.firebaseapp.com",
   storageBucket: "gs://puppr420.appspot.com",
 };
-firebase.initializeApp(config);
+firebase.initializeApp(firebaseConfig);
 
 // CORS middleware
 const allowCrossDomain = function(req, res, next) {
@@ -49,7 +60,7 @@ router.post('/register', function(req, res) {
                 return res.status(500).send("There was a problem getting user")
             }
             let accessToken = jwt.sign({ id: user.id }, config.secret, { expiresIn: 600 }); // expires in 24 hours
-            res.status(200).send({ auth: true, accessToken: accessToken, user: user });
+            res.status(200).send({ auth: true, accessToken, user });
         });
     });
 });
@@ -61,8 +72,12 @@ router.post('/login', (req, res) => {
         let passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
         if (!passwordIsValid) return res.status(401).send({ auth: false, accessToken: null });
         let accessToken = jwt.sign({ id: user.id }, config.secret, { expiresIn: 600 }); // expires in 24 hours
-        res.status(200).send({ auth: true, accessToken: accessToken, user: user });
+        res.status(200).send({ auth: true, accessToken, user });
     });
+})
+
+router.post('/uploadProfilePicture', (req, res) => {
+    console.log('at upload route')
 })
 
 

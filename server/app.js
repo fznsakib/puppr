@@ -14,23 +14,15 @@ const router = express.Router();
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
-// router.use(bodyParser.json({ limit: '50mb' }));
-// router.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
-
-// router.use(bodyParser.urlencoded({ extended: false }));
-// router.use(bodyParser.json());
-
-// bodyParser = {
-//   json: {limit: '50mb', extended: true},
-//   urlencoded: {limit: '50mb', extended: true}
-// };
-
-// Initialise Firebase
-var firebaseConfig = {
-  apiKey: "AIzaSyCZGF3FJ7noduTbOvpZ5Oq_tawuzai4_NU",
-  authDomain: "puppr420.firebaseapp.com",
-  storageBucket: "gs://puppr420.appspot.com",
-};
+// Initialize Firebase
+  var firebaseConfig = {
+    apiKey: "AIzaSyCZGF3FJ7noduTbOvpZ5Oq_tawuzai4_NU",
+    authDomain: "puppr420.firebaseapp.com",
+    databaseURL: "https://puppr420.firebaseio.com",
+    projectId: "puppr420",
+    storageBucket: "puppr420.appspot.com",
+    messagingSenderId: "10141626857"
+  };
 firebase.initializeApp(firebaseConfig);
 
 // CORS middleware
@@ -78,6 +70,11 @@ router.post('/login', (req, res) => {
 
 router.post('/uploadProfilePicture', (req, res) => {
     console.log('at upload route')
+    // Upload image to firebase
+
+    // Get the url to image on firebase
+
+    // Put the url onto the image
 })
 
 

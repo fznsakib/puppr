@@ -24,16 +24,13 @@ export default {
   removeAuthToken() {
     apiClient.defaults.headers.common.Authorization = null;
   },
-
-
   registerUser(userData) {
-    console.log(userData);
     return apiClient.post('/register', userData);
   },
   login(userData) {
     return apiClient.post('/login', userData);
   },
   uploadProfilePicture(image) {
-    return apiClient.post('/uploadProfilePicture', image)
-  }
+    return apiClient.post('/uploadProfilePicture', image);
+  },
 };

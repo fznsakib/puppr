@@ -81,11 +81,11 @@ export default {
       console.log(this.selectedProfilePicture);
     },
     onProfilePictureUpload() {
-      this.uploadProfilePicture(this.selectedProfilePicture)
+      this.uploadProfilePicture(this.selectedProfilePicture);
     },
     ...mapActions({
-      uploadProfilePicture: 'account/uploadPictureToUser'
-    })
+      uploadProfilePicture: 'account/uploadPictureToUser',
+    }),
   },
   computed: {
     ...mapGetters({

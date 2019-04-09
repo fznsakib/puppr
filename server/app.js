@@ -1,4 +1,5 @@
 "use strict";
+
 const express = require('express');
 const DB = require('./db');
 const config = require('./config');
@@ -6,10 +7,15 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const firebase = require('firebase');
+const axios = require('axios');
+const FormData = require('form-data');
+const form = new FormData();
+// const request = require('request');
 
 const db = new DB("database")
 const app = express();
 const router = express.Router();
+
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
@@ -72,10 +78,24 @@ router.post('/login', (req, res) => {
 router.post('/uploadProfilePicture', (req, res) => {
     console.log('at upload route')
     // Upload image to firebase
+    // console.log(req.body.image)
+    // https://us-central1-puppr-8727d.cloudfunctions.net/uploadImage
 
+    const imageName = "hello"
+
+    console.log(imageName)
+
+    const fd = form
+    // fd.append('image', req.body.image, imageName)
+    // axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadImage', fd)
+    //   .then( res => {
+    //     console.log(res)
+    //   })
+
+    res.status(200).send({})
     // Get the url to image on firebase
 
-    // Put the url onto the image
+    // Put the url onto the database
 })
 
 

@@ -35,9 +35,10 @@ export const mutations = {
   },
 
   UPLOAD_PP_REQUEST: (state) => {
-    state.status = { isUploadingPP: true }
+    state.status = { isUploadingPP: true, isLoggedIn: true }
   },
   UPLOAD_PP_SUCCESS: (state, imageurl) => {
+    state.status = { isUploadingPP: false, isLoggedIn: true }
     state.user.profilePic = { imageurl }
   },
 };
@@ -105,7 +106,8 @@ export const actions = {
         console.log(session.get('user'))
       })
       .catch(() => {
-
+        console.log('upload error')
+        console.log(session.getAll())
       })
   }
 };

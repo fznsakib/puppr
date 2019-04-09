@@ -20,9 +20,10 @@ var firebaseConfig = {
     authDomain: "puppr-8727d.firebaseapp.com",
     databaseURL: "https://puppr-8727d.firebaseio.com",
     projectId: "puppr-8727d",
-    storageBucket: "puppr-8727d.appspot.com",
+    storageBucket: "gs://puppr-8727d.appspot.com",
     messagingSenderId: "764093981772"
     };
+
 firebase.initializeApp(firebaseConfig);
 
 // CORS middleware

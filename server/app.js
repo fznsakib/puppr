@@ -1,17 +1,39 @@
 "use strict";
+
 const express = require('express');
 const DB = require('./db');
 const config = require('./config');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
+const firebase = require('firebase');
+const axios = require('axios');
+const FormData = require('form-data');
+const form = new FormData();
+const fs = require('fs');
+
 
 const db = new DB("database")
 const app = express();
 const router = express.Router();
 
-router.use(bodyParser.urlencoded({ extended: false }));
-router.use(bodyParser.json());
+
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
+app.use(formidable());
+
+
+// Initialize Firebase
+var firebaseConfig = {
+    apiKey: "AIzaSyC5SnkTNBFjGvnBa7YhWVEilOvcS5oA99Q",
+    authDomain: "puppr-8727d.firebaseapp.com",
+    databaseURL: "https://puppr-8727d.firebaseio.com",
+    projectId: "puppr-8727d",
+    storageBucket: "gs://puppr-8727d.appspot.com",
+    messagingSenderId: "764093981772"
+    };
+
+firebase.initializeApp(firebaseConfig);
 
 // CORS middleware
 const allowCrossDomain = function(req, res, next) {
@@ -40,7 +62,7 @@ router.post('/register', function(req, res) {
                 return res.status(500).send("There was a problem getting user")
             }
             let accessToken = jwt.sign({ id: user.id }, config.secret, { expiresIn: 600 }); // expires in 24 hours
-            res.status(200).send({ auth: true, accessToken: accessToken, user: user });
+            res.status(200).send({ auth: true, accessToken, user });
         });
     });
 });
@@ -52,9 +74,17 @@ router.post('/login', (req, res) => {
         let passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
         if (!passwordIsValid) return res.status(401).send({ auth: false, accessToken: null });
         let accessToken = jwt.sign({ id: user.id }, config.secret, { expiresIn: 600 }); // expires in 24 hours
-        res.status(200).send({ auth: true, accessToken: accessToken, user: user });
+        res.status(200).send({ auth: true, accessToken, user });
     });
 })
+
+router.post('/uploadProfilePicture', (req, res) => {
+    console.log('at upload route')
+    // Upload image to firebase
+
+})
+
+
 
 app.use(router)
 

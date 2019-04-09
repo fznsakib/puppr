@@ -16,6 +16,7 @@ class Db {
                 email text UNIQUE,
                 username text UNIQUE,
                 password text,
+                pp_url text,
                 question text,
                 answer text)
             `
@@ -44,11 +45,11 @@ class Db {
     }
 
     selectUserByEmail(email, callback) {
-        return this.db.get(
-            `SELECT * FROM user WHERE email = ?`,
-            [email],function(err,row){
-                callback(err,row)
-            })
+      return this.db.get(
+          `SELECT * FROM user WHERE email = ?`,
+          [email],function(err,row){
+              callback(err,row)
+          })
     }
 
     selectAll(callback) {
@@ -64,6 +65,10 @@ class Db {
             user, (err) => {
                 callback(err)
             })
+    }
+
+    updateProfilePicture(userID, imageurl, callback) {
+      console.log("Updating database...")
     }
 }
 

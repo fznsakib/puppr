@@ -20,3 +20,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+# Firebase
+/server/functions/index.js
+/server/functions/puppr*

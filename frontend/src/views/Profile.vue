@@ -67,16 +67,19 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import ApiService from '@/services/ApiService';
+import axios from 'axios';
 
 export default {
   name: 'profile',
   data() {
     return {
       selectedProfilePicture: null,
+      fd: null,
     };
   },
   methods: {
     onProfilePictureSelected(event) {
+      // Get image file
       this.selectedProfilePicture = event.target.files[0];
       console.log(this.selectedProfilePicture);
     },

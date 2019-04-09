@@ -98,7 +98,7 @@ export const actions = {
     console.log('upload commit');
     const session = this._vm.$session;
     commit('UPLOAD_PP_REQUEST');
-    console.log('about to call APIservice');
+
     ApiService.uploadProfilePicture(image)
       .then((res) => {
         console.log('upload then');

@@ -20,7 +20,6 @@ const router = express.Router();
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
-app.use(formidable());
 
 
 // Initialize Firebase

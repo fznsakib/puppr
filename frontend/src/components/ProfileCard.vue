@@ -12,7 +12,18 @@
           <p class="subtitle is-6">@{{ user.username }}</p>
         </div>
       </div>
-
+      <div class="file is-centered" style="padding-top: 1rem; margin: 0 auto;" @change="onProfilePictureSelected">
+        <label class="file-label">
+          <input class="file-input" type="file" name="resume">
+          <span class="file-cta">
+            <span class="file-label">
+              Choose a picture
+            </span>
+          </span>
+        </label>
+        <a v-if="selectedProfilePicture == null" class="button is-primary" style="margin-left: 1rem;" disabled>Upload</a>
+        <a v-else @click="onProfilePictureUpload" class="button is-primary" style="margin-left: 1rem;">Upload</a>
+      </div>
       <div class="content">
         <span class="bio" v-if="!isEditingBio">
           {{ bio }}
@@ -35,6 +46,10 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+import ApiService from '@/services/ApiService';
+import axios from 'axios';
+
 export default {
   name: "profilecard",
   props: {
@@ -47,6 +62,7 @@ export default {
       bio: 'Description goes here. Apothecary. Really good.',
       oldBio: '',
       isEditingBio: false,
+      selectedProfilePicture: null,
     }
   },
   methods: {
@@ -61,6 +77,22 @@ export default {
       this.bio = this.oldBio;
       this.isEditingBio = false;
     },
+    onProfilePictureSelected(event) {
+      // Get image file
+      this.selectedProfilePicture = event.target.files[0];
+      console.log(this.selectedProfilePicture);
+    },
+    onProfilePictureUpload() {
+      this.uploadProfilePicture(this.selectedProfilePicture);
+    },
+    ...mapActions({
+      uploadProfilePicture: 'account/uploadPictureToUser',
+    }),
+  },
+  computed: {
+    ...mapGetters({
+      userData: 'account/getUser',
+    }),
   },
 };
 </script>

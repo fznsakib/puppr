@@ -10,11 +10,10 @@ class Db {
     createTable() {
         const createUser = `
             CREATE TABLE IF NOT EXISTS user (
-                id integer PRIMARY KEY AUTOINCREMENT,
+                username text PRIMARY KEY UNIQUE,
                 firstname text,
                 lastname text,
                 email text UNIQUE,
-                username text UNIQUE,
                 password text,
                 pp_url text,
                 question text,
@@ -23,20 +22,20 @@ class Db {
         const createPost = `
             CREATE TABLE IF NOT EXISTS post (
                 id integer PRIMARY KEY AUTOINCREMENT,
-                user_id integer,
+                username text,
                 date text,
                 likes integer,
                 dislikes integer,
-                CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES user(id)
+                CONSTRAINT fk_users FOREIGN KEY (username) REFERENCES user(username)
             )`
         const createComment = `
             CREATE TABLE IF NOT EXISTS comment (
                 id integer PRIMARY KEY AUTOINCREMENT,
-                user_id integer,
-                post_id interger,
+                username integer,
+                post_id integer,
                 body text,
                 date text,
-                CONSTRAINT fk_users FOREIGN KEY (user_id) REFERENCES user(id),
+                CONSTRAINT fk_users FOREIGN KEY (username) REFERENCES user(username),
                 CONSTRAINT fk_posts FOREIGN KEY (post_id) REFERENCES post(id)
             )`
         this.db.run(createUser);
@@ -61,7 +60,7 @@ class Db {
     insertUser(user, callback) {
         console.log(`Insert user: ${user}`);
         return this.db.run(
-            'INSERT INTO user (firstname,lastname,email,username,password) VALUES (?,?,?,?,?)',
+            'INSERT INTO user (username,firstname,lastname,email,password) VALUES (?,?,?,?,?)',
             user, (err) => {
                 callback(err)
             })

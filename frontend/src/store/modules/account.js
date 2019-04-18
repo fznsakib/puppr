@@ -95,11 +95,13 @@ export const actions = {
     }
   },
   uploadPictureToUser({ commit, state }, image) {
-    console.log('upload commit');
+    // console.log('upload commit');
     const session = this._vm.$session;
     commit('UPLOAD_PP_REQUEST');
 
-    ApiService.uploadProfilePicture(image)
+    const user = session.get('user');
+
+    ApiService.uploadProfilePicture(image, user.username)
       .then((res) => {
         console.log('upload then');
         commit('UPLOAD_PP_SUCCESS', res.data.imageurl);

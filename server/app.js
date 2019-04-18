@@ -11,6 +11,8 @@ const axios = require('axios');
 const FormData = require('form-data');
 const form = new FormData();
 const fs = require('fs');
+const Busboy = require('busboy')
+
 
 
 const db = new DB("database")
@@ -44,12 +46,20 @@ const allowCrossDomain = function(req, res, next) {
 
 app.use(allowCrossDomain)
 
+const axiosConfig = {
+  headers: {
+    'Content-Type': 'application/json;charset=UTF-8',
+    'Access-Control-Allow-Origin': '*',
+  },
+};
+
+
 router.post('/register', function(req, res) {
     db.insertUser([
+        req.body.username,
         req.body.firstname,
         req.body.lastname,
         req.body.email,
-        req.body.username,
         bcrypt.hashSync(req.body.password, 8)
     ],
     function (err) {
@@ -77,9 +87,11 @@ router.post('/login', (req, res) => {
     });
 })
 
-router.post('/uploadProfilePicture', (req, res) => {
+router.post('/uploadProfilePicture', (req, res, next) => {
     console.log('at upload route')
-    // Upload image to firebase
+
+    // Update database with imageURL
+    return res.status(200).send({});
 
 })
 

@@ -42,11 +42,11 @@ export default {
     const fd = new FormData();
 
     // Produce name for image specific to user
-    const imageName = `pp${username}.jpg`;
+    const imageName = `pp-${username}.jpg`;
     fd.append('file', image, imageName);
 
-
-    // Upload image to profilepictures folder on Firebase
+    // Upload image to Firebase
+    // Check to see if catch works
     axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadProfilePicture', fd, axiosConfig)
     // .then((res) => {
     //   return res.status(200).send({});
@@ -56,8 +56,7 @@ export default {
     //   return console.error(err);
     // });
 
-
     // Add imageURL to database
-    return apiClient.post('/uploadProfilePicture', fd);
+    return apiClient.post('/updateProfilePicture', { username });
   },
 };

@@ -12,13 +12,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/storage": "^2.5.0",
     "axios": "^0.18.0",
     "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",
     "busboy": "^0.3.1",
     "express": "^4.16.4",
     "express-formidable": "^1.2.0",
-    "firebase": "^5.9.1",
+    "firebase": "^5.10.0",
+    "firebase-admin": "^7.3.0",
     "jsonwebtoken": "^8.5.0",
     "sqlite3": "^4.0.6"
   }

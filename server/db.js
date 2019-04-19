@@ -66,8 +66,13 @@ class Db {
             })
     }
 
-    updateProfilePicture(userID, imageurl, callback) {
-      console.log("Updating database...")
+    updateProfilePicture(username, imageURL, callback) {
+        console.log("Updating database...")
+        return this.db.run(
+          'UPDATE user SET pp_url = ? WHERE username = ?',
+          imageURL, username, (err) => {
+            callback(err)
+          })
     }
 }
 

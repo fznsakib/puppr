@@ -37,21 +37,26 @@ export default {
   login(userData) {
     return apiClient.post('/login', userData);
   },
-  uploadProfilePicture(image) {
+  uploadProfilePicture(image, username) {
     // Upload image to firebase as form data
     const fd = new FormData();
-    fd.append('file', image, image.name);
 
-    axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadImage', fd, axiosConfig)
-      .then((res) => {
-        console.log(res);
-        res.status(200).send({});
-      })
-      .catch((res) => {
-        res.status(500).send({});
-      });
+    // Produce name for image specific to user
+    const imageName = `pp-${username}.jpg`;
+    fd.append('file', image, imageName);
+
+    // Upload image to Firebase
+    // Check to see if catch works
+    axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadProfilePicture', fd, axiosConfig)
+    // .then((res) => {
+    //   return res.status(200).send({});
+    // })
+    // .catch((err) => {
+    //   // return res.status(500).send({});
+    //   return console.error(err);
+    // });
 
     // Add imageURL to database
-    return apiClient.post('/uploadProfilePicture', image);
+    return apiClient.post('/updateProfilePicture', { username });
   },
 };

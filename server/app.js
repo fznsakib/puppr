@@ -6,12 +6,11 @@ const config = require('./config');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
-const firebase = require('firebase');
 const axios = require('axios');
-const FormData = require('form-data');
-const form = new FormData();
-const fs = require('fs');
-
+const {Storage} = require('@google-cloud/storage');
+const firebase = require('firebase');
+const admin = require("firebase-admin");
+// const serviceAccount = require("/functions/puppr-8727d-firebase-adminsdk-kfdzh-6324893b05.json");
 
 const db = new DB("database")
 const app = express();
@@ -34,6 +33,23 @@ var firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+
+const storage = new Storage({
+  projectId: 'puppr-8727d',
+  keyFilename: 'functions/puppr-8727d-firebase-adminsdk-kfdzh-6324893b05.json'
+});
+
+const bucket = storage.bucket('puppr-8727d.appspot.com')
+
+
+admin.initializeApp({
+    credential: admin.credential.cert("functions/puppr-8727d-firebase-adminsdk-kfdzh-6324893b05.json"),
+    storageBucket: "puppr-8727d.appspot.com"
+});
+
+// var bucket = admin.storage().bucket();
+
+
 // CORS middleware
 const allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -44,12 +60,20 @@ const allowCrossDomain = function(req, res, next) {
 
 app.use(allowCrossDomain)
 
+const axiosConfig = {
+  headers: {
+    'Content-Type': 'application/json;charset=UTF-8',
+    'Access-Control-Allow-Origin': '*',
+  },
+};
+
+
 router.post('/register', function(req, res) {
     db.insertUser([
+        req.body.username,
         req.body.firstname,
         req.body.lastname,
         req.body.email,
-        req.body.username,
         bcrypt.hashSync(req.body.password, 8)
     ],
     function (err) {
@@ -77,11 +101,28 @@ router.post('/login', (req, res) => {
     });
 })
 
-router.post('/uploadProfilePicture', (req, res) => {
-    console.log('at upload route')
-    // Upload image to firebase
+router.post('/updateProfilePicture', (req, res) => {
+    console.log('at update route');
 
+    // Specify image to look at
+    const imageName = `pp-${req.body.username}.jpg`;
+    const image = bucket.file(imageName);
+
+    // Get image URL
+    return image.getSignedUrl({
+      action: 'read',
+      expires: '03-09-2491'
+    }).then(signedUrls => {
+      const imageURL = signedUrls[0];
+
+      // Update database with image URL
+      db.updateProfilePicture(req.body.username, imageURL, (err) => {
+        if (err) return res.status(500).send('Error retrieving profile picture URL');
+      })
+      res.status(200).send({ imageURL: imageURL });
+    });
 })
+
 
 
 

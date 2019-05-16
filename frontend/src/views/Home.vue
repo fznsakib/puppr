@@ -13,7 +13,7 @@ import Searchbar from '@/components/Searchbar.vue';
 export default {
   name: 'home',
   components: {
-    Hero
+    Hero,
     Searchbar,
   },
 };

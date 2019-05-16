@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home.vue';
-import HomeNotAuth from './views/HomeNotAuth.vue';
 
 Vue.use(Router);
 
@@ -13,22 +12,19 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: Home,
-      meta: {
-        requiresAuth: true,
-      },
-    },
-    {
-      path: '/',
-      name: 'homenotauth',
-      component: HomeNotAuth,
-      meta: {
-        guest: true,
-      },
     },
     {
       path: '/register',
       name: 'register',
       component: () => import(/* webpackChunkName: "register" */ './views/Register.vue'), //eslint-disable-line
+      meta: {
+        guest: true,
+      },
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import(/* webpackChunkName: "login" */ './views/Login.vue'), //eslint-disable-line
       meta: {
         guest: true,
       },
@@ -44,12 +40,27 @@ const router = new Router({
   ],
 });
 
-const checkAuthenticated = (to, from, next) => {
-  if (router.app.$session.get('accessToken')) {
-    next()
-    return
+// const checkAuthenticated = (to, from, next) => {
+//   if (router.app.$session.get('accessToken')) {
+//     next()
+//     return
+//   }
+//   next('/login')
+// }
+
+router.beforeEach((to, from, next) => {
+  const isUserLoggedIn = router.app.$session.get('accessToken');
+
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (isUserLoggedIn) {
+      next();
+      return;
+    }
+    next('/login');
+  } else {
+    next();
   }
-}
+});
 
 
 export default router;

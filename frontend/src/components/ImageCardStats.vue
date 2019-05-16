@@ -31,21 +31,21 @@ export default {
   props: {
     isHovered: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       numLikes: 10,
       numComments: 20,
       favorited: false,
-    }
+    };
   },
   computed: {
     favoritedIcon() {
       return (this.favorited ? 'fas fa-heart' : 'far fa-heart');
-    }
-  }
+    },
+  },
 };
 </script>
 

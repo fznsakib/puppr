@@ -16,11 +16,11 @@ export default {
   },
   methods: {
     ...mapActions({
-      checkActiveSession: 'account/checkActiveSession',
+      validateSession: 'account/validateSession',
     }),
   },
   created() {
-    this.checkActiveSession();
+    this.validateSession();
   },
 };
 </script>

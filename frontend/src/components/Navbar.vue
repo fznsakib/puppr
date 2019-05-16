@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar" role="navigation" aria-label="main navigation">
+  <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
     <div class="container">
       <div class="navbar-brand">
         <a @click="showHomeView" class="navbar-item">
@@ -32,7 +32,7 @@
               <button v-if="isLoggedIn"
                       @click="showProfileView"
                       :disabled="loggingOut"
-                      class="button is-primary">
+                      class="button is-info">
                 Profile
               </button>
               <button v-if="isLoggedIn"
@@ -90,7 +90,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isLoggedIn: 'account/isLoggedIn',
+      isLoggedIn: 'account/getLoggedInStatus',
     }),
   },
 };
@@ -98,8 +98,8 @@ export default {
 
 <style scoped>
 .navbar {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.9);
   box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1),
-              0 0 0 1px rgba(10, 10, 10, 0.1);
+              0 0 0 1px rgba(10, 10, 10, 0.0);
 }
 </style>

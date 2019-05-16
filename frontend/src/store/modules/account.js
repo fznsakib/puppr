@@ -3,82 +3,131 @@ import ApiService from '@/services/ApiService';
 export const namespaced = true;
 
 export const state = {
-  status: {},
+  isLoggingIn: false,
+  isLoggedIn: false,
+  isRegistering: false,
+  isUploadingImg: false,
   user: {},
 };
 
 export const mutations = {
   LOGIN_REQUEST: (state) => {
-    state.status = { isLoggingIn: true };
+    state.isLoggingIn = true;
   },
   LOGIN_SUCCESS: (state, user) => {
-    state.status = { isLoggedIn: true };
+    state.isLoggedIn = true;
     state.user = user;
   },
   LOGIN_FAILURE: (state) => {
-    state.status = { };
-    state.user = null;
+    state.isLoggingIn = false;
+    state.isLoggedIn = false;
+    state.user = {};
   },
   LOGOUT: (state) => {
-    state.status = { };
-    state.user = null;
+    state.isLoggedIn = false;
+    state.user = {};
   },
 
   REGISTER_REQUEST: (state) => {
-    state.status = { isRegistering: true };
+    state.isRegistering = true;
   },
-  REGISTER_SUCCESS: (state) => {
-    state.status = { };
+  REGISTER_SUCCESS: (state, user) => {
+    state.isRegistering = false;
+    state.isLoggedIn = true;
+    state.user = user;
   },
   REGISTER_FAILURE: (state) => {
-    state.status = { };
+    state.isRegistering = false;
+    state.user = {};
   },
 
   UPLOAD_PP_REQUEST: (state) => {
-    state.status = { isUploadingPP: true, isLoggedIn: true };
+    state.isUploadingImg = true;
   },
   UPLOAD_PP_SUCCESS: (state, imageURL) => {
-    state.status = { isUploadingPP: false, isLoggedIn: true };
-    state.user.pp_url = imageURL;
+    state.isUploadingImg = false;
+    state.user.ppUrl = imageURL;
+  },
+  UPLOAD_PP_FAILURE: (state) => {
+    state.isUploadingImg = false;
+  },
+
+  VALID_SESSION: (state, user) => {
+    state.isLoggedIn = true;
+    state.user = user;
+  },
+  INVALID_SESSION: (state) => {
+    state.isLoggedIn = false;
+    state.user = {};
   },
 };
 
 
 export const actions = {
+  // NOTE: LOGIN
   login({ commit }, userToLogin) {
+    // get vue-session
     const session = this._vm.$session;
+
+    // init local login
     commit('LOGIN_REQUEST');
+
+    // perform server login
     ApiService.login(userToLogin)
       .then((res) => {
+        // obtain data from successful login
         const { accessToken, user } = res.data;
+
+        // start session and put data inside
         session.start();
         session.set('accessToken', accessToken);
         session.set('user', user);
+
+        // store user's token in Api headers
         ApiService.setAuthToken(accessToken);
+
+        // finalize local login
         commit('LOGIN_SUCCESS', user);
       })
       .catch(() => {
+        // remove status
         commit('LOGIN_FAILURE');
+
+        // remove any tokens if exist
         session.remove('accessToken');
       });
   },
+
   register({ commit }, userToRegister) {
+    // get vue-session
     const session = this._vm.$session;
-    commit('LOGIN_REQUEST');
+
+    // init local register
+    commit('REGISTER_REQUEST');
+
+    // perform server register
     ApiService.registerUser(userToRegister)
       .then((res) => {
+        // get data
         const { accessToken, user } = res.data;
+
+        // start a session & populate, as no logged in user
         session.start();
         session.set('accessToken', accessToken);
         session.set('user', user);
+
+        // store user's token in Api headers
         ApiService.setAuthToken(accessToken);
-        commit('LOGIN_SUCCESS', user);
+
+        // finalize local register
+        commit('REGISTER_SUCCESS', user);
       })
       .catch(() => {
-        commit('LOGIN_FAILURE');
+        commit('REGISTER_FAILURE');
         session.remove('accessToken');
       });
   },
+
   logout({ commit }) {
     const session = this._vm.$session;
     commit('LOGOUT');
@@ -86,37 +135,38 @@ export const actions = {
     session.destroy();
     ApiService.removeAuthToken();
   },
-  checkActiveSession({ commit }) {
+
+  validateSession({ commit }) {
     const user = this._vm.$session.get('user');
     if (user) {
-      commit('LOGIN_SUCCESS', user);
+      commit('VALID_SESSION', user);
     } else {
-      commit('LOGIN_FAILURE');
+      commit('INVALID_SESSION');
     }
   },
-  uploadPictureToUser({ commit, state }, image) {
+
+  uploadProfilePicture({ commit, state }, image) {
     // console.log('upload commit');
     const session = this._vm.$session;
     commit('UPLOAD_PP_REQUEST');
-
     const user = session.get('user');
 
     ApiService.uploadProfilePicture(image, user.username)
       .then((res) => {
-        console.log('upload then');
         commit('UPLOAD_PP_SUCCESS', res.data.imageURL);
         session.set('user', state.user);
-        console.log(session.get('user'));
       })
       .catch(() => {
-        console.log('upload error');
-        // console.log(session.getAll());
+        commit('UPLOAD_PP_FAILURE');
       });
   },
 };
 
 
 export const getters = {
-  isLoggedIn: state => state.status.isLoggedIn,
+  getLoggingInStatus: state => state.isLoggingIn,
+  getLoggedInStatus: state => state.isLoggedIn,
+  getRegisterStatus: state => state.isRegistering,
+  getUploadingStatus: state => state.isUploadingImg,
   getUser: state => state.user,
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="home page">
-    Auth
+    Not auth
     <!-- <Hero /> -->
     <!-- <Searchbar /> -->
   </div>
@@ -11,7 +11,7 @@ import Hero from '@/components/Hero.vue';
 import Searchbar from '@/components/Searchbar.vue';
 
 export default {
-  name: 'home',
+  name: 'homenotauth',
   components: {
     Hero,
     Searchbar,

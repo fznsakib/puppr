@@ -46,15 +46,14 @@ export default {
     fd.append('file', image, imageName);
 
     // Upload image to Firebase
-    // Check to see if catch works
-    axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadProfilePicture', fd, axiosConfig)
-    // .then((res) => {
-    //   return res.status(200).send({});
-    // })
-    // .catch((err) => {
-    //   // return res.status(500).send({});
-    //   return console.error(err);
-    // });
+    axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadProfilePicture', fd, axiosConfig);
+    /* .then((res) => {
+      return res.status(200).send({});
+    })
+    .catch((err) => {
+      // return res.status(500).send({});
+      return console.error(err);
+    }); */
 
     // Add imageURL to database
     return apiClient.post('/updateProfilePicture', { username });

@@ -1,5 +1,5 @@
 <template>
-  <div class="profile">
+  <div class="profile page">
     <div class="container">
       <div class="columns">
 
@@ -38,9 +38,13 @@ export default {
 </script>
 
 <style scoped>
-.profile {
-  background-color: #ECF0F3;
-  padding-top: 2rem;
+.page {
+  background-color: #FAFAFA;
   min-height: 100vh;
+  margin-top: 3.25rem;
+}
+
+.profile {
+  padding-top: 2rem;
 }
 </style>

@@ -17,7 +17,7 @@ import ImageCardStats from '@/components/ImageCardStats.vue';
 export default {
   name: 'imagecard',
   components: {
-    ImageCardStats
+    ImageCardStats,
   },
   props: {
     imageUrl: {
@@ -28,8 +28,8 @@ export default {
   },
   data() {
     return {
-      isHovered: false
-    }
+      isHovered: false,
+    };
   },
 };
 </script>

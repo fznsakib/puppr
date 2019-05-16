@@ -19,11 +19,11 @@
 
 <script>
 export default {
-  name: "basetabs",
+  name: 'basetabs',
   data() {
     return {
-      activeTabIndex: 1
-    }
+      activeTabIndex: 1,
+    };
   },
   props: {
     tabsData: {

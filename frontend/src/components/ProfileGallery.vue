@@ -84,17 +84,17 @@ export default {
     user: {
       type: Object,
       required: true,
-    }
+    },
   },
   data() {
     return {
-      tmpImageLink: 'https://bulma.io/images/placeholders/128x128.png',
+      tmpImageLink: 'https://picsum.photos/200/300',
       profileTabs: [
-        { name: 'Posts',     iconClasses: ['fas', 'fa-camera'] },
+        { name: 'Posts', iconClasses: ['fas', 'fa-camera'] },
         { name: 'Favorites', iconClasses: ['fas', 'fa-heart'] },
       ],
-    }
-  }
+    };
+  },
 };
 </script>
 

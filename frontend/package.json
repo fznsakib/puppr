@@ -10,7 +10,7 @@
     "watch-sass": "npm run build-sass -- --watch"
   },
   "dependencies": {
-    "@vue/cli-service": "^3.5.1",
+    "@vue/cli-service": "^3.7.0",
     "axios": "^0.18.0",
     "bulma": "^0.7.4",
     "vue": "^2.5.22",
@@ -20,11 +20,11 @@
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
-    "@vue/cli-plugin-eslint": "^3.4.0",
+    "@vue/cli-plugin-eslint": "^3.7.0",
     "@vue/eslint-config-airbnb": "^4.0.0",
     "babel-eslint": "^10.0.1",
-    "eslint": "^5.8.0",
-    "eslint-plugin-vue": "^5.0.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.2.2",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",

@@ -15,7 +15,7 @@ class Db {
                 lastname text,
                 email text UNIQUE,
                 password text,
-                pp_url text,
+                ppUrl text,
                 question text,
                 answer text)
             `
@@ -69,7 +69,7 @@ class Db {
     updateProfilePicture(username, imageURL, callback) {
         console.log("Updating database...")
         return this.db.run(
-          'UPDATE user SET pp_url = ? WHERE username = ?',
+          'UPDATE user SET ppUrl = ? WHERE username = ?',
           imageURL, username, (err) => {
             callback(err)
           })

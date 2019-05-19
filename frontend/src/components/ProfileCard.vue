@@ -134,7 +134,6 @@ export default {
       this.isEditingBio = true
     },
     saveBioEdit () {
-      console.log(this.bio)
       this.updateBio(this.bio)
       this.isEditingBio = false
     },

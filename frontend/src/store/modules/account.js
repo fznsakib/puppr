@@ -233,7 +233,6 @@ export const actions = {
   },
 
   updateBio ({ commit, state }, bio) {
-    console.log('in updateBio')
     const session = this._vm.$session
     const user = session.get('user')
 

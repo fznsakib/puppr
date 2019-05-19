@@ -157,8 +157,28 @@ router.post('/updatePostPicture', (req, res) => {
   })
 })
 
-router.post('/addLike', (req, res) => {
+router.post('/addFavourite', (req, res) => {
+  // Insert user's favourited post into database
+  db.insertFavourite(req.body.postID, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error inserting favourited post')
+  })
+  res.status(200).send()
+})
 
+router.post('/removeFavourite', (req, res) => {
+  // Delete user's favourited post from database
+  db.deleteFavourite(req.body.postID, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error deleting favourited post')
+  })
+  res.status(200).send()
+})
+
+
+router.post('/addLike', (req, res) => {
+  // Insert like
+  db.insertLike(req.body.postID, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error inserting like')
+  })
   // Update post stats
   db.addLike(req.body.postID, (err) => {
     if (err) return res.status(500).send('Error incrementing post likes')
@@ -167,7 +187,10 @@ router.post('/addLike', (req, res) => {
 })
 
 router.post('/removeLike', (req, res) => {
-
+  // Delete like
+  db.deleteLike(req.body.postID, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error deleting like')
+  })
   // Update post stats
   db.removeLike(req.body.postID, (err) => {
     if (err) return res.status(500).send('Error decrementing post likes')
@@ -176,7 +199,10 @@ router.post('/removeLike', (req, res) => {
 })
 
 router.post('/addDislike', (req, res) => {
-
+  // Insert dislike
+  db.insertDislike(req.body.postID, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error inserting dislike')
+  })
   // Update post stats
   db.addDislike(req.body.postID, (err) => {
     if (err) return res.status(500).send('Error incrementing post dislikes')
@@ -185,7 +211,10 @@ router.post('/addDislike', (req, res) => {
 })
 
 router.post('/removeDislike', (req, res) => {
-
+  // Delete like
+  db.deleteDislike(req.body.postID, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error deleting dislike')
+  })
   // Update post stats
   db.removeDislike(req.body.postID, (err) => {
     if (err) return res.status(500).send('Error decrementing post dislikes')

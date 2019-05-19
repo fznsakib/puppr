@@ -8,6 +8,7 @@ export const state = {
   isRegistering: false,
   isUploadingImg: false,
   isUpdatingPost: false,
+  isFavouritingPost: false,
   user: {}
 }
 
@@ -56,9 +57,8 @@ export const mutations = {
   UPLOAD_POST_REQUEST: (state) => {
     state.isUploadingImg = true
   },
-  UPLOAD_POST_SUCCESS: (state, imageURL) => {
+  UPLOAD_POST_SUCCESS: (state) => {
     state.isUploadingImg = false
-    // state.user.ppUrl = imageURL
   },
   UPLOAD_POST_FAILURE: (state) => {
     state.isUploadingImg = false
@@ -72,6 +72,16 @@ export const mutations = {
   },
   UPDATE_POST_FAIL: (state) => {
     state.isUpdatingPost = false
+  },
+
+  FAVOURITE_POST_REQUEST: (state) => {
+    state.isFavouritingPost = true
+  },
+  FAVOURITE_POST_SUCCESS: (state) => {
+    state.isFavouritingPost = false
+  },
+  FAVOURITE_POST_FAILURE: (state) => {
+    state.isFavouritingPost = false
   },
 
   VALID_SESSION: (state, user) => {
@@ -188,7 +198,7 @@ export const actions = {
 
     ApiService.uploadPost(image, caption, user.username)
       .then((res) => {
-        commit('UPLOAD_POST_SUCCESS', res.data.imageURL)
+        commit('UPLOAD_POST_SUCCESS')
         session.set('user', state.user)
       })
       .catch(() => {
@@ -196,12 +206,45 @@ export const actions = {
       })
   },
 
-  addLike ({ commit, state }, postID) {
-    commit('UPDATE_POST_REQUEST')
+  addFavourite ({ commit, state }, postID) {
+    const session = this._vm.$session
+    commit('FAVOURITE_POST_REQUEST')
+    const user = session.get('user')
 
-    ApiService.addLike(postID)
+    ApiService.addFavourite(postID, user.username)
+      .then((res) => {
+        commit('FAVOURITE_POST_SUCCESS')
+        session.set('user', state.user)
+      })
+      .catch(() => {
+        commit('FAVOURITE_POST_FAILURE')
+      })
+  },
+
+  removeFavourite ({ commit, state }, postID) {
+    const session = this._vm.$session
+    commit('FAVOURITE_POST_REQUEST')
+    const user = session.get('user')
+
+    ApiService.removeFavourite(postID, user.username)
+      .then((res) => {
+        commit('FAVOURITE_POST_SUCCESS')
+        session.set('user', state.user)
+      })
+      .catch(() => {
+        commit('FAVOURITE_POST_FAILURE')
+      })
+  },
+
+  addLike ({ commit, state }, postID) {
+    const session = this._vm.$session
+    commit('UPDATE_POST_REQUEST')
+    const user = session.get('user')
+
+    ApiService.addLike(postID, user.username)
       .then((res) => {
         commit('UPDATE_POST_SUCCESS')
+        session.set('user', state.user)
       })
       .catch(() => {
         commit('UPLOAD_POST_FAILURE')
@@ -209,11 +252,14 @@ export const actions = {
   },
 
   removeLike ({ commit, state }, postID) {
+    const session = this._vm.$session
     commit('UPDATE_POST_REQUEST')
+    const user = session.get('user')
 
-    ApiService.removeLike(postID)
+    ApiService.removeLike(postID, user.username)
       .then((res) => {
         commit('UPDATE_POST_SUCCESS')
+        session.set('user', state.user)
       })
       .catch(() => {
         commit('UPLOAD_POST_FAILURE')
@@ -221,11 +267,14 @@ export const actions = {
   },
 
   addDislike ({ commit, state }, postID) {
+    const session = this._vm.$session
     commit('UPDATE_POST_REQUEST')
+    const user = session.get('user')
 
-    ApiService.addDislike(postID)
+    ApiService.addDislike(postID, user.username)
       .then((res) => {
         commit('UPDATE_POST_SUCCESS')
+        session.set('user', state.user)
       })
       .catch(() => {
         commit('UPLOAD_POST_FAILURE')
@@ -233,11 +282,14 @@ export const actions = {
   },
 
   removeDislike ({ commit, state }, postID) {
+    const session = this._vm.$session
     commit('UPDATE_POST_REQUEST')
+    const user = session.get('user')
 
-    ApiService.removeDislike(postID)
+    ApiService.removeDislike(postID, user.username)
       .then((res) => {
         commit('UPDATE_POST_SUCCESS')
+        session.set('user', state.user)
       })
       .catch(() => {
         commit('UPLOAD_POST_FAILURE')

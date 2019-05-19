@@ -72,16 +72,22 @@ export default {
     // Update post with imageURL on database
     return apiClient.post('/updatePostPicture', { postID, username })
   },
-  addLike (postID) {
-    return apiClient.post('/addLike', { postID })
+  addFavourite (postID, username) {
+    return apiClient.post('/addFavourite', { postID, username })
   },
-  removeLike (postID) {
-    return apiClient.post('/removeLike', { postID })
+  removeFavourite (postID, username) {
+    return apiClient.post('/removeFavourite', { postID, username })
   },
-  addDislike (postID) {
-    return apiClient.post('/addDislike', { postID })
+  addLike (postID, username) {
+    return apiClient.post('/addLike', { postID, username })
   },
-  removeDislike (postID) {
-    return apiClient.post('/removeDislike', { postID })
+  removeLike (postID, username) {
+    return apiClient.post('/removeLike', { postID, username })
+  },
+  addDislike (postID, username) {
+    return apiClient.post('/addDislike', { postID, username })
+  },
+  removeDislike (postID, username) {
+    return apiClient.post('/removeDislike', { postID, username })
   }
 }

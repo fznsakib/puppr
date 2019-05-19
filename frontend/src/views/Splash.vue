@@ -1,6 +1,6 @@
 <template>
-  <div class="home page">
-    Auth
+  <div class="splash page">
+    Not auth
     <!-- <Hero /> -->
     <!-- <Searchbar /> -->
   </div>
@@ -8,13 +8,13 @@
 
 <script>
 // import Hero from '@/components/Hero.vue'
-// import SearchBar from '@/components/SearchBar.vue'
+// import Searchbar from '@/components/Searchbar.vue'
 
 export default {
-  name: 'Home',
+  name: 'Splash',
   components: {
     // Hero,
-    // SearchBar
+    // Searchbar
   }
 }
 </script>

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'
 
 const apiClient = axios.create({
   baseURL: 'http://127.0.0.1:3000',
@@ -7,46 +7,46 @@ const apiClient = axios.create({
     common: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: null,
-    },
+      Authorization: null
+    }
   },
-  timeout: 10000,
-});
+  timeout: 10000
+})
 
 const axiosConfig = {
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
-    'Access-Control-Allow-Origin': '*',
-  },
-};
+    'Access-Control-Allow-Origin': '*'
+  }
+}
 
 export default {
-  setAuthToken(token) {
+  setAuthToken (token) {
     if (token) {
-      apiClient.defaults.headers.common.Authorization = token;
+      apiClient.defaults.headers.common.Authorization = token
     } else {
-      apiClient.defaults.headers.common.Authorization = null;
+      apiClient.defaults.headers.common.Authorization = null
     }
   },
-  removeAuthToken() {
-    apiClient.defaults.headers.common.Authorization = null;
+  removeAuthToken () {
+    apiClient.defaults.headers.common.Authorization = null
   },
-  registerUser(userData) {
-    return apiClient.post('/register', userData);
+  registerUser (userData) {
+    return apiClient.post('/register', userData)
   },
-  login(userData) {
-    return apiClient.post('/login', userData);
+  login (userData) {
+    return apiClient.post('/login', userData)
   },
-  uploadProfilePicture(image, username) {
+  uploadProfilePicture (image, username) {
     // Upload image to firebase as form data
-    const fd = new FormData();
+    const fd = new FormData()
 
     // Produce name for image specific to user
-    const imageName = `pp-${username}.jpg`;
-    fd.append('file', image, imageName);
+    const imageName = `pp-${username}.jpg`
+    fd.append('file', image, imageName)
 
     // Upload image to Firebase
-    axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadProfilePicture', fd, axiosConfig);
+    axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadProfilePicture', fd, axiosConfig)
     /* .then((res) => {
       return res.status(200).send({});
     })
@@ -56,6 +56,6 @@ export default {
     }); */
 
     // Add imageURL to database
-    return apiClient.post('/updateProfilePicture', { username });
-  },
-};
+    return apiClient.post('/updateProfilePicture', { username })
+  }
+}

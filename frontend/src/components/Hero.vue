@@ -2,8 +2,7 @@
   <section class="hero is-primary is-medium is-clear">
     <div class="hero-body">
       <div class="container">
-        <h1 class="title">
-        </h1>
+        <h1 class="title" />
       </div>
     </div>
     <div class="hero-footer">
@@ -11,15 +10,15 @@
         <h1 class="hero-brand">
           puppr.
         </h1>
-        </div>
       </div>
+    </div>
   </section>
 </template>
 
 <script>
 export default {
-  name: 'hero',
-};
+  name: 'Hero'
+}
 </script>
 
 <style scoped>

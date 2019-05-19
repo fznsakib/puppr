@@ -2,44 +2,64 @@
   <div id="login">
     <div class="container is-flex">
       <div class="box">
-        <h4 class="title is-bold has-text-centered">Login</h4>
+        <h4 class="title is-bold has-text-centered">
+          Login
+        </h4>
         <form @submit.prevent="loginSubmit">
           <!-- first name -->
           <div class="field">
-              <label for="email" class="label">Email</label>
+            <label
+              for="email"
+              class="label">Email</label>
 
-              <div class="control">
-                  <input type="email" name="email" class="input"
-                         placeholder="example@mail.com" v-model="email" autofocus>
-              </div>
+            <div class="control">
+              <input
+                v-model="email"
+                type="email"
+                name="email"
+                class="input"
+                placeholder="example@mail.com"
+                autofocus>
+            </div>
           </div>
 
           <!-- password -->
           <div class="field">
-              <label for="password" class="label">Password</label>
+            <label
+              for="password"
+              class="label">Password</label>
 
-              <div class="control">
-                  <input type="password" name="password" class="input"
-                         v-model="password">
-              </div>
+            <div class="control">
+              <input
+                v-model="password"
+                type="password"
+                name="password"
+                class="input">
+            </div>
           </div>
 
           <div class="columns is-vcentered is-mobile">
             <!-- submit -->
             <div class="column">
               <div class="field">
-                  <div class="control">
-                      <button type="submit"
-                              :disabled="loggingIn"
-                              :class="{ 'is-loading': loggingIn }"
-                              class="button is-link">Log In</button>
-                  </div>
+                <div class="control">
+                  <button
+                    type="submit"
+                    :disabled="loggingIn"
+                    :class="{ 'is-loading': loggingIn }"
+                    class="button is-link">
+                    Log In
+                  </button>
+                </div>
               </div>
             </div>
 
             <div class="column">
-              <router-link :to="{ name: 'register' }"
-                           class="is-pulled-right">Create Account</router-link>
+              <router-link
+                :to="{ name: 'register' }"
+                class="is-pulled-right">
+                Create Account
+              </router-link>
             </div>
           </div>
         </form>
@@ -49,31 +69,31 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from 'vuex'
 
 export default {
-  data() {
+  data () {
     return {
       email: '',
       password: '',
-      loggingIn: false,
-    };
+      loggingIn: false
+    }
   },
   methods: {
-    loginSubmit() {
-      const { email, password } = this;
-      this.loggingIn = true;
-      this.login({ email, password });
+    loginSubmit () {
+      const { email, password } = this
+      this.loggingIn = true
+      this.login({ email, password })
       setTimeout(() => {
-        this.loggingIn = false;
-        this.$router.push('/');
-      }, 250);
+        this.loggingIn = false
+        this.$router.push('/')
+      }, 250)
     },
     ...mapActions({
-      login: 'account/login',
-    }),
-  },
-};
+      login: 'account/login'
+    })
+  }
+}
 </script>
 
 <style scoped>

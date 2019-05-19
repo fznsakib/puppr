@@ -1,15 +1,15 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import * as account from '@/store/modules/account';
+import Vue from 'vue'
+import Vuex from 'vuex'
+import * as account from '@/store/modules/account'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-    account,
+    account
   },
   state: {},
   mutations: {},
   actions: {},
-  getters: {},
-});
+  getters: {}
+})

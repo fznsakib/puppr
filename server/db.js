@@ -15,6 +15,7 @@ class Db {
         lastname text,
         email text UNIQUE,
         password text,
+        bio text,
         ppUrl text,
         question text,
         answer text
@@ -24,8 +25,10 @@ class Db {
         id integer PRIMARY KEY AUTOINCREMENT,
         username text,
         date text,
+        caption text,
         likes integer,
         dislikes integer,
+        favourites integer,
         CONSTRAINT fk_users FOREIGN KEY (username) REFERENCES user(username)
       )`
     const createComment = `

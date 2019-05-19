@@ -47,15 +47,8 @@ export default {
 
     // Upload image to Firebase
     axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadProfilePicture', fd, axiosConfig)
-    /* .then((res) => {
-      return res.status(200).send({});
-    })
-    .catch((err) => {
-      // return res.status(500).send({});
-      return console.error(err);
-    }); */
 
-    // Add imageURL to database
+    // Add imageURL to user on database
     return apiClient.post('/updateProfilePicture', { username })
   }
 }

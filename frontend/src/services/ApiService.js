@@ -50,5 +50,26 @@ export default {
 
     // Add imageURL to user on database
     return apiClient.post('/updateProfilePicture', { username })
+  },
+  uploadPost (image, caption, username) {
+    // Upload image to firebase as form data
+    const fd = new FormData()
+    var postID = null
+
+    // Create post in database and update postID
+    apiClient.post('/insertPost', { caption, username })
+      .then((res) => {
+        postID = res.data.postID
+      })
+
+    // Produce name for image specific to post
+    const imageName = `post-${postID}.jpg`
+    fd.append('file', image, imageName)
+
+    // Upload image to Firebase
+    axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadPost', fd, axiosConfig)
+
+    // Update post with imageURL on database
+    return apiClient.post('/updatePostPicture', { postID, username })
   }
 }

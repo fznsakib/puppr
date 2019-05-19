@@ -52,6 +52,17 @@ export const mutations = {
     state.isUploadingImg = false
   },
 
+  UPLOAD_POST_REQUEST: (state) => {
+    state.isUploadingImg = true
+  },
+  UPLOAD_POST_SUCCESS: (state, imageURL) => {
+    state.isUploadingImg = false
+    // state.user.ppUrl = imageURL
+  },
+  UPLOAD_POST_FAILURE: (state) => {
+    state.isUploadingImg = false
+  },
+
   VALID_SESSION: (state, user) => {
     state.isLoggedIn = true
     state.user = user
@@ -145,7 +156,6 @@ export const actions = {
   },
 
   uploadProfilePicture ({ commit, state }, image) {
-    // console.log('upload commit');
     const session = this._vm.$session
     commit('UPLOAD_PP_REQUEST')
     const user = session.get('user')
@@ -157,6 +167,21 @@ export const actions = {
       })
       .catch(() => {
         commit('UPLOAD_PP_FAILURE')
+      })
+  },
+
+  uploadPost ({ commit, state }, image, caption) {
+    const session = this._vm.$session
+    commit('UPLOAD_POST_REQUEST')
+    const user = session.get('user')
+
+    ApiService.uploadPost(image, caption, user.username)
+      .then((res) => {
+        commit('UPLOAD_POST_SUCCESS', res.data.imageURL)
+        session.set('user', state.user)
+      })
+      .catch(() => {
+        commit('UPLOAD_POST_FAILURE')
       })
   }
 }

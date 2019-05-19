@@ -95,7 +95,6 @@ router.post('/login', (req, res) => {
 })
 
 router.post('/updateProfilePicture', (req, res) => {
-  console.log('at update route')
 
   // Specify image to look at
   const imageName = `pp-${req.body.username}.jpg`
@@ -110,11 +109,54 @@ router.post('/updateProfilePicture', (req, res) => {
 
     // Update database with image URL
     db.updateProfilePicture(req.body.username, imageURL, (err) => {
-      if (err) return res.status(500).send('Error retrieving profile picture URL')
+      if (err) return res.status(500).send('Error updating profile picture URL on database')
     })
     res.status(200).send({ imageURL: imageURL })
   })
 })
+
+router.post('/insertPost', (req, res) => {
+  db.insertPost([
+    req.body.username,
+    req.body.caption
+  ],
+  function (err) {
+    if (err) {
+      return res.status(500).send('There was a problem creating the post.')
+    }
+    db.getLatestPostID((err, postID) => {
+      if (err) {
+        return res.status(500).send('There was a problem getting the latest post.')
+      }
+      if (!postID) {
+        return res.status(500).send('No post found.')
+      }
+      res.status(200).send({ postID: postID })
+    })
+  })
+})
+
+router.post('/updatePostPicture', (req, res) => {
+
+  // Specify image to look at
+  const imageName = `post-${req.body.postID}.jpg`
+  const image = bucket.file(imageName)
+
+  // Get image URL
+  return image.getSignedUrl({
+    action: 'read',
+    expires: '03-09-2491'
+  }).then(signedUrls => {
+    const imageURL = signedUrls[0]
+
+    // Update database with image URL
+    db.updatePostPicture(req.body.postID, imageURL, (err) => {
+      if (err) return res.status(500).send('Error updating post picture URL on database')
+    })
+    res.status(200).send({ imageURL: imageURL })
+  })
+})
+
 
 app.use(router)
 

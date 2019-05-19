@@ -25,6 +25,7 @@ class Db {
         id integer PRIMARY KEY AUTOINCREMENT,
         username text,
         date text,
+        postUrl text,
         caption text,
         likes integer,
         dislikes integer,
@@ -68,6 +69,32 @@ class Db {
       })
   }
 
+  insertPost (username, caption, callback) {
+    console.log('Inserting post...')
+    const initCount = 0
+    return this.db.run(
+      'INSERT INTO post (username,date,caption,likes,dislikes,favourites) VALUES (?,datetime("now"),?,?,?,?)',
+      username, caption, initCount, initCount, initCount, (err) => {
+        callback(err)
+      })
+  }
+
+  getLatestPostID (callback) {
+    return this.db.get(
+      `SELECT id from post ORDER BY id DESC limit 1`, function (err, postID) {
+        callback(err, postID)
+      })
+  }
+
+  updatePostPicture (postID, imageURL, callback) {
+    console.log('Updating post picture...')
+    return this.db.run(
+      'UPDATE post SET postUrl = ? WHERE id = ?',
+      imageURL, postID, (err) => {
+        callback(err)
+      })
+  }
+
   updateProfilePicture (username, imageURL, callback) {
     console.log('Updating database...')
     return this.db.run(
@@ -76,6 +103,8 @@ class Db {
         callback(err)
       })
   }
+
+
 }
 
 module.exports = Db

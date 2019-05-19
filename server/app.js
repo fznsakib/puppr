@@ -157,6 +157,42 @@ router.post('/updatePostPicture', (req, res) => {
   })
 })
 
+router.post('/addLike', (req, res) => {
+
+  // Update post stats
+  db.addLike(req.body.postID, (err) => {
+    if (err) return res.status(500).send('Error incrementing post likes')
+  })
+  res.status(200).send()
+})
+
+router.post('/removeLike', (req, res) => {
+
+  // Update post stats
+  db.removeLike(req.body.postID, (err) => {
+    if (err) return res.status(500).send('Error decrementing post likes')
+  })
+  res.status(200).send()
+})
+
+router.post('/addDislike', (req, res) => {
+
+  // Update post stats
+  db.addDislike(req.body.postID, (err) => {
+    if (err) return res.status(500).send('Error incrementing post dislikes')
+  })
+  res.status(200).send()
+})
+
+router.post('/removeDislike', (req, res) => {
+
+  // Update post stats
+  db.removeDislike(req.body.postID, (err) => {
+    if (err) return res.status(500).send('Error decrementing post dislikes')
+  })
+  res.status(200).send()
+})
+
 
 app.use(router)
 

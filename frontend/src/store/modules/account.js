@@ -7,6 +7,7 @@ export const state = {
   isLoggedIn: false,
   isRegistering: false,
   isUploadingImg: false,
+  isUpdatingPost: false,
   user: {}
 }
 
@@ -61,6 +62,16 @@ export const mutations = {
   },
   UPLOAD_POST_FAILURE: (state) => {
     state.isUploadingImg = false
+  },
+
+  UPDATE_POST_REQUEST: (state) => {
+    state.isUpdatingPost = true
+  },
+  UPDATE_POST_SUCCESS: (state) => {
+    state.isUpdatingPost = false
+  },
+  UPDATE_POST_FAIL: (state) => {
+    state.isUpdatingPost = false
   },
 
   VALID_SESSION: (state, user) => {
@@ -184,6 +195,54 @@ export const actions = {
         commit('UPLOAD_POST_FAILURE')
       })
   },
+
+  addLike ({ commit, state }, postID) {
+    commit('UPDATE_POST_REQUEST')
+
+    ApiService.addLike(postID)
+      .then((res) => {
+        commit('UPDATE_POST_SUCCESS')
+      })
+      .catch(() => {
+        commit('UPLOAD_POST_FAILURE')
+      })
+  },
+
+  removeLike ({ commit, state }, postID) {
+    commit('UPDATE_POST_REQUEST')
+
+    ApiService.removeLike(postID)
+      .then((res) => {
+        commit('UPDATE_POST_SUCCESS')
+      })
+      .catch(() => {
+        commit('UPLOAD_POST_FAILURE')
+      })
+  },
+
+  addDislike ({ commit, state }, postID) {
+    commit('UPDATE_POST_REQUEST')
+
+    ApiService.addDislike(postID)
+      .then((res) => {
+        commit('UPDATE_POST_SUCCESS')
+      })
+      .catch(() => {
+        commit('UPLOAD_POST_FAILURE')
+      })
+  },
+
+  removeDislike ({ commit, state }, postID) {
+    commit('UPDATE_POST_REQUEST')
+
+    ApiService.removeDislike(postID)
+      .then((res) => {
+        commit('UPDATE_POST_SUCCESS')
+      })
+      .catch(() => {
+        commit('UPLOAD_POST_FAILURE')
+      })
+  }
 }
 
 export const getters = {

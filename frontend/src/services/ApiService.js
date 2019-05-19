@@ -71,5 +71,17 @@ export default {
 
     // Update post with imageURL on database
     return apiClient.post('/updatePostPicture', { postID, username })
+  },
+  addLike (postID) {
+    return apiClient.post('/addLike', { postID })
+  },
+  removeLike (postID) {
+    return apiClient.post('/removeLike', { postID })
+  },
+  addDislike (postID) {
+    return apiClient.post('/addDislike', { postID })
+  },
+  removeDislike (postID) {
+    return apiClient.post('/removeDislike', { postID })
   }
 }

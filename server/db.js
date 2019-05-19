@@ -113,6 +113,42 @@ class Db {
       })
   }
 
+  addLike (postID, callback) {
+    console.log('Updating database...')
+    return this.db.run(
+      'UPDATE post SET likes = likes + 1 WHERE id = ?',
+      postID, (err) => {
+        callback(err)
+      })
+  }
+
+  removeLike (postID, callback) {
+    console.log('Updating database...')
+    return this.db.run(
+      'UPDATE post SET likes = likes - 1 WHERE id = ?',
+      postID, (err) => {
+        callback(err)
+      })
+  }
+
+  addDislike (postID, callback) {
+    console.log('Updating database...')
+    return this.db.run(
+      'UPDATE post SET dislikes = dislikes + 1 WHERE id = ?',
+      postID, (err) => {
+        callback(err)
+      })
+  }
+
+  removeDislike (postID, callback) {
+    console.log('Updating database...')
+    return this.db.run(
+      'UPDATE post SET dislikes = dislikes - 1 WHERE id = ?',
+      postID, (err) => {
+        callback(err)
+      })
+  }
+
 
 }
 

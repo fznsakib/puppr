@@ -35,16 +35,25 @@ class Db {
     const createComment = `
       CREATE TABLE IF NOT EXISTS comment (
         id integer PRIMARY KEY AUTOINCREMENT,
-        username integer,
+        username text,
         post_id integer,
         body text,
         date text,
         CONSTRAINT fk_users FOREIGN KEY (username) REFERENCES user(username),
         CONSTRAINT fk_posts FOREIGN KEY (post_id) REFERENCES post(id)
       )`
+    const createFavourite = `
+      CREATE TABLE IF NOT EXISTS favourite (
+        id integer PRIMARY KEY AUTOINCREMENT,
+        username text,
+        post_id integer,
+        CONSTRAINT fk_users FOREIGN KEY (username) REFERENCES user(username),
+        CONSTRAINT fk_posts FOREIGN KEY (post_id) REFERENCES post(id)
+      )`
     this.db.run(createUser)
     this.db.run(createPost)
-    return this.db.run(createComment)
+    this.db.run(createComment)
+    return this.db.run(createFavourite)
   }
 
   selectUserByEmail (email, callback) {

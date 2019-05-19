@@ -183,7 +183,7 @@ export const actions = {
       .catch(() => {
         commit('UPLOAD_POST_FAILURE')
       })
-  }
+  },
 }
 
 export const getters = {

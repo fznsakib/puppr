@@ -232,6 +232,19 @@ export const actions = {
       })
   },
 
+  updateBio ({ commit, state }, bio) {
+    console.log('in updateBio')
+    const session = this._vm.$session
+    const user = session.get('user')
+
+    ApiService.updateBio(bio, user.username)
+      .then((res) => {
+        session.set('user', state.user)
+      })
+      .catch(() => {
+      })
+  },
+
   addFavourite ({ commit, state }, postID) {
     const session = this._vm.$session
     commit('FAVOURITE_POST_REQUEST')

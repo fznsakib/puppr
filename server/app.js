@@ -165,6 +165,14 @@ router.post('/uploadComment', (req, res) => {
   res.status(200).send()
 })
 
+router.post('/updateBio', (req, res) => {
+  // Update user's bio in database
+  db.updateBio(req.body.bio, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error updating user bio')
+  })
+  res.status(200).send()
+})
+
 router.post('/addFavourite', (req, res) => {
   // Insert user's favourited post into database
   db.insertFavourite(req.body.postID, req.body.username, (err) => {

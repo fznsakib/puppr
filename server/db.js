@@ -88,7 +88,7 @@ class Db {
   }
 
   insertUser (user, callback) {
-    console.log(`Insert user: ${user}`)
+    console.log(`DB Update: Inserting user: ${user}`)
     return this.db.run(
       'INSERT INTO user (username,firstname,lastname,email,password) VALUES (?,?,?,?,?)',
       user, (err) => {
@@ -97,7 +97,7 @@ class Db {
   }
 
   insertPost (username, caption, callback) {
-    console.log('Inserting post...')
+    console.log('DB Update: Inserting post')
     const initCount = 0
     return this.db.run(
       'INSERT INTO post (username,date,caption,likes,dislikes,favourites) VALUES (?,datetime("now"),?,?,?,?)',
@@ -114,7 +114,7 @@ class Db {
   }
 
   updatePostPicture (postID, imageURL, callback) {
-    console.log('DB Update: post picture...')
+    console.log('DB Update: Updating post with picture')
     return this.db.run(
       'UPDATE post SET postUrl = ? WHERE id = ?',
       imageURL, postID, (err) => {
@@ -123,7 +123,7 @@ class Db {
   }
 
   updateProfilePicture (username, imageURL, callback) {
-    console.log('DB Update: profile picture...')
+    console.log('DB Update: Updating profile picture')
     return this.db.run(
       'UPDATE user SET ppUrl = ? WHERE username = ?',
       imageURL, username, (err) => {
@@ -132,7 +132,7 @@ class Db {
   }
 
   uploadComment (postID, comment, username, callback) {
-    console.log('DB Update: comment...')
+    console.log('DB Update: Uploading comment')
     return this.db.run(
       'INSERT INTO comment (username, post_id, body, date) VALUES (?,?,?,datetime("now"))',
       username, postID, comment, (err) => {
@@ -140,8 +140,17 @@ class Db {
       })
   }
 
+  updateBio (bio, username, callback) {
+    console.log('DB Update: Updating user bio')
+    return this.db.run(
+      'UPDATE user SET bio = ? WHERE username = ?',
+      bio, username, (err) => {
+        callback(err)
+      })
+  }
+
   insertFavourite (postID, username, callback) {
-    console.log('DB Update: Inserting favourited post...')
+    console.log('DB Update: Inserting favourited post')
     return this.db.run(
       'INSERT INTO favourite (username, post_id) VALUES (?,?)',
       username, postID, (err) => {
@@ -150,7 +159,7 @@ class Db {
   }
 
   deleteFavourite (postID, username, callback) {
-    console.log('DB Update: Deleting favourited post...')
+    console.log('DB Update: Deleting favourited post')
     return this.db.run(
       'DELETE FROM favorite WHERE username = ? AND post_id = ?',
       username, postID, (err) => {
@@ -159,7 +168,7 @@ class Db {
   }
 
   insertLike (postID, username, callback) {
-    console.log('DB Update: Inserting like...')
+    console.log('DB Update: Inserting like')
     return this.db.run(
       'INSERT INTO like (username, post_id) VALUES (?,?)',
       username, postID, (err) => {
@@ -168,7 +177,7 @@ class Db {
   }
 
   deleteLike (postID, username, callback) {
-    console.log('DB Update: Deleting like...')
+    console.log('DB Update: Deleting like')
     return this.db.run(
       'DELETE FROM like WHERE username = ? AND post_id = ?',
       username, postID, (err) => {
@@ -177,7 +186,7 @@ class Db {
   }
 
   addLike (postID, callback) {
-    console.log('DB Update: Adding post like...')
+    console.log('DB Update: Adding post like')
     return this.db.run(
       'UPDATE post SET likes = likes + 1 WHERE id = ?',
       postID, (err) => {
@@ -186,7 +195,7 @@ class Db {
   }
 
   removeLike (postID, callback) {
-    console.log('DB Update: Removing post like...')
+    console.log('DB Update: Removing post like')
     return this.db.run(
       'UPDATE post SET likes = likes - 1 WHERE id = ?',
       postID, (err) => {
@@ -195,7 +204,7 @@ class Db {
   }
 
   insertDislike (postID, username, callback) {
-    console.log('DB Update: Inserting dislike...')
+    console.log('DB Update: Inserting dislike')
     return this.db.run(
       'INSERT INTO dislike (username, post_id) VALUES (?,?)',
       username, postID, (err) => {
@@ -204,7 +213,7 @@ class Db {
   }
 
   deleteDislike (postID, username, callback) {
-    console.log('DB Update: Deleting dislike...')
+    console.log('DB Update: Deleting dislike')
     return this.db.run(
       'DELETE FROM dislike WHERE username = ? AND post_id = ?',
       username, postID, (err) => {
@@ -213,7 +222,7 @@ class Db {
   }
 
   addDislike (postID, callback) {
-    console.log('DB Update: Adding post dislike...')
+    console.log('DB Update: Adding post dislike')
     return this.db.run(
       'UPDATE post SET dislikes = dislikes + 1 WHERE id = ?',
       postID, (err) => {
@@ -222,7 +231,7 @@ class Db {
   }
 
   removeDislike (postID, callback) {
-    console.log('DB Update: Removing post dislike...')
+    console.log('DB Update: Removing post dislike')
     return this.db.run(
       'UPDATE post SET dislikes = dislikes - 1 WHERE id = ?',
       postID, (err) => {

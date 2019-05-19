@@ -75,6 +75,9 @@ export default {
   uploadComment (postID, comment, username) {
     return apiClient.post('/uploadComment', { postID, comment, username })
   },
+  updateBio (bio, username) {
+    return apiClient.post('/updateBio', { bio, username })
+  },
   addFavourite (postID, username) {
     return apiClient.post('/addFavourite', { postID, username })
   },

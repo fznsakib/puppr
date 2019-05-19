@@ -47,15 +47,53 @@ export default {
 
     // Upload image to Firebase
     axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadProfilePicture', fd, axiosConfig)
-    /* .then((res) => {
-      return res.status(200).send({});
-    })
-    .catch((err) => {
-      // return res.status(500).send({});
-      return console.error(err);
-    }); */
 
-    // Add imageURL to database
+    // Add imageURL to user on database
     return apiClient.post('/updateProfilePicture', { username })
+  },
+  uploadPost (image, caption, username) {
+    // Upload image to firebase as form data
+    const fd = new FormData()
+    var postID = null
+
+    // Create post in database and update postID
+    apiClient.post('/insertPost', { caption, username })
+      .then((res) => {
+        postID = res.data.postID
+      })
+
+    // Produce name for image specific to post
+    const imageName = `post-${postID}.jpg`
+    fd.append('file', image, imageName)
+
+    // Upload image to Firebase
+    axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadPost', fd, axiosConfig)
+
+    // Update post with imageURL on database
+    return apiClient.post('/updatePostPicture', { postID, username })
+  },
+  uploadComment (postID, comment, username) {
+    return apiClient.post('/uploadComment', { postID, comment, username })
+  },
+  updateBio (bio, username) {
+    return apiClient.post('/updateBio', { bio, username })
+  },
+  addFavourite (postID, username) {
+    return apiClient.post('/addFavourite', { postID, username })
+  },
+  removeFavourite (postID, username) {
+    return apiClient.post('/removeFavourite', { postID, username })
+  },
+  addLike (postID, username) {
+    return apiClient.post('/addLike', { postID, username })
+  },
+  removeLike (postID, username) {
+    return apiClient.post('/removeLike', { postID, username })
+  },
+  addDislike (postID, username) {
+    return apiClient.post('/addDislike', { postID, username })
+  },
+  removeDislike (postID, username) {
+    return apiClient.post('/removeDislike', { postID, username })
   }
 }

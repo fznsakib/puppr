@@ -95,7 +95,6 @@ router.post('/login', (req, res) => {
 })
 
 router.post('/updateProfilePicture', (req, res) => {
-  console.log('at update route')
 
   // Specify image to look at
   const imageName = `pp-${req.body.username}.jpg`
@@ -110,11 +109,135 @@ router.post('/updateProfilePicture', (req, res) => {
 
     // Update database with image URL
     db.updateProfilePicture(req.body.username, imageURL, (err) => {
-      if (err) return res.status(500).send('Error retrieving profile picture URL')
+      if (err) return res.status(500).send('Error updating profile picture URL on database')
     })
     res.status(200).send({ imageURL: imageURL })
   })
 })
+
+router.post('/insertPost', (req, res) => {
+  db.insertPost([
+    req.body.username,
+    req.body.caption
+  ],
+  function (err) {
+    if (err) {
+      return res.status(500).send('There was a problem creating the post.')
+    }
+    db.getLatestPostID((err, postID) => {
+      if (err) {
+        return res.status(500).send('There was a problem getting the latest post.')
+      }
+      if (!postID) {
+        return res.status(500).send('No post found.')
+      }
+      res.status(200).send({ postID: postID })
+    })
+  })
+})
+
+router.post('/updatePostPicture', (req, res) => {
+
+  // Specify image to look at
+  const imageName = `post-${req.body.postID}.jpg`
+  const image = bucket.file(imageName)
+
+  // Get image URL
+  return image.getSignedUrl({
+    action: 'read',
+    expires: '03-09-2491'
+  }).then(signedUrls => {
+    const imageURL = signedUrls[0]
+
+    // Update database with image URL
+    db.updatePostPicture(req.body.postID, imageURL, (err) => {
+      if (err) return res.status(500).send('Error updating post picture URL on database')
+    })
+    res.status(200).send({ imageURL: imageURL })
+  })
+})
+
+router.post('/uploadComment', (req, res) => {
+  // Insert user's comment into database
+  db.uploadComment(req.body.postID, req.body.comment, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error uploading comment')
+  })
+  res.status(200).send()
+})
+
+router.post('/updateBio', (req, res) => {
+  // Update user's bio in database
+  db.updateBio(req.body.bio, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error updating user bio')
+  })
+  res.status(200).send()
+})
+
+router.post('/addFavourite', (req, res) => {
+  // Insert user's favourited post into database
+  db.insertFavourite(req.body.postID, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error inserting favourited post')
+  })
+  res.status(200).send()
+})
+
+router.post('/removeFavourite', (req, res) => {
+  // Delete user's favourited post from database
+  db.deleteFavourite(req.body.postID, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error deleting favourited post')
+  })
+  res.status(200).send()
+})
+
+
+router.post('/addLike', (req, res) => {
+  // Insert like
+  db.insertLike(req.body.postID, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error inserting like')
+  })
+  // Update post stats
+  db.addLike(req.body.postID, (err) => {
+    if (err) return res.status(500).send('Error incrementing post likes')
+  })
+  res.status(200).send()
+})
+
+router.post('/removeLike', (req, res) => {
+  // Delete like
+  db.deleteLike(req.body.postID, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error deleting like')
+  })
+  // Update post stats
+  db.removeLike(req.body.postID, (err) => {
+    if (err) return res.status(500).send('Error decrementing post likes')
+  })
+  res.status(200).send()
+})
+
+router.post('/addDislike', (req, res) => {
+  // Insert dislike
+  db.insertDislike(req.body.postID, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error inserting dislike')
+  })
+  // Update post stats
+  db.addDislike(req.body.postID, (err) => {
+    if (err) return res.status(500).send('Error incrementing post dislikes')
+  })
+  res.status(200).send()
+})
+
+router.post('/removeDislike', (req, res) => {
+  // Delete like
+  db.deleteDislike(req.body.postID, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error deleting dislike')
+  })
+  // Update post stats
+  db.removeDislike(req.body.postID, (err) => {
+    if (err) return res.status(500).send('Error decrementing post dislikes')
+  })
+  res.status(200).send()
+})
+
 
 app.use(router)
 

@@ -134,10 +134,10 @@ export default {
       this.isEditingBio = true
     },
     saveBioEdit () {
+      this.updateBio(this.bio)
       this.isEditingBio = false
     },
     cancelBioEdit () {
-      this.bio = this.oldBio
       this.isEditingBio = false
     },
     onProfilePictureSelection (event) {
@@ -152,7 +152,8 @@ export default {
       console.log('After force')
     },
     ...mapActions({
-      uploadProfilePicture: 'account/uploadProfilePicture'
+      uploadProfilePicture: 'account/uploadProfilePicture',
+      updateBio: 'account/updateBio'
     })
   }
 }

@@ -131,6 +131,15 @@ class Db {
       })
   }
 
+  uploadComment (postID, comment, username, callback) {
+    console.log('DB Update: comment...')
+    return this.db.run(
+      'INSERT INTO comment (username, post_id, body, date) VALUES (?,?,?,datetime("now"))',
+      username, postID, comment, (err) => {
+        callback(err)
+      })
+  }
+
   insertFavourite (postID, username, callback) {
     console.log('DB Update: Inserting favourited post...')
     return this.db.run(

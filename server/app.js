@@ -157,6 +157,14 @@ router.post('/updatePostPicture', (req, res) => {
   })
 })
 
+router.post('/uploadComment', (req, res) => {
+  // Insert user's comment into database
+  db.uploadComment(req.body.postID, req.body.comment, req.body.username, (err) => {
+    if (err) return res.status(500).send('Error uploading comment')
+  })
+  res.status(200).send()
+})
+
 router.post('/addFavourite', (req, res) => {
   // Insert user's favourited post into database
   db.insertFavourite(req.body.postID, req.body.username, (err) => {

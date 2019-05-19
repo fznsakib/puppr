@@ -9,6 +9,7 @@ export const state = {
   isUploadingImg: false,
   isUpdatingPost: false,
   isFavouritingPost: false,
+  isCommenting: false,
   user: {}
 }
 
@@ -70,8 +71,18 @@ export const mutations = {
   UPDATE_POST_SUCCESS: (state) => {
     state.isUpdatingPost = false
   },
-  UPDATE_POST_FAIL: (state) => {
+  UPDATE_POST_FAILURE: (state) => {
     state.isUpdatingPost = false
+  },
+
+  UPLOAD_COMMENT_REQUEST: (state) => {
+    state.isCommenting = true
+  },
+  UPLOAD_COMMENT_SUCCESS: (state) => {
+    state.isCommenting = false
+  },
+  UPLOAD_COMMENT_FAILURE: (state) => {
+    state.isCommenting = false
   },
 
   FAVOURITE_POST_REQUEST: (state) => {
@@ -203,6 +214,21 @@ export const actions = {
       })
       .catch(() => {
         commit('UPLOAD_POST_FAILURE')
+      })
+  },
+
+  uploadComment ({ commit, state }, postID, comment) {
+    const session = this._vm.$session
+    commit('UPLOAD_COMMENT_REQUEST')
+    const user = session.get('user')
+
+    ApiService.uploadComment(postID, comment, user.username)
+      .then((res) => {
+        commit('UPLOAD_COMMENT_SUCCESS')
+        session.set('user', state.user)
+      })
+      .catch(() => {
+        commit('UPLOAD_COMMENT_FAILURE')
       })
   },
 

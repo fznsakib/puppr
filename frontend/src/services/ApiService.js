@@ -72,6 +72,9 @@ export default {
     // Update post with imageURL on database
     return apiClient.post('/updatePostPicture', { postID, username })
   },
+  uploadComment (postID, comment, username) {
+    return apiClient.post('/uploadComment', { postID, comment, username })
+  },
   addFavourite (postID, username) {
     return apiClient.post('/addFavourite', { postID, username })
   },

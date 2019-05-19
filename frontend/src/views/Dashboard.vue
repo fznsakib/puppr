@@ -1,38 +1,38 @@
 <template>
-    <div>
-        <h2>Dashboard</h2>
-        <p>Name: {{ user.name }}</p>
-    </div>
+  <div>
+    <h2>Dashboard</h2>
+    <p>Name: {{ user.name }}</p>
+  </div>
 </template>
 <script>
-import axios from 'axios';
-import router from '../router';
+import axios from 'axios'
+import router from '../router'
 
 export default {
   name: 'Login',
-  data() {
+  data () {
     return {
       user: {
-        name: 'Jesse',
-      },
-    };
+        name: 'Jesse'
+      }
+    }
+  },
+  mounted () {
+    this.getUserData()
   },
   methods: {
-    getUserData() {
-      const self = this;
+    getUserData () {
+      const self = this
       axios.get('/api/user')
         .then((response) => {
-          console.log(response);
-          self.$set(this, 'user', response.data.user);
+          console.log(response)
+          self.$set(this, 'user', response.data.user)
         })
         .catch((errors) => {
-          console.log(errors);
-          router.push('/');
-        });
-    },
-  },
-  mounted() {
-    this.getUserData();
-  },
-};
+          console.log(errors)
+          router.push('/')
+        })
+    }
+  }
+}
 </script>

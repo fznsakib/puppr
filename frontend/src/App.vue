@@ -6,23 +6,23 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar.vue';
-import { mapActions } from 'vuex';
+import Navbar from '@/components/Navbar.vue'
+import { mapActions } from 'vuex'
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {
-    Navbar,
+    Navbar
+  },
+  created () {
+    this.validateSession()
   },
   methods: {
     ...mapActions({
-      validateSession: 'account/validateSession',
-    }),
-  },
-  created() {
-    this.validateSession();
-  },
-};
+      validateSession: 'account/validateSession'
+    })
+  }
+}
 </script>
 
 <style scoped></style>

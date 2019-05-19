@@ -1,14 +1,19 @@
 <template>
   <div class="tabs is-centered is-medium is-fullwidth">
     <ul>
-      <li v-for="(tab, index) in tabsData"
-          :key="index"
-          @click="activeTabIndex = index"
-          class="tab"
-          :class="{ 'is-active': index===activeTabIndex }">
+      <li
+        v-for="(tab, index) in tabsData"
+        :key="index"
+        class="tab"
+        :class="{ 'is-active': index===activeTabIndex }"
+        @click="activeTabIndex = index"
+      >
         <a id="override">
           <span class="icon is-small">
-            <i :class="tab.iconClasses" aria-hidden="true"></i>
+            <i
+              :class="tab.iconClasses"
+              aria-hidden="true"
+            />
           </span>
           <span>{{ tab.name }}</span>
         </a>
@@ -19,19 +24,19 @@
 
 <script>
 export default {
-  name: 'basetabs',
-  data() {
-    return {
-      activeTabIndex: 1,
-    };
-  },
+  name: 'BaseTabs',
   props: {
     tabsData: {
       type: Array,
-      required: true,
-    },
+      required: true
+    }
   },
-};
+  data () {
+    return {
+      activeTabIndex: 1
+    }
+  }
+}
 </script>
 
 <style scoped>

@@ -2,39 +2,37 @@
   <div class="profile page">
     <div class="container">
       <div class="columns">
-
         <!-- Profile Card -->
         <div class="column is-3">
-          <ProfileCard :user="user"/>
+          <ProfileCard :user="user" />
         </div>
 
         <!-- Profile Uploads -->
         <div class="column is-9">
-          <ProfileGallery :user="user"/>
+          <ProfileGallery :user="user" />
         </div>
-
       </div><!-- columns -->
     </div><!-- container -->
   </div><!-- profile -->
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import ProfileCard from '@/components/ProfileCard.vue';
-import ProfileGallery from '@/components/ProfileGallery.vue';
+import { mapGetters } from 'vuex'
+import ProfileCard from '@/components/ProfileCard.vue'
+import ProfileGallery from '@/components/ProfileGallery.vue'
 
 export default {
-  name: 'profile',
+  name: 'Profile',
   components: {
     ProfileCard,
-    ProfileGallery,
+    ProfileGallery
   },
   computed: {
     ...mapGetters({
-      user: 'account/getUser',
-    }),
-  },
-};
+      user: 'account/getUser'
+    })
+  }
+}
 </script>
 
 <style scoped>

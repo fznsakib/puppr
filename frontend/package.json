@@ -13,7 +13,6 @@
     "@vue/cli-service": "^3.7.0",
     "axios": "^0.18.0",
     "bulma": "^0.7.4",
-    "tar": "^4.4.2",
     "vue": "^2.5.22",
     "vue-router": "^3.0.1",
     "vue-session": "^1.0.0",
@@ -22,14 +21,16 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.7.0",
     "@vue/cli-plugin-eslint": "^3.7.0",
-    "@vue/eslint-config-airbnb": "^4.0.0",
-    "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-node": "^9.0.1",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^5.2.2",
     "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
-    "tar": ">=4.4.2",
     "vue-template-compiler": "^2.6.10"
   }
 }

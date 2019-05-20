@@ -34,7 +34,8 @@
 
         <div class="control">
           <textarea
-            name="postComment"
+            v-model="postCaption"
+            name="postCaption"
             class="textarea" />
         </div>
       </div><!-- field -->
@@ -71,6 +72,7 @@ export default {
   },
   methods: {
     onImageSelect (event) {
+      console.log(event);
       [this.postImage] = event.target.files
     },
 

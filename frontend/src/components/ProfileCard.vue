@@ -145,14 +145,14 @@ export default {
       [this.profilePictureToUpload] = event.target.files
     },
     onProfilePictureUpload () {
-      this.uploadProfilePicture(this.profilePictureToUpload)
+      this.updateProfilePicture(this.profilePictureToUpload)
       this.isProfilePictureSelected = false
       console.log('Before force')
       this.$forceUpdate()
       console.log('After force')
     },
     ...mapActions({
-      uploadProfilePicture: 'account/uploadProfilePicture',
+      updateProfilePicture: 'account/updateProfilePicture',
       updateBio: 'account/updateBio'
     })
   }

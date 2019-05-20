@@ -9,7 +9,6 @@ const bodyParser = require('body-parser')
 const { Storage } = require('@google-cloud/storage')
 const firebase = require('firebase')
 const admin = require('firebase-admin')
-// const serviceAccount = require('/functions/puppr-8727d-firebase-adminsdk-kfdzh-6324893b05.json')
 
 const db = new DB('database')
 const app = express()
@@ -62,7 +61,7 @@ const axiosConfig = {
 }
 
 router.post('/register', function (req, res) {
-  db.insertUser([
+  db.createUser([
     req.body.username,
     req.body.firstname,
     req.body.lastname,
@@ -94,10 +93,91 @@ router.post('/login', (req, res) => {
   })
 })
 
-router.post('/profile/picture/edit', (req, res) => {
+// CREATE //
 
+router.post('/posts/create', (req, res) => {
+  db.createPost( req.body.username, req.body.caption, (err) => {
+    if (err) {
+      return res.status(500).send('There was a problem creating the post.')
+    }
+    db.getLatestPostID((err, postID) => {
+      if (err) {
+        return res.status(500).send('There was a problem getting the latest post.')
+      }
+      if (!postID) {
+        return res.status(500).send('No post found.')
+      }
+      res.status(200).send({ postID })
+    })
+  })
+})
+
+router.post('/posts/:postID/picture/create', (req, res) => {
   // Specify image to look at
-  const imageName = `pp-${req.body.username}.jpg`
+  const imageName = `post-${req.params.postID}.jpg`
+  const image = bucket.file(imageName)
+
+  // Get image URL
+  return image.getSignedUrl({
+    action: 'read',
+    expires: '03-09-2491'
+  }).then(signedUrls => {
+    const imageURL = signedUrls[0]
+
+    // Update database with image URL
+    db.createPostPicture(req.params.postID, imageURL, (err) => {
+      if (err) return res.status(500).send('Error updating post picture URL on database')
+    })
+
+    res.status(200).send()
+  })
+})
+
+router.post('/posts/:postID/comment/create', (req, res) => {
+  // Insert user's comment into database
+  db.createComment(req.body.username, req.params.postID, req.body.comment, (err) => {
+    if (err) return res.status(500).send('Error uploading comment')
+  })
+  res.status(200).send()
+})
+
+router.post('/favourites/create', (req, res) => {
+  // Insert user's favourited post into database
+  db.createFavourite(req.query.username, req.query.postID, (err) => {
+    if (err) return res.status(500).send('Error inserting favourited post')
+  })
+  res.status(200).send()
+})
+
+router.post('/likes/create', (req, res) => {
+  // Insert like
+  db.createLike(req.query.username, req.query.postID, (err) => {
+    if (err) return res.status(500).send('Error inserting like')
+  })
+  // Update post stats
+  db.incrementLike(req.body.postID, (err) => {
+    if (err) return res.status(500).send('Error incrementing post likes')
+  })
+  res.status(200).send()
+})
+
+router.post('/dislikes/create', (req, res) => {
+  // Insert dislike
+  db.createDislike(req.query.postID, req.query.username, (err) => {
+    if (err) return res.status(500).send('Error inserting dislike')
+  })
+  // Update post stats
+  db.incrementDislike(req.query.postID, (err) => {
+    if (err) return res.status(500).send('Error incrementing post dislikes')
+  })
+  res.status(200).send()
+})
+
+// UPDATE //
+
+router.post('/users/:username/picture/update', (req, res) => {
+  // Specify image to look at
+  const imageName = `pp-${req.params.username}.jpg`
   const image = bucket.file(imageName)
 
   // Get image URL
@@ -115,130 +195,47 @@ router.post('/profile/picture/edit', (req, res) => {
   })
 })
 
-router.post('/post/create', (req, res) => {
-  db.insertPost( req.body.username, req.body.caption, (err) => {
-    if (err) {
-      return res.status(500).send('There was a problem creating the post.')
-    }
-    db.getLatestPostID((err, postID) => {
-      if (err) {
-        return res.status(500).send('There was a problem getting the latest post.')
-      }
-      if (!postID) {
-        return res.status(500).send('No post found.')
-      }
-      res.status(200).send({ postID })
-    })
-  })
-})
-
-router.post('/post/success', (req, res) => {
-  return res.status(200)
-})
-
-router.post('/postpicture/create', (req, res) => {
-
-  // Specify image to look at
-  const imageName = `post-${req.body.postID}.jpg`
-  const image = bucket.file(imageName)
-
-  // Get image URL
-  return image.getSignedUrl({
-    action: 'read',
-    expires: '03-09-2491'
-  }).then(signedUrls => {
-    const imageURL = signedUrls[0]
-
-    // Update database with image URL
-    db.updatePostPicture(req.body.postID, imageURL, (err) => {
-      if (err) return res.status(500).send('Error updating post picture URL on database')
-    })
-
-    res.status(200).send()
-  })
-})
-
-router.post('/uploadComment', (req, res) => {
-  // Insert user's comment into database
-  db.uploadComment(req.body.postID, req.body.comment, req.body.username, (err) => {
-    if (err) return res.status(500).send('Error uploading comment')
-  })
-  res.status(200).send()
-})
-
-router.post('/updateBio', (req, res) => {
+router.post('/users/:username/bio/update', (req, res) => {
   // Update user's bio in database
-  db.updateBio(req.body.bio, req.body.username, (err) => {
+  db.updateBio(req.body.username, req.body.bio, (err) => {
     if (err) return res.status(500).send('Error updating user bio')
   })
   res.status(200).send()
 })
 
-router.post('/addFavourite', (req, res) => {
-  // Insert user's favourited post into database
-  db.insertFavourite(req.body.postID, req.body.username, (err) => {
-    if (err) return res.status(500).send('Error inserting favourited post')
-  })
-  res.status(200).send()
-})
+// REMOVE //
 
-router.post('/removeFavourite', (req, res) => {
+router.post('/favourites/remove', (req, res) => {
   // Delete user's favourited post from database
-  db.deleteFavourite(req.body.postID, req.body.username, (err) => {
+  db.removeFavourite(req.query.username, req.query.postID, (err) => {
     if (err) return res.status(500).send('Error deleting favourited post')
   })
   res.status(200).send()
 })
 
-
-router.post('/addLike', (req, res) => {
-  // Insert like
-  db.insertLike(req.body.postID, req.body.username, (err) => {
-    if (err) return res.status(500).send('Error inserting like')
-  })
-  // Update post stats
-  db.addLike(req.body.postID, (err) => {
-    if (err) return res.status(500).send('Error incrementing post likes')
-  })
-  res.status(200).send()
-})
-
-router.post('/removeLike', (req, res) => {
+router.post('/likes/remove', (req, res) => {
   // Delete like
-  db.deleteLike(req.body.postID, req.body.username, (err) => {
+  db.removeLike(req.query.username, req.query.postID, (err) => {
     if (err) return res.status(500).send('Error deleting like')
   })
   // Update post stats
-  db.removeLike(req.body.postID, (err) => {
+  db.decrementLike(req.body.postID, (err) => {
     if (err) return res.status(500).send('Error decrementing post likes')
   })
   res.status(200).send()
 })
 
-router.post('/addDislike', (req, res) => {
-  // Insert dislike
-  db.insertDislike(req.body.postID, req.body.username, (err) => {
-    if (err) return res.status(500).send('Error inserting dislike')
-  })
-  // Update post stats
-  db.addDislike(req.body.postID, (err) => {
-    if (err) return res.status(500).send('Error incrementing post dislikes')
-  })
-  res.status(200).send()
-})
-
-router.post('/removeDislike', (req, res) => {
+router.post('/dislikes/remove', (req, res) => {
   // Delete like
-  db.deleteDislike(req.body.postID, req.body.username, (err) => {
+  db.removeDislike(req.query.username, req.query.postID, (err) => {
     if (err) return res.status(500).send('Error deleting dislike')
   })
   // Update post stats
-  db.removeDislike(req.body.postID, (err) => {
+  db.decrementDislike(req.query.postID, (err) => {
     if (err) return res.status(500).send('Error decrementing post dislikes')
   })
   res.status(200).send()
 })
-
 
 app.use(router)
 

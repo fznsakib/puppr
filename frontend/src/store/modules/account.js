@@ -187,12 +187,12 @@ export const actions = {
     }
   },
 
-  uploadProfilePicture ({ commit, state }, image) {
+  updateProfilePicture ({ commit, state }, image) {
     const session = this._vm.$session
     commit('UPLOAD_PP_REQUEST')
     const user = session.get('user')
 
-    ApiService.uploadProfilePicture(image, user.username)
+    ApiService.updateProfilePicture(user.username, image)
       .then((res) => {
         commit('UPLOAD_PP_SUCCESS', res.data.imageURL)
         session.set('user', state.user)

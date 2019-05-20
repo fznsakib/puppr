@@ -44,7 +44,8 @@
         <div class="control">
           <button
             type="submit"
-            class="button is-link">
+            class="button is-link"
+            @submit.prevent="createPost">
             Ligma
           </button>
         </div>
@@ -77,8 +78,10 @@ export default {
     },
 
     createPost () {
+      console.log(this.user.username)
       ApiService.uploadPost(this.postImage, this.postCaption, this.user.username)
         .then(res => {
+          console.log(this.user.username)
           console.log('YOU DID IT :)')
         })
         .catch(err => {

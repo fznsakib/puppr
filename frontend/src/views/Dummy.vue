@@ -4,7 +4,7 @@
       Dummy
     </h1>
 
-    <form action="POST">
+    <form @submit.prevent="createPost">
       <div
         class="file has-name is-boxed"
         @change="onImageSelect">
@@ -44,8 +44,7 @@
         <div class="control">
           <button
             type="submit"
-            class="button is-link"
-            @submit.prevent="createPost">
+            class="button is-link">
             Ligma
           </button>
         </div>
@@ -78,6 +77,7 @@ export default {
     },
 
     createPost () {
+      console.log('called')
       console.log(this.user.username)
       ApiService.uploadPost(this.postImage, this.postCaption, this.user.username)
         .then(res => {

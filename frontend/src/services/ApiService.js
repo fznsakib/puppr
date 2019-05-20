@@ -28,16 +28,12 @@ export default {
       apiClient.defaults.headers.common.Authorization = null
     }
   },
-  removeAuthToken () {
+  removeAuthToken: () => {
     apiClient.defaults.headers.common.Authorization = null
   },
-  registerUser (userData) {
-    return apiClient.post('/register', userData)
-  },
-  login (userData) {
-    return apiClient.post('/login', userData)
-  },
-  uploadProfilePicture (image, username) {
+  registerUser: (userData) => apiClient.post('/register', userData),
+  login: (userData) => apiClient.post('/login', userData),
+  uploadProfilePicture: (image, username) => {
     // Upload image to firebase as form data
     const fd = new FormData()
 
@@ -51,7 +47,7 @@ export default {
     // Add imageURL to user on database
     return apiClient.post('/updateProfilePicture', { username })
   },
-  uploadPost (image, caption, username) {
+  uploadPost: (image, caption, username) => {
     // Upload image to firebase as form data
     const fd = new FormData()
     var postID = null
@@ -72,28 +68,13 @@ export default {
     // Update post with imageURL on database
     return apiClient.post('/updatePostPicture', { postID, username })
   },
-  uploadComment (postID, comment, username) {
-    return apiClient.post('/uploadComment', { postID, comment, username })
-  },
-  updateBio (bio, username) {
-    return apiClient.post('/updateBio', { bio, username })
-  },
-  addFavourite (postID, username) {
-    return apiClient.post('/addFavourite', { postID, username })
-  },
-  removeFavourite (postID, username) {
-    return apiClient.post('/removeFavourite', { postID, username })
-  },
-  addLike (postID, username) {
-    return apiClient.post('/addLike', { postID, username })
-  },
-  removeLike (postID, username) {
-    return apiClient.post('/removeLike', { postID, username })
-  },
-  addDislike (postID, username) {
-    return apiClient.post('/addDislike', { postID, username })
-  },
-  removeDislike (postID, username) {
-    return apiClient.post('/removeDislike', { postID, username })
-  }
+
+  uploadComment: (postID, comment, username) => apiClient.post('/uploadComment', { postID, comment, username }),
+  updateBio: (bio, username) => apiClient.post('/updateBio', { bio, username }),
+  addFavourite: (postID, username) => apiClient.post('/addFavourite', { postID, username }),
+  removeFavourite: (postID, username) => apiClient.post('/removeFavourite', { postID, username }),
+  addLike: (postID, username) => apiClient.post('/addLike', { postID, username }),
+  removeLike: (postID, username) => apiClient.post('/removeLike', { postID, username }),
+  addDislike: (postID, username) => apiClient.post('/addDislike', { postID, username }),
+  removeDislike: (postID, username) => apiClient.post('/removeDislike', { postID, username })
 }

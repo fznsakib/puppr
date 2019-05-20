@@ -94,7 +94,7 @@ router.post('/login', (req, res) => {
   })
 })
 
-router.post('/updateProfilePicture', (req, res) => {
+router.post('/profile/picture/edit', (req, res) => {
 
   // Specify image to look at
   const imageName = `pp-${req.body.username}.jpg`
@@ -115,7 +115,7 @@ router.post('/updateProfilePicture', (req, res) => {
   })
 })
 
-router.post('/insertPost', (req, res) => {
+router.post('/post/create', (req, res) => {
   db.insertPost([
     req.body.username,
     req.body.caption
@@ -136,7 +136,7 @@ router.post('/insertPost', (req, res) => {
   })
 })
 
-router.post('/updatePostPicture', (req, res) => {
+router.post('/postpicture/create', (req, res) => {
 
   // Specify image to look at
   const imageName = `post-${req.body.postID}.jpg`

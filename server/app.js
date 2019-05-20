@@ -116,11 +116,7 @@ router.post('/profile/picture/edit', (req, res) => {
 })
 
 router.post('/post/create', (req, res) => {
-  db.insertPost([
-    req.body.username,
-    req.body.caption
-  ],
-  function (err) {
+  db.insertPost( req.body.username, req.body.caption, (err) => {
     if (err) {
       return res.status(500).send('There was a problem creating the post.')
     }
@@ -131,9 +127,13 @@ router.post('/post/create', (req, res) => {
       if (!postID) {
         return res.status(500).send('No post found.')
       }
-      res.status(200).send({ postID: postID })
+      res.status(200).send({ postID })
     })
   })
+})
+
+router.post('/post/success', (req, res) => {
+  return res.status(200)
 })
 
 router.post('/postpicture/create', (req, res) => {
@@ -153,7 +153,8 @@ router.post('/postpicture/create', (req, res) => {
     db.updatePostPicture(req.body.postID, imageURL, (err) => {
       if (err) return res.status(500).send('Error updating post picture URL on database')
     })
-    res.status(200).send({ imageURL: imageURL })
+
+    res.status(200).send()
   })
 })
 

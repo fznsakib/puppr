@@ -33,7 +33,9 @@ export default {
   },
   registerUser: (userData) => apiClient.post('/register', userData),
   login: (userData) => apiClient.post('/login', userData),
-  uploadProfilePicture: (image, username) => {
+
+  // CREATE //
+  createProfilePicture: (image, username) => {
     // Upload image to firebase as form data
     const fd = new FormData()
 
@@ -47,34 +49,42 @@ export default {
     // Add imageURL to user on database
     return apiClient.post('/updateProfilePicture', { username })
   },
-  uploadPost: (image, caption, username) => {
+  createPost: (image, caption, username) => {
+
     // Upload image to firebase as form data
     const fd = new FormData()
-    var postID = null
+    let postID
 
     // Create post in database and update postID
-    apiClient.post('/insertPost', { caption, username })
+    return apiClient.post('/post/create', { caption, username })
       .then((res) => {
-        postID = res.data.postID
+        postID = res.data.postID.id
+
+        // Produce name for image specific to post
+        const imageName = `post-${postID}.jpg`
+        fd.append('file', image, imageName)
+
+        // Upload image to Firebase
+        axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadPost', fd, axiosConfig)
+
+        // Update post entry with image URL
+        return apiClient.post('/postpicture/create', { postID, username })
       })
-
-    // Produce name for image specific to post
-    const imageName = `post-${postID}.jpg`
-    fd.append('file', image, imageName)
-
-    // Upload image to Firebase
-    axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadPost', fd, axiosConfig)
-
-    // Update post with imageURL on database
-    return apiClient.post('/updatePostPicture', { postID, username })
+      .catch((err) => {
+        console.log('post/create error' + err)
+      })
   },
+  createComment: (postID, comment, username) => apiClient.post('/uploadComment', { postID, comment, username }),
+  createFavourite: (postID, username) => apiClient.post('/addFavourite', { postID, username }),
+  createLike: (postID, username) => apiClient.post('/addLike', { postID, username }),
+  createDislike: (postID, username) => apiClient.post('/addDislike', { postID, username }),
 
-  uploadComment: (postID, comment, username) => apiClient.post('/uploadComment', { postID, comment, username }),
-  updateBio: (bio, username) => apiClient.post('/updateBio', { bio, username }),
-  addFavourite: (postID, username) => apiClient.post('/addFavourite', { postID, username }),
+  // REMOVE //
   removeFavourite: (postID, username) => apiClient.post('/removeFavourite', { postID, username }),
-  addLike: (postID, username) => apiClient.post('/addLike', { postID, username }),
   removeLike: (postID, username) => apiClient.post('/removeLike', { postID, username }),
-  addDislike: (postID, username) => apiClient.post('/addDislike', { postID, username }),
-  removeDislike: (postID, username) => apiClient.post('/removeDislike', { postID, username })
+  removeDislike: (postID, username) => apiClient.post('/removeDislike', { postID, username }),
+
+  // UPDATE //
+  updateBio: (bio, username) => apiClient.post('/updateBio', { bio, username })
+
 }

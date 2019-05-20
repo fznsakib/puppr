@@ -108,7 +108,8 @@ class Db {
 
   getLatestPostID (callback) {
     return this.db.get(
-      `SELECT id from post ORDER BY id DESC limit 1`, function (err, postID) {
+      `SELECT id from post ORDER BY id DESC limit 1`, (err, postID) => {
+        console.log(postID)
         callback(err, postID)
       })
   }

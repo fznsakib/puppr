@@ -77,14 +77,12 @@ export default {
     },
 
     createPost () {
-      console.log('called')
-      console.log(this.user.username)
-      ApiService.uploadPost(this.postImage, this.postCaption, this.user.username)
-        .then(res => {
-          console.log(this.user.username)
+      ApiService.createPost(this.postImage, this.postCaption, this.user.username)
+        .then((res) => {
+          // console.log(this.user.username)
           console.log('YOU DID IT :)')
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err)
         })
     }

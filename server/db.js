@@ -182,6 +182,15 @@ class Db {
       })
   }
 
+  updatePostCaption (postID, caption, callback) {
+    console.log('DB Update: Updating post caption')
+    return this.db.run(
+      'UPDATE post SET caption = ? WHERE id = ?',
+      caption, postID, (err) => {
+        callback(err)
+      })
+  }
+
   // REMOVE //
 
   removePost (postID, callback) {

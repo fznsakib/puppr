@@ -203,6 +203,14 @@ router.post('/users/:username/bio/update', (req, res) => {
   res.status(200).send()
 })
 
+router.post(`/posts/:postID/caption/update`, (req, res) => {
+  // Update post's caption in database
+  db.updatePostCaption(req.parms.postID, req.body.caption, (err) => {
+    if (err) return res.status(500).send('Error updating post caption')
+  })
+  res.status(200).send()
+})
+
 // REMOVE //
 
 router.post('/posts/:postID/remove', (req, res) => {

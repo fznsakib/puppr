@@ -72,19 +72,15 @@ export default {
   },
   methods: {
     onImageSelect (event) {
-      console.log(event);
       [this.postImage] = event.target.files
     },
 
     createPost () {
-      console.log('called')
-      console.log(this.user.username)
-      ApiService.uploadPost(this.postImage, this.postCaption, this.user.username)
-        .then(res => {
-          console.log(this.user.username)
-          console.log('YOU DID IT :)')
+      ApiService.createPost(this.user.username, this.postImage, this.postCaption)
+        .then((res) => {
+          console.log('Post created successfully.')
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err)
         })
     }

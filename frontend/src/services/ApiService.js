@@ -33,7 +33,41 @@ export default {
   },
   registerUser: (userData) => apiClient.post('/register', userData),
   login: (userData) => apiClient.post('/login', userData),
-  uploadProfilePicture: (image, username) => {
+
+  // CREATE //
+  createPost: (username, image, caption) => {
+    // Upload image to firebase as form data
+    const fd = new FormData()
+    let postID
+
+    // Create post in database and update postID
+    return apiClient.post('/posts/create', { username, caption })
+      .then((res) => {
+        postID = res.data.postID.id
+
+        // Produce name for image specific to post
+        const imageName = `post-${postID}.jpg`
+        fd.append('file', image, imageName)
+
+        // console.log(postID)
+
+        // Upload image to Firebase
+        axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadPost', fd, axiosConfig)
+
+        // Update post entry with image URL
+        return apiClient.post(`/posts/${postID}/picture/create`, { username })
+      })
+      .catch((err) => {
+        console.log('post/create error' + err)
+      })
+  },
+  createComment: (username, postID, comment) => apiClient.post(`/posts/${postID}/comment/create`, { comment, username }),
+  createFavourite: (username, postID) => apiClient.post(`/favourites/create?username=${username}&postID=${postID}`),
+  createLike: (username, postID) => apiClient.post(`/likes/create?username=${username}&postID=${postID}`),
+  createDislike: (username, postID) => apiClient.post(`/dislikes/create?username=${username}&postID=${postID}`),
+
+  // UPDATE //
+  updateProfilePicture: (username, image) => {
     // Upload image to firebase as form data
     const fd = new FormData()
 
@@ -45,36 +79,13 @@ export default {
     axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadProfilePicture', fd, axiosConfig)
 
     // Add imageURL to user on database
-    return apiClient.post('/updateProfilePicture', { username })
+    return apiClient.post(`/users/${username}/picture/update`)
   },
-  uploadPost: (image, caption, username) => {
-    // Upload image to firebase as form data
-    const fd = new FormData()
-    var postID = null
+  updateBio: (username, bio) => apiClient.post(`/users/${username}/bio/update`, { bio }),
 
-    // Create post in database and update postID
-    apiClient.post('/insertPost', { caption, username })
-      .then((res) => {
-        postID = res.data.postID
-      })
+  // REMOVE //
+  removeFavourite: (username, postID) => apiClient.post(`/favourites/remove?username=${username}&postID=${postID}`),
+  removeLike: (username, postID) => apiClient.post(`/likes/remove?username=${username}&postID=${postID}`),
+  removeDislike: (username, postID) => apiClient.post(`/dislikes/remove?username=${username}&postID=${postID}`)
 
-    // Produce name for image specific to post
-    const imageName = `post-${postID}.jpg`
-    fd.append('file', image, imageName)
-
-    // Upload image to Firebase
-    axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadPost', fd, axiosConfig)
-
-    // Update post with imageURL on database
-    return apiClient.post('/updatePostPicture', { postID, username })
-  },
-
-  uploadComment: (postID, comment, username) => apiClient.post('/uploadComment', { postID, comment, username }),
-  updateBio: (bio, username) => apiClient.post('/updateBio', { bio, username }),
-  addFavourite: (postID, username) => apiClient.post('/addFavourite', { postID, username }),
-  removeFavourite: (postID, username) => apiClient.post('/removeFavourite', { postID, username }),
-  addLike: (postID, username) => apiClient.post('/addLike', { postID, username }),
-  removeLike: (postID, username) => apiClient.post('/removeLike', { postID, username }),
-  addDislike: (postID, username) => apiClient.post('/addDislike', { postID, username }),
-  removeDislike: (postID, username) => apiClient.post('/removeDislike', { postID, username })
 }

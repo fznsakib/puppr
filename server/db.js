@@ -184,6 +184,15 @@ class Db {
 
   // REMOVE //
 
+  removePost (postID, callback) {
+    console.log('DB Update: Deleting user post')
+    return this.db.run(
+      'DELETE FROM post WHERE id = ?',
+      postID, (err) => {
+        callback(err)
+      })
+  }
+
   removeFavourite (username, postID, callback) {
     console.log('DB Update: Deleting favourited post')
     return this.db.run(

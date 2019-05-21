@@ -82,6 +82,7 @@ export default {
     return apiClient.post(`/users/${username}/picture/update`)
   },
   updateBio: (username, bio) => apiClient.post(`/users/${username}/bio/update`, { bio }),
+  updatePostCaption: (postID, caption) => apiClient.post(`/posts/${postID}/caption/update`, { caption }),
 
   // REMOVE //
   removePost: (postID) => apiClient.post(`/posts/${postID}/remove`),

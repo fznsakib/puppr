@@ -182,6 +182,15 @@ class Db {
       })
   }
 
+  updatePostCaption (postID, caption, callback) {
+    console.log('DB Update: Updating post caption')
+    return this.db.run(
+      'UPDATE post SET caption = ? WHERE id = ?',
+      caption, postID, (err) => {
+        callback(err)
+      })
+  }
+
   // REMOVE //
 
   removePost (postID, callback) {
@@ -216,6 +225,33 @@ class Db {
     return this.db.run(
       'DELETE FROM dislike WHERE username = ? AND post_id = ?',
       username, postID, (err) => {
+        callback(err)
+      })
+  }
+
+  removeFavouritesByPost (postID, callback) {
+    console.log('DB Update: Deleting favourites on post')
+    return this.db.run(
+      'DELETE FROM favourite WHERE post_id = ?',
+      postID, (err) => {
+        callback(err)
+      })
+  }
+
+  removeLikesByPost (postID, callback) {
+    console.log('DB Update: Deleting likes on post')
+    return this.db.run(
+      'DELETE FROM like WHERE post_id = ?',
+      postID, (err) => {
+        callback(err)
+      })
+  }
+
+  removeDislikesByPost (postID, callback) {
+    console.log('DB Update: Deleting dislikes on post')
+    return this.db.run(
+      'DELETE FROM dislike WHERE post_id = ?',
+      postID, (err) => {
         callback(err)
       })
   }

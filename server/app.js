@@ -203,10 +203,29 @@ router.post('/users/:username/bio/update', (req, res) => {
   res.status(200).send()
 })
 
+router.post(`/posts/:postID/caption/update`, (req, res) => {
+  // Update post's caption in database
+  db.updatePostCaption(req.parms.postID, req.body.caption, (err) => {
+    if (err) return res.status(500).send('Error updating post caption')
+  })
+  res.status(200).send()
+})
+
 // REMOVE //
 
 router.post('/posts/:postID/remove', (req, res) => {
-  // Delete user's post from database
+  // Remove all likes, dislikes and favourites tied to this post
+  db.removeLikesByPost(req.params.postID, (err) => {
+    if (err) return res.status(500).send(`Error removing likes on post`)
+  })
+  db.removeDislikesByPost(req.params.postID, (err) => {
+    if (err) return res.status(500).send(`Error removing dislikes on post`)
+  })
+  db.removeFavouritesByPost(req.params.postID, (err) => {
+    if (err) return res.status(500).send(`Error removing favourites post`)
+  })
+
+  // Now delete user's post from database
   db.removePost(req.params.postID, (err) => {
     if (err) return res.status(500).send(`Error deleting user's post`)
   })

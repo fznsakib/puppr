@@ -205,6 +205,14 @@ router.post('/users/:username/bio/update', (req, res) => {
 
 // REMOVE //
 
+router.post('/posts/:postID/remove', (req, res) => {
+  // Delete user's post from database
+  db.removePost(req.params.postID, (err) => {
+    if (err) return res.status(500).send(`Error deleting user's post`)
+  })
+  res.status(200).send()
+})
+
 router.post('/favourites/remove', (req, res) => {
   // Delete user's favourited post from database
   db.removeFavourite(req.query.username, req.query.postID, (err) => {

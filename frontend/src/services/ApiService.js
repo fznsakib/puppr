@@ -84,6 +84,7 @@ export default {
   updateBio: (username, bio) => apiClient.post(`/users/${username}/bio/update`, { bio }),
 
   // REMOVE //
+  removePost: (postID) => apiClient.post(`/posts/${postID}/remove`),
   removeFavourite: (username, postID) => apiClient.post(`/favourites/remove?username=${username}&postID=${postID}`),
   removeLike: (username, postID) => apiClient.post(`/likes/remove?username=${username}&postID=${postID}`),
   removeDislike: (username, postID) => apiClient.post(`/dislikes/remove?username=${username}&postID=${postID}`)

@@ -229,6 +229,33 @@ class Db {
       })
   }
 
+  removeFavouritesByPost (postID, callback) {
+    console.log('DB Update: Deleting favourites on post')
+    return this.db.run(
+      'DELETE FROM favourite WHERE post_id = ?',
+      postID, (err) => {
+        callback(err)
+      })
+  }
+
+  removeLikesByPost (postID, callback) {
+    console.log('DB Update: Deleting likes on post')
+    return this.db.run(
+      'DELETE FROM like WHERE post_id = ?',
+      postID, (err) => {
+        callback(err)
+      })
+  }
+
+  removeDislikesByPost (postID, callback) {
+    console.log('DB Update: Deleting dislikes on post')
+    return this.db.run(
+      'DELETE FROM dislike WHERE post_id = ?',
+      postID, (err) => {
+        callback(err)
+      })
+  }
+
   // IGNORE BELOW, D E P R E C A T E D
   // No of likes/dislikes don't need to be stored for each post as this can
   // be handled using SQL COUNT method. Keep here just to remind me that I

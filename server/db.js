@@ -89,9 +89,16 @@ class Db {
     })
   }
 
+  getPostsByUser (username, callback) {
+    return this.db.all(
+      `SELECT * FROM post WHERE username = ?`, [username], function(err, posts) {
+        callback(err, posts)
+      })
+  }
+
   getLatestPostID (callback) {
     return this.db.get(
-      `SELECT id from post ORDER BY id DESC limit 1`, (err, postID) => {
+      `SELECT id FROM post ORDER BY id DESC limit 1`, (err, postID) => {
         callback(err, postID)
       })
   }
@@ -295,7 +302,6 @@ class Db {
         callback(err)
       })
   }
-
 
 }
 

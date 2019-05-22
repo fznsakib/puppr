@@ -93,6 +93,18 @@ router.post('/login', (req, res) => {
   })
 })
 
+// GETTERS //
+
+router.get('/posts', (req, res) => {
+  db.getPostsByUser( req.query.username, (err, posts) => {
+    if (err) {
+      return res.status(500).send(`here was a problem getting user's post.`)
+    }
+    res.status(200).send({ posts })
+  })
+})
+
+
 // CREATE //
 
 router.post('/posts/create', (req, res) => {

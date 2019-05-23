@@ -34,6 +34,28 @@ export default {
   registerUser: (userData) => apiClient.post('/register', userData),
   login: (userData) => apiClient.post('/login', userData),
 
+  // GETTERS //
+  getPostsByUser: (username) => {
+    return apiClient.get(`/posts?username=${username}`)
+      .then((res) => {
+        console.log(`Successfully retrieved user's posts`)
+        return res.data.posts
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  },
+  getFavouritesByUser: (username) => {
+    return apiClient.get(`/favourites?username=${username}`)
+      .then((res) => {
+        console.log(`Successfully retrieved user's favourited posts`)
+        return res.data.posts
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  },
+
   // CREATE //
   createPost: (username, image, caption) => {
     // Upload image to firebase as form data

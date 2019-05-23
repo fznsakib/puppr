@@ -89,9 +89,40 @@ class Db {
     })
   }
 
+  getPostsByUser (username, callback) {
+    return this.db.all(
+      `SELECT * FROM post WHERE username = ?`, username, (err, posts) => {
+        callback(err, posts)
+      })
+  }
+
+  getFavouritesByUser (username, callback) {
+    // Get all postIDs of posts favourited by user
+    this.db.all(`SELECT post_id FROM favourite WHERE username = ?`, username, (err, postIDs) => {
+      if (err) {
+        console.log(err);
+      }
+      else {
+        // Populate array of post IDs for use in SQL statement
+        var arrayPostIDs = new Array()
+
+        for (var i = 0; i < postIDs.length; i++) {
+          arrayPostIDs.push(postIDs[i].post_id)
+        }
+
+        // Find all favourited posts using the acquired postIDs
+        return this.db.all(
+          `SELECT * FROM post WHERE id IN ( ` + arrayPostIDs.map(function(){ return '?' }).join(',') + ' )',
+          arrayPostIDs, (err, posts) => {
+            callback(err, posts)
+        })
+      }
+    })
+  }
+
   getLatestPostID (callback) {
     return this.db.get(
-      `SELECT id from post ORDER BY id DESC limit 1`, (err, postID) => {
+      `SELECT id FROM post ORDER BY id DESC limit 1`, (err, postID) => {
         callback(err, postID)
       })
   }
@@ -295,7 +326,6 @@ class Db {
         callback(err)
       })
   }
-
 
 }
 

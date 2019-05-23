@@ -61,6 +61,7 @@ export default {
   name: 'Dummy',
   data () {
     return {
+      posts: null,
       postImage: null,
       postCaption: ''
     }

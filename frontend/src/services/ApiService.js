@@ -42,7 +42,17 @@ export default {
         return res.data.posts
       })
       .catch((err) => {
-        console.log(`Error getting user's posts`)
+        console.log(err)
+      })
+  },
+  getFavouritesByUser: (username) => {
+    return apiClient.get(`/favourites?username=${username}`)
+      .then((res) => {
+        console.log(`Successfully retrieved user's favourited posts`)
+        return res.data.posts
+      })
+      .catch((err) => {
+        console.log(err)
       })
   },
 

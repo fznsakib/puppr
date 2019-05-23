@@ -1,13 +1,11 @@
-<template functional>
-  <div class="navbar-brand">
-    <a
-      class="navbar-item"
-      href="https://bulma.io">
+<template>
+  <a class="navbar-brand">
+    <div class="navbar-item">
       <img
         src="https://bulma.io/images/bulma-logo.png"
         width="112"
         height="28">
-    </a>
+    </div>
 
     <a
       role="button"
@@ -19,7 +17,7 @@
       <span aria-hidden="true" />
       <span aria-hidden="true" />
     </a>
-  </div>
+  </a>
 </template>
 
 <script>

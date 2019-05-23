@@ -1,16 +1,16 @@
 <template>
   <nav
-    class="navbar"
+    class="navbar is-fixed-top"
     role="navigation"
     aria-label="main navigation">
     <div class="container">
-      <NavbarBrand />
-
+      <!-- debug test. Please change back to an a with href inside NavbarBrand -->
+      <NavbarBrand @click.native="isUserSignedIn = !isUserSignedIn" />
       <div
         id="hamburger"
         class="navbar-menu">
         <NavbarStart v-if="isUserSignedIn" />
-        <NavbarEnd :isUserSignedIn="isUserSignedIn" />
+        <NavbarEnd :is-user-signed-in="isUserSignedIn" />
       </div>
     </div>
   </nav>
@@ -30,7 +30,7 @@ export default {
   },
   data() {
     return {
-      isUserSignedIn: false
+      isUserSignedIn: true
     }
   }
 }

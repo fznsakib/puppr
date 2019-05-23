@@ -12,8 +12,14 @@
             Full Name
           </label>
 
-          <div class="control has-icons-left">
-            <input type="text" class="input" autofocus>
+          <div
+            class="control has-icons-left"
+            :class="{ 'input-filled': fullnameInputHasText }">
+            <input
+              v-model="fullname"
+              type="text"
+              class="input"
+              autofocus>
             <span class="icon is-small is-left">
               <i class="fas fa-address-card" />
             </span>
@@ -23,8 +29,13 @@
         <!-- username -->
         <div class="field">
           <label class="label">Username</label>
-          <div class="control has-icons-left">
-            <input type="text" class="input">
+          <div
+            class="control has-icons-left"
+            :class="{ 'input-filled': usernameInputHasText }">
+            <input
+              v-model="username"
+              type="text"
+              class="input">
             <span class="icon is-small is-left">
               <i class="fas fa-user" />
             </span>
@@ -34,8 +45,13 @@
         <!-- email -->
         <div class="field">
           <label class="label">Email</label>
-          <div class="control has-icons-left">
-            <input type="email" class="input">
+          <div
+            class="control has-icons-left"
+            :class="{ 'input-filled': emailInputHasText }">
+            <input
+              v-model="email"
+              type="email"
+              class="input">
             <span class="icon is-small is-left">
               <i class="fas fa-envelope" />
             </span>
@@ -44,9 +60,14 @@
 
         <!-- password -->
         <div class="field">
-          <label for="password" class="label">Password</label>
-          <div class="control has-icons-left">
-            <input type="password" class="input">
+          <label class="label">Password</label>
+          <div
+            class="control has-icons-left"
+            :class="{ 'input-filled': passwordInputHasText }">
+            <input
+              v-model="password"
+              type="password"
+              class="input">
             <span class="icon is-small is-left">
               <i class="fas fa-key" />
             </span>
@@ -55,9 +76,14 @@
 
         <!-- password confirm -->
         <div class="field">
-          <label for="password" class="label">Confirm Password</label>
-          <div class="control has-icons-left">
-            <input type="password" class="input">
+          <label class="label">Confirm Password</label>
+          <div
+            class="control has-icons-left"
+            :class="{ 'input-filled': passwordConfirmInputHasText }">
+            <input
+              v-model="passwordConfirm"
+              type="password"
+              class="input">
             <span class="icon is-small is-left">
               <i class="fas fa-key" />
             </span>
@@ -92,6 +118,32 @@
 <script>
 export default {
   name: 'SignUpPanel',
+  data() {
+    return {
+      fullname: '',
+      username: '',
+      email: '',
+      password: '',
+      passwordConfirm: ''
+    }
+  },
+  computed: {
+    fullnameInputHasText() {
+      return !(this.fullname === '')
+    },
+    usernameInputHasText() {
+      return !(this.username === '')
+    },
+    emailInputHasText() {
+      return !(this.email === '')
+    },
+    passwordInputHasText() {
+      return !(this.password === '')
+    },
+    passwordConfirmInputHasText() {
+      return !(this.passwordConfirm === '')
+    }
+  },
   methods: {
     togglePanel() {
       this.$emit('togglePanel')

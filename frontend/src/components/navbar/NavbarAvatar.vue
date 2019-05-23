@@ -39,7 +39,7 @@ export default {
     return {
       username: 'ebxn',
       avatarImage: 'https://picsum.photos/500/500',
-      isDisplayingMenu: true
+      isDisplayingMenu: false
     }
   }
 }
@@ -51,6 +51,10 @@ export default {
   align-items: center;
 
   & img { border-radius: 50%; }
+}
+
+.navbar-dropdown {
+  cursor: default;
 }
 
 .navbar-item {

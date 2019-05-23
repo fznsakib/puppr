@@ -2,8 +2,8 @@
   <div class="landingcontent">
     <transition name="fade">
       <img
-        :src="dogImage"
         :key="dogImage"
+        :src="dogImage"
         class="doggo"
         alt="A good boy">
     </transition>
@@ -53,9 +53,9 @@ export default {
 }
 
 .doggo {
-  position: relative;
-  top: 50%;
-  left: 50%;
+  position: fixed;
+  top: 35%;
+  left: 28%;
 }
 
 .fade-enter-active, .fade-leave-active {

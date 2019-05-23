@@ -1,5 +1,5 @@
 <template>
-  <div class="landing is-flex">
+  <div class="landing page is-flex">
     <div class="container">
       <div class="columns">
         <!-- left (text) -->
@@ -43,7 +43,7 @@ export default {
 
 <style lang="scss" scoped>
 .landing {
-  min-height: 100%;
+  min-height: 100vh;
   height: 100vh;
   align-items: center;
   background-color: #f7f7f7;
@@ -51,7 +51,9 @@ export default {
 
 .column {
   align-items: center;
+}
 
+@media screen and (min-width: 769px) {
   &.right { justify-content: flex-start; margin-left: 5rem;}
   &.left { justify-content: flex-end; }
 }

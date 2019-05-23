@@ -1,118 +1,42 @@
 <template>
   <nav
-    class="navbar is-fixed-top"
+    class="navbar"
     role="navigation"
     aria-label="main navigation">
     <div class="container">
-      <div class="navbar-brand">
-        <a
-          class="navbar-item"
-          @click="showHomeView">
-          <img
-            class="image is-48x48"
-            :src="image"
-            width="112"
-            height="28">
-        </a>
-
-        <a
-          role="button"
-          class="navbar-burger burger"
-          aria-label="menu"
-          aria-expanded="false"
-          data-target="navbar">
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-        </a>
-      </div>
+      <NavbarBrand />
 
       <div
-        id="navbar"
+        id="hamburger"
         class="navbar-menu">
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              <button
-                v-if="!isLoggedIn"
-                class="button is-black"
-                @click="showRegisterView">
-                <strong>Sign up</strong>
-              </button>
-              <button
-                v-if="!isLoggedIn"
-                class="button is-light"
-                @click="showLoginView">
-                Log in
-              </button>
-              <button
-                v-if="isLoggedIn"
-                :disabled="loggingOut"
-                class="button is-info"
-                @click="showProfileView">
-                Profile
-              </button>
-              <button
-                v-if="isLoggedIn"
-                class="button is-light"
-                :class="{ 'is-loading': loggingOut }"
-                @click="logout">
-                Log out
-              </button>
-            </div>
-          </div>
-        </div>
+        <NavbarStart v-if="isUserSignedIn" />
+        <NavbarEnd :isUserSignedIn="isUserSignedIn" />
       </div>
     </div>
   </nav>
 </template>
 
 <script>
-import brand from '@/assets/logo.png'
-import { mapGetters, mapActions } from 'vuex'
+import NavbarBrand from '@/components/navbar/NavbarBrand.vue'
+import NavbarStart from '@/components/navbar/NavbarStart.vue'
+import NavbarEnd from '@/components/navbar/NavbarEnd.vue'
 
 export default {
-  name: '',
-  data () {
+  name: 'Navbar',
+  components: {
+    NavbarBrand,
+    NavbarStart,
+    NavbarEnd
+  },
+  data() {
     return {
-      loggingOut: false,
-      image: brand
+      isUserSignedIn: false
     }
-  },
-  computed: {
-    ...mapGetters({
-      isLoggedIn: 'account/getLoggedInStatus'
-    })
-  },
-  methods: {
-    showHomeView () {
-      this.$router.push({ name: 'home' })
-    },
-    showLoginView () {
-      this.$router.push({ name: 'login' })
-    },
-    showRegisterView () {
-      this.$router.push({ name: 'register' })
-    },
-    showProfileView () {
-      this.$router.push({ name: 'profile' })
-    },
-    logout () {
-      this.loggingOut = true
-      setTimeout(() => {
-        this.logoutUser()
-        this.$router.push('/')
-        this.loggingOut = false
-      }, 500)
-    },
-    ...mapActions({
-      logoutUser: 'account/logout'
-    })
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .navbar {
   background-color: rgba(255, 255, 255, 0.9);
   box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1),

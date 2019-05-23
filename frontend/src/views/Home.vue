@@ -1,24 +1,12 @@
 <template>
-  <div class="home page">
-    Auth
-    <!-- <Hero /> -->
-    <!-- <Searchbar /> -->
-  </div>
+  <h1>Hi</h1>
 </template>
 
 <script>
-// import Hero from '@/components/Hero.vue'
-// import SearchBar from '@/components/SearchBar.vue'
-
 export default {
-  name: 'Home',
-  components: {
-    // Hero,
-    // SearchBar
-  }
+  name: 'Home'
 }
 </script>
 
 <style scoped>
-
 </style>

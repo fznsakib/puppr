@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar.vue'
 import { mapActions } from 'vuex'
+import Navbar from '@/components/Navbar.vue'
 
 export default {
   name: 'App',
@@ -25,4 +25,9 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+div {
+  min-width: 100vw;
+  min-height: 100vh;
+}
+</style>

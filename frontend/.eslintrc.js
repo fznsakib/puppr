@@ -20,6 +20,7 @@ module.exports = {
   ],
   'rules': {
     'vue/require-valid-default-prop': 'off',
-    'vue/html-closing-bracket-newline': 'off'
+    'vue/html-closing-bracket-newline': 'off',
+    'space-before-function-paren': 'off'
   }
 }

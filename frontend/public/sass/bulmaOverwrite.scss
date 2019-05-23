@@ -3,12 +3,12 @@
 
 $black: #000000;
 
-/*.card, .box {
-  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1);
-}
-*/
 .page {
   background-color: #FAFAFA;
-  min-height: 100vh;
   margin-top: 3.25rem;
+}
+
+.columns {
+  padding: 0;
+  margin-bottom: 0;
 }

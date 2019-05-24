@@ -8,25 +8,7 @@ class Db {
   }
 
   createTables() {
-    const createUserTableQuery = `
-      CREATE TABLE IF NOT EXISTS users (
-        fullname          string,
-        username          string PRIMARY KEY UNIQUE,
-        email             string UNIQUE,
-        password          string,
-        bio               text,
-        profilePictureUrl string
-      )`
-    const createPostTableQuery = `
-      CREATE TABLE IF NOT EXISTS posts (
-        id         integer PRIMARY KEY AUTOINCREMENT,
-        imageUrl   string,
-        caption    text,
-        username   string,
-        favorites  integer,
-        date       datetime,
-        CONSTRAINT users_fk FOREIGN KEY (username) REFERENCES user(username)
-      )`
+
     const createCommentTableQuery = `
       CREATE TABLE IF NOT EXISTS comments (
         id integer PRIMARY KEY AUTOINCREMENT,
@@ -46,8 +28,6 @@ class Db {
         CONSTRAINT posts_fk FOREIGN KEY (postId)   REFERENCES post(id)
       )`
 
-    this.db.run(createUserTableQuery)
-    this.db.run(createPostTableQuery)
     this.db.run(createCommentTableQuery)
     this.db.run(createFavoriteTableQuery)
   }

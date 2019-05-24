@@ -20,7 +20,16 @@ module.exports = {
   ],
   'rules': {
     'vue/require-valid-default-prop': 'off',
+    'space-before-function-paren': 'off',
+    'vue/max-attributes-per-line': 'off',
     'vue/html-closing-bracket-newline': 'off',
-    'space-before-function-paren': 'off'
+
+    /*'vue/max-attributes-per-line': [1, {
+      'singleline': 1,
+      'multiline': {
+        'max': 1,
+        'allowFirstLine': true
+      }
+    }]*/
   }
 }

@@ -2,189 +2,166 @@
 const sqlite3 = require('sqlite3').verbose()
 
 class Db {
-  constructor (file) {
+  constructor(file) {
     this.db = new sqlite3.Database(file)
-    this.createTable()
+    this.createTables()
   }
 
-  createTable () {
-    const createUser = `
-      CREATE TABLE IF NOT EXISTS user (
-        username text PRIMARY KEY UNIQUE,
-        firstname text,
-        lastname text,
-        email text UNIQUE,
-        password text,
-        bio text,
-        ppUrl text,
-        question text,
-        answer text
+  createTables() {
+    const createUserTableQuery = `
+      CREATE TABLE IF NOT EXISTS users (
+        fullname          string,
+        username          string PRIMARY KEY UNIQUE,
+        email             string UNIQUE,
+        password          string,
+        bio               text,
+        profilePictureUrl string
       )`
-    const createPost = `
-      CREATE TABLE IF NOT EXISTS post (
+    const createPostTableQuery = `
+      CREATE TABLE IF NOT EXISTS posts (
+        id         integer PRIMARY KEY AUTOINCREMENT,
+        imageUrl   string,
+        caption    text,
+        username   string,
+        favorites  integer,
+        date       datetime,
+        CONSTRAINT users_fk FOREIGN KEY (username) REFERENCES user(username)
+      )`
+    const createCommentTableQuery = `
+      CREATE TABLE IF NOT EXISTS comments (
         id integer PRIMARY KEY AUTOINCREMENT,
-        username text,
-        date text,
-        postUrl text,
-        caption text,
-        likes integer,
-        dislikes integer,
-        favourites integer,
-        CONSTRAINT fk_users FOREIGN KEY (username) REFERENCES user(username)
+        postId     integer,
+        body       text,
+        username   string,
+        date       datetime,
+        CONSTRAINT users_fk FOREIGN KEY (username) REFERENCES user(username),
+        CONSTRAINT posts_fk FOREIGN KEY (postId)   REFERENCES post(id)
       )`
-    const createComment = `
-      CREATE TABLE IF NOT EXISTS comment (
-        id integer PRIMARY KEY AUTOINCREMENT,
-        username text,
-        post_id integer,
-        body text,
-        date text,
-        CONSTRAINT fk_users FOREIGN KEY (username) REFERENCES user(username),
-        CONSTRAINT fk_posts FOREIGN KEY (post_id) REFERENCES post(id)
+    const createFavoriteTableQuery = `
+      CREATE TABLE IF NOT EXISTS favorites (
+        id         integer PRIMARY KEY AUTOINCREMENT,
+        postId     integer,
+        username   string,
+        CONSTRAINT users_fk FOREIGN KEY (username) REFERENCES user(username),
+        CONSTRAINT posts_fk FOREIGN KEY (postId)   REFERENCES post(id)
       )`
-    const createFavourite = `
-      CREATE TABLE IF NOT EXISTS favourite (
-        id integer PRIMARY KEY AUTOINCREMENT,
-        username text,
-        post_id integer,
-        CONSTRAINT fk_users FOREIGN KEY (username) REFERENCES user(username),
-        CONSTRAINT fk_posts FOREIGN KEY (post_id) REFERENCES post(id)
-      )`
-    const createLike = `
-      CREATE TABLE IF NOT EXISTS like (
-        id integer PRIMARY KEY AUTOINCREMENT,
-        username text,
-        post_id integer,
-        CONSTRAINT fk_users FOREIGN KEY (username) REFERENCES user(username),
-        CONSTRAINT fk_posts FOREIGN KEY (post_id) REFERENCES post(id)
-      )`
-    const createDislike = `
-      CREATE TABLE IF NOT EXISTS dislike (
-        id integer PRIMARY KEY AUTOINCREMENT,
-        username text,
-        post_id integer,
-        CONSTRAINT fk_users FOREIGN KEY (username) REFERENCES user(username),
-        CONSTRAINT fk_posts FOREIGN KEY (post_id) REFERENCES post(id)
-      )`
-    this.db.run(createUser)
-    this.db.run(createPost)
-    this.db.run(createComment)
-    this.db.run(createFavourite)
-    this.db.run(createLike)
-    return this.db.run(createDislike)
+
+    this.db.run(createUserTableQuery)
+    this.db.run(createPostTableQuery)
+    this.db.run(createCommentTableQuery)
+    this.db.run(createFavoriteTableQuery)
   }
 
-  // GETTERS //
+  /* ***** */
+  /* USERS */
 
-  selectUserByEmail (email, callback) {
-    return this.db.get(
-      `SELECT * FROM user WHERE email = ?`, [email], function (err, row) {
-        callback(err, row)
-      })
-  }
-
-  selectAll (callback) {
-    return this.db.all(`SELECT * FROM user`, function (err, rows) {
-      callback(err, rows)
+  getAllUsers(callback) {
+    const query = 'SELECT * FROM users'
+    return this.db.get(query, (err, users) => {
+      callback(err, users)
     })
   }
 
-  getLatestPostID (callback) {
-    return this.db.get(
-      `SELECT id from post ORDER BY id DESC limit 1`, (err, postID) => {
-        callback(err, postID)
-      })
+  getUserByEmail(email, callback) {
+    const query = 'SELECT * FROM users WHERE email = ?'
+    return this.db.get(query, email, (err, user) => {
+      callback(err, user)
+    })
   }
 
-  // CREATE //
-
-  createUser (user, callback) {
-    console.log(`DB Update: Inserting user: ${user}`)
-    return this.db.run(
-      'INSERT INTO user (username,firstname,lastname,email,password) VALUES (?,?,?,?,?)',
-      user, (err) => {
-        callback(err)
-      })
+  getUserByUsername(username, callback) {
+    const query = 'SELECT * FROM users WHERE username = ?'
+    return this.db.get(query, username, (err, user) => {
+      callback(err, user)
+    })
   }
 
-  createPost (username, caption, callback) {
-    console.log('DB Update: Inserting post')
-    const initCount = 0
-    return this.db.run(
-      'INSERT INTO post (username,date,caption,likes,dislikes,favourites) VALUES (?,datetime("now"),?,?,?,?)',
-      username, caption, initCount, initCount, initCount, (err) => {
-        callback(err)
-      })
+  createUser(user, callback) {
+    const query = 'INSERT INTO users (fullname, username, email, password, bio, profilePictureUrl) VALUES (?,?,?,?,?,?))'
+    return this.db.run(query, user, (err) => {
+      callback(err)
+    })
   }
 
-  createPostPicture (postID, imageURL, callback) {
-    console.log('DB Update: Updating post with picture')
-    return this.db.run(
-      'UPDATE post SET postUrl = ? WHERE id = ?',
-      imageURL, postID, (err) => {
-        callback(err)
-      })
+  /* ***** */
+  /* POSTS */
+
+  getAllPosts(callback) {
+    const query = 'SELECT * FROM posts'
+    return this.db.all(query, (err, posts) => {
+      callback(err, posts)
+    })
   }
 
-  createComment (username, postID, comment, callback) {
-    console.log('DB Update: Uploading comment')
-    return this.db.run(
-      'INSERT INTO comment (username, post_id, body, date) VALUES (?,?,?,datetime("now"))',
-      username, postID, comment, (err) => {
-        callback(err)
-      })
+  getPostById(id, callback) {
+    const query = 'SELECT * FROM posts WHERE id = ?'
+    return this.db.get(query, id, (err, post) => {
+      callback(err, post)
+    })
   }
 
-  createFavourite (username, postID, callback) {
-    console.log('DB Update: Inserting favourited post')
-    return this.db.run(
-      'INSERT INTO favourite (username, post_id) VALUES (?,?)',
-      username, postID, (err) => {
-        callback(err)
-      })
+  getPostsByUsername(username, callback) {
+    const query = 'SELECT * FROM posts WHERE username = ?'
+    return this.db.all(query, username, (err, post) => {
+      callback(err, post)
+    })
   }
 
-  createLike (username, postID, callback) {
-    console.log('DB Update: Inserting like')
-    return this.db.run(
-      'INSERT INTO like (username, post_id) VALUES (?,?)',
-      username, postID, (err) => {
-        callback(err)
-      })
+  getLastPostId(callback) {
+    const query = 'SELECT id FROM posts ORDER BY id DESC limit 1'
+    return this.db.get(query, (err, postId) => {
+      callback(err, postId)
+    })
   }
 
-  createDislike (username, postID, callback) {
-    console.log('DB Update: Inserting dislike')
-    return this.db.run(
-      'INSERT INTO dislike (username, post_id) VALUES (?,?)',
-      username, postID, (err) => {
-        callback(err)
-      })
+  getPostFavorites(postId, callback) {
+    // select all favorites with post Id
+    // return this number
   }
 
-  // UPDATE //
+  /* Creation methods */
 
-  updateProfilePicture (username, imageURL, callback) {
-    console.log('DB Update: Updating profile picture')
-    return this.db.run(
-      'UPDATE user SET ppUrl = ? WHERE username = ?',
-      imageURL, username, (err) => {
-        callback(err)
-      })
+  newPost(post, callback) {
+    const { imageUrl, caption, username } = post
+    const query = 'INSERT INTO posts (imageUrl, caption, username, favorites, date) VALUES (?,?,?,?,datetime("now"))'
+    return this.db.run(query, imageUrl, caption, username, 0, (err) => {
+      callback(err)
+    })
   }
 
-  updateBio (username, bio, callback) {
-    console.log('DB Update: Updating user bio')
-    return this.db.run(
-      'UPDATE user SET bio = ? WHERE username = ?',
-      bio, username, (err) => {
-        callback(err)
-      })
+  newComment(comment, callback) {
+    const { postId, body, username } = comment
+    const query = 'INSERT INTO comments (postId, body, username, date) VALUES (?,?,?,datetime("now"))'
+    return this.db.run(query, postId, body, username, (err) => {
+      callback(err)
+    })
   }
 
-  // REMOVE //
+  newFavorite({ postId, username }, callback) {
+    const query = 'INSERT INTO favorites (postId, username) VALUES (?,?)'
+    return this.db.run(query, postId, username, (err) => {
+      callback(err)
+    })
+  }
 
-  removeFavourite (username, postID, callback) {
+  /* Update methods */
+  updateProfilePicture({ newProfilePictureUrl, username }, callback) {
+    const query = 'UPDATE users SET profilePictureUrl = ? WHERE username = ?'
+    return this.db.run(query, newProfilePictureUrl, username, (err) => {
+      callback(err)
+    })
+  }
+
+  updateBio({ bio, username }, callback) {
+    const query = 'UPDATE users SET bio = ? WHERE username = ?'
+    return this.db.run(query, bio, username, (err) => {
+      callback(err)
+    })
+  }
+
+/* // REMOVE //
+
+  removeFavourite(username, postID, callback) {
     console.log('DB Update: Deleting favourited post')
     return this.db.run(
       'DELETE FROM favorite WHERE username = ? AND post_id = ?',
@@ -193,7 +170,7 @@ class Db {
       })
   }
 
-  removeLike (username, postID, callback) {
+  removeLike(username, postID, callback) {
     console.log('DB Update: Deleting like')
     return this.db.run(
       'DELETE FROM like WHERE username = ? AND post_id = ?',
@@ -202,7 +179,7 @@ class Db {
       })
   }
 
-  removeDislike (username, postID, callback) {
+  removeDislike(username, postID, callback) {
     console.log('DB Update: Deleting dislike')
     return this.db.run(
       'DELETE FROM dislike WHERE username = ? AND post_id = ?',
@@ -211,10 +188,10 @@ class Db {
       })
   }
 
-  // IGNORE BELOW, D E P R E C A T E D
-  // No of likes/dislikes don't need to be stored for each post as this can
-  // be handled using SQL COUNT method. Keep here just to remind me that I
-  // need to implement the get methods
+   IGNORE BELOW, D E P R E C A T E D
+     No of likes/dislikes don't need to be stored for each post as this can
+     be handled using SQL COUNT method. Keep here just to remind me that I
+     need to implement the get methods
   incrementLike (postID, callback) {
     console.log('DB Update: Adding post like')
     return this.db.run(
@@ -249,9 +226,7 @@ class Db {
       postID, (err) => {
         callback(err)
       })
-  }
-
-
+  } */
 }
 
 module.exports = Db

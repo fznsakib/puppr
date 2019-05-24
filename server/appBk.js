@@ -6,7 +6,7 @@ const config = require('./config')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const bodyParser = require('body-parser')
-const { Storage } = require('@google-cloud/storage')
+const { Storage } = require('@google-cloud/stI juorage')
 const firebase = require('firebase')
 const admin = require('firebase-admin')
 
@@ -17,8 +17,8 @@ const router = express.Router()
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }))
 
-// init firebase
-let firebaseConfig = {
+// Initialize Firebase
+var firebaseConfig = {
   apiKey: 'AIzaSyC5SnkTNBFjGvnBa7YhWVEilOvcS5oA99Q',
   authDomain: 'puppr-8727d.firebaseapp.com',
   databaseURL: 'https://puppr-8727d.firebaseio.com',
@@ -41,14 +41,17 @@ admin.initializeApp({
   storageBucket: 'puppr-8727d.appspot.com'
 })
 
-const middleware = (req, res, next) => {
+// var bucket = admin.storage().bucket()
+
+// CORS middleware
+const allowCrossDomain = function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Methods', '*')
   res.header('Access-Control-Allow-Headers', '*')
   next()
 }
 
-app.use(middleware)
+app.use(allowCrossDomain)
 
 const axiosConfig = {
   headers: {
@@ -57,127 +60,56 @@ const axiosConfig = {
   }
 }
 
-/* AUTH */
 router.post('/register', (req, res) => {
   const { fullname, username, email, password } = req.body
 
   db.createUser([fullname, username, email, bcrypt.hashSync(password, 8)], (err) => {
     if (err) return res.status(500).send('error registering user')
 
-    db.getUserByEmail(email, (err, user) => {
-      if (err) return res.status(500).send('/register: error selecting user from email')
-      const accessToken = jwt.sign({ id: user.id }, config.secret, { expiresIn: 600 })
-      return res.status(200).send({ auth: true, user, accessToken })
+    db.selectUserByEmail(email, (err, user) => {
+      if (err) return res.status(500).send('error getting user from email')
+      let accessToken = jwt.sign({ id: user.id }, config.secret, { expiresIn: 600 })
+      res.status(200).send({ auth: true, user, accessToken })
     })
   })
 })
+
+// router.post('/register', function (req, res) {
+//   db.createUser([
+//     req.body.username,
+//     req.body.firstname,
+//     req.body.lastname,
+//     req.body.email,
+//     bcrypt.hashSync(req.body.password, 8)
+//   ],
+//   function (err) {
+//     if (err) {
+//       return res.status(500).send('There was a problem registering the user.')
+//     }
+//     db.selectUserByEmail(req.body.email, (err, user) => {
+//       if (err) {
+//         return res.status(500).send('There was a problem getting user')
+//       }
+//       let accessToken = jwt.sign({ id: user.id }, config.secret, { expiresIn: 600 }) // expires in 24 hours
+//       res.status(200).send({ auth: true, accessToken, user })
+//     })
+//   })
+// })
 
 router.post('/login', (req, res) => {
-  const { email, password } = req.body
-
-  db.getUserByEmail(email, (err, user) => {
-    if (err) return res.status(500).send('/login: error selecting user from email')
-    // if (!user) return res.status(404).send('/login: user not found')
-    const isPasswordIsValid = bcrypt.compareSync(password, user.password)
-    if (!isPasswordIsValid) return res.status(401).send({ auth: false, accessToken: null })
-    const accessToken = jwt.sign({ id: user.id }, config.secret, { expiresIn: 600 }) // expires in 24 hours
-    return res.status(200).send({ auth: true, user, accessToken })
+  db.selectUserByEmail(req.body.email, (err, user) => {
+    if (err) return res.status(500).send('Error on the server.')
+    if (!user) return res.status(404).send('No user found.')
+    let passwordIsValid = bcrypt.compareSync(req.body.password, user.password)
+    if (!passwordIsValid) return res.status(401).send({ auth: false, accessToken: null })
+    let accessToken = jwt.sign({ id: user.id }, config.secret, { expiresIn: 600 }) // expires in 24 hours
+    res.status(200).send({ auth: true, accessToken, user })
   })
 })
-
-/* ***** */
-/* POSTS */
-
-// index -> get all posts
-router.get('/posts', (req, res) => {
-  db.getPosts((err, posts) => {
-    if (err) return res.status(500).send('/posts: Server error')
-    if (!posts) return res.status(404).send('/posts: No posts found')
-    return res.status(200).send(posts)
-  })
-})
-
-// show -> get ONE post
-router.get('/posts/:postId', (req, res) => {
-  const { postId } = req.params
-  db.getPostById(postId, (err, post) => {
-    if (err) return res.status(500).send('/posts/postId: Server error')
-    if (!post) return res.status(404).send('/posts/postId: No post found')
-    return res.status(200).send(post)
-  })
-})
-
-// create -> create ONE post
-router.post('/posts', (req, res) => {
-  const { imageName, ...rest } = req.body
-  const image = bucket.file(imageName)
-
-  return image.getSignedUrl({ action: 'read', expires: '12-12-2500' })
-    .then(signedUrls => {
-      const [imageUrl] = signedUrls
-      db.newPost({ imageUrl, ...rest }, (err) => {
-        if (err) return res.status(500).send('/posts: Server error')
-        return res.status(200).send('succesfully created post')
-      })
-    })
-})
-
-// TODO
-// update -> update ONE post
-router.patch('/posts/:postId', (req, res) => {})
-
-// TODO
-// delete ->  delete ONE post
-router.delete('/posts/:postId/delete', (req, res) => {})
-
-/* ******** */
-/* COMMENTS */
-
-// index -> get all comments
-router.get('/posts/:postId/comments', (req, res) => {
-  const { postId } = req.params
-  db.getComments(postId, (err, comments) => {
-    if (err) return res.status(500).send('comments[index]: Server error')
-    if (!comments) return res.status(404).send('comments[index]: No comments found')
-    return res.status(200).send(comments)
-  })
-})
-
-// show -> get one comment
-router.get('/posts/:postId/comments/:commentId', (req, res) => {
-  const { postId, commentId } = req.params
-  db.getComment(postId, commentId, (err, comment) => {
-    if (err) return res.status(500).send('comments[show]: Server error')
-    if (!comment) return res.status(404).send('comments[show]: No comment found')
-    return res.status(200).send(comment)
-  })
-})
-
-// create -> create one new comment
-router.post('/posts/:postId/comments', (req, res) => {
-  const { postId } = req.params
-  const { body, username } = req.body
-  db.newComment({ postId, body, username }, (err) => {
-    if (err) return res.status(500).send('comments[create]: Server error')
-    return res.status(200).send('Comment created successfully.')
-  })
-})
-
-// update
-router.patch('/posts/:postId/comments', (req, res) => {
-
-})
-
-// delete
-router.delete('/posts/:postId/comments/delete', (req, res) => {
-
-})
-
-
 
 // CREATE //
 
-/* router.post('/posts/create', (req, res) => {
+router.post('/posts/create', (req, res) => {
   db.createPost( req.body.username, req.body.caption, (err) => {
     if (err) {
       return res.status(500).send('There was a problem creating the post.')
@@ -283,11 +215,47 @@ router.post('/users/:username/bio/update', (req, res) => {
     if (err) return res.status(500).send('Error updating user bio')
   })
   res.status(200).send()
-}) */
+})
+
+// REMOVE //
+
+router.post('/favourites/remove', (req, res) => {
+  // Delete user's favourited post from database
+  db.removeFavourite(req.query.username, req.query.postID, (err) => {
+    if (err) return res.status(500).send('Error deleting favourited post')
+  })
+  res.status(200).send()
+})
+
+router.post('/likes/remove', (req, res) => {
+  // Delete like
+  db.removeLike(req.query.username, req.query.postID, (err) => {
+    if (err) return res.status(500).send('Error deleting like')
+  })
+  // Update post stats
+  db.decrementLike(req.body.postID, (err) => {
+    if (err) return res.status(500).send('Error decrementing post likes')
+  })
+  res.status(200).send()
+})
+
+router.post('/dislikes/remove', (req, res) => {
+  // Delete like
+  db.removeDislike(req.query.username, req.query.postID, (err) => {
+    if (err) return res.status(500).send('Error deleting dislike')
+  })
+  // Update post stats
+  db.decrementDislike(req.query.postID, (err) => {
+    if (err) return res.status(500).send('Error decrementing post dislikes')
+  })
+  res.status(200).send()
+})
 
 app.use(router)
 
+let port = process.env.PORT || 3000
+
 // eslint-disable-next-line
-let server = app.listen(process.env.PORT || 3000, () => {
-  console.log('Server online.')
+let server = app.listen(port, function () {
+  console.log('Express server listening on port ' + port)
 })

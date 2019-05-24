@@ -1,29 +1,37 @@
 <template>
   <div class="navbar-end">
-    <NavbarAuthButtons v-if="!isUserSignedIn" />
+    <div v-if="!isUserSignedIn" class="navbar-item">
+      <div class="buttons">
+        <a class="button is-text">
+          Sign up
+        </a>
+        <a class="button is-text">
+          Log in
+        </a>
+      </div>
+    </div>
+
     <NavbarAvatar v-else />
   </div>
 </template>
 
 <script>
-import NavbarAuthButtons from '@/components/navbar/NavbarAuthButtons.vue'
 import NavbarAvatar from '@/components/navbar/NavbarAvatar.vue'
-// import { mapGetters } from 'vuex'
 
 export default {
   name: 'NavbarEnd',
   components: {
-    NavbarAuthButtons,
     NavbarAvatar
   },
   props: {
     isUserSignedIn: {
+      type: Boolean,
       default: false,
-      type: Boolean
+      required: true
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 </style>

@@ -21,7 +21,7 @@ const axiosConfig = {
 }
 
 export default {
-  setAuthToken (token) {
+  setAuthToken: (token) => {
     if (token) {
       apiClient.defaults.headers.common.Authorization = token
     } else {
@@ -31,61 +31,102 @@ export default {
   removeAuthToken: () => {
     apiClient.defaults.headers.common.Authorization = null
   },
-  registerUser: (userData) => apiClient.post('/register', userData),
-  login: (userData) => apiClient.post('/login', userData),
 
-  // CREATE //
-  createPost: (username, image, caption) => {
-    // Upload image to firebase as form data
-    const fd = new FormData()
-    let postID
+  login: (user) => apiClient.post('/login', user),
+  register: (user) => apiClient.post('/register', user),
 
-    // Create post in database and update postID
-    return apiClient.post('/posts/create', { username, caption })
+  /* POSTS */
+  // GET    /posts             => show all posts (index)
+  // GET    /posts/{id}        => show ONE post (show)
+  // GET    /posts/new         => show FORM to create new post (new)
+  // POST   /posts             => create one new post & redirect (create)
+  // GET    /posts/{id}/edit   => show edit form for one post (edit)
+  // PATCH  /posts/{id}        => update one post & redirect (update)
+  // DELETE /posts/{id}/delete => delete one post & redirect
+
+  // gets all posts
+  postsIndex: () => {
+    return apiClient.get('/posts')
+      .then((res) => res)
+      .catch((err) => console.log(err))
+  },
+  // get one post
+  postsShow: (postId) => {
+    return apiClient.get(`/posts/${postId}`)
+      .then((res) => res)
+      .catch((err) => console.log(err))
+  },
+  // create a new post
+  postsCreate: ({ image, caption, username }) => {
+    const timeString = new Date().getTime()
+    const imageName = `post-${timeString}jpg`
+
+    // upload image to Firebase, with key postImageName
+    let formData = new FormData()
+    formData.append('file', image, imageName)
+    return axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadPost', formData, axiosConfig)
       .then((res) => {
-        postID = res.data.postID.id
+        apiClient.post('/posts', { imageName, caption, username })
+      })
+      .catch((err) => console.log(err))
+  },
+  // TODO
+  postsUpdate: ({ newCaption, postId }) => {
+    return apiClient.patch(`/posts/${postId}`)
+      .then((res) => {
 
-        // Produce name for image specific to post
-        const imageName = `post-${postID}.jpg`
-        fd.append('file', image, imageName)
-
-        // console.log(postID)
-
-        // Upload image to Firebase
-        axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadPost', fd, axiosConfig)
-
-        // Update post entry with image URL
-        return apiClient.post(`/posts/${postID}/picture/create`, { username })
       })
       .catch((err) => {
-        console.log('post/create error' + err)
+        console.log(err)
       })
   },
-  createComment: (username, postID, comment) => apiClient.post(`/posts/${postID}/comment/create`, { comment, username }),
-  createFavourite: (username, postID) => apiClient.post(`/favourites/create?username=${username}&postID=${postID}`),
-  createLike: (username, postID) => apiClient.post(`/likes/create?username=${username}&postID=${postID}`),
-  createDislike: (username, postID) => apiClient.post(`/dislikes/create?username=${username}&postID=${postID}`),
+  // TODO
+  postsDestroy: (postId) => {
+    return apiClient.delete(`/posts/${postId}/delete`)
+      .then((res) => {
 
-  // UPDATE //
-  updateProfilePicture: (username, image) => {
-    // Upload image to firebase as form data
-    const fd = new FormData()
-
-    // Produce name for image specific to user
-    const imageName = `pp-${username}.jpg`
-    fd.append('file', image, imageName)
-
-    // Upload image to Firebase
-    axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadProfilePicture', fd, axiosConfig)
-
-    // Add imageURL to user on database
-    return apiClient.post(`/users/${username}/picture/update`)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   },
-  updateBio: (username, bio) => apiClient.post(`/users/${username}/bio/update`, { bio }),
 
-  // REMOVE //
-  removeFavourite: (username, postID) => apiClient.post(`/favourites/remove?username=${username}&postID=${postID}`),
-  removeLike: (username, postID) => apiClient.post(`/likes/remove?username=${username}&postID=${postID}`),
-  removeDislike: (username, postID) => apiClient.post(`/dislikes/remove?username=${username}&postID=${postID}`)
-
+  /* COMMENTS */
+  // GET    /posts/{id}/comments/       => show ALL comments           (index)
+  // GET    /posts/{id}/comments/{id}   => show ONE comment            (show)
+  // GET    /posts/{id}/comments/new    => show FORM for new comment   (new)
+  // POST   /posts/{id}/comments/       => create ONE comment & redir  (create)
+  // GET    /posts/{id}/comments/edit   => show EDIT FORM for ONE comm (edit)
+  // PATCH  /posts/{id}/comments/       => update ONE post & redir     (update)
+  // DELETE /posts/{id}/comments/delete => delete ONE post & redir     (delete)
+  // TODO
+  commentsIndex: (postId) => {
+    return apiClient.get(`/posts/${postId}/comments/`)
+      .then((res) => {})
+      .catch((err) => console.log(err))
+  },
+  // TODO
+  commentsShow: (postId, commentId) => {
+    return apiClient.get(`/posts/${postId}/comments/${commentId}`)
+      .then((res) => {})
+      .catch((err) => console.log(err))
+  },
+  // TODO
+  commentsCreate: (postId) => {
+    return apiClient.post(`/posts/${postId}/comments`)
+      .then((res) => {})
+      .catch((err) => console.log(err))
+  },
+  // TODO
+  commentsUpdate: (postId) => {
+    return apiClient.patch(`/posts/${postId}/comments`)
+      .then((res) => {})
+      .catch((err) => console.log(err))
+  },
+  // TODO
+  commentsDelete: (postId) => {
+    return apiClient.delete(`/posts/${postId}/comments/delete`)
+      .then((res) => {})
+      .catch((err) => console.log(err))
+  }
 }

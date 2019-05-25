@@ -31,16 +31,12 @@ var firebaseConfig = {
   storageBucket: 'gs://puppr-8727d.appspot.com',
   messagingSenderId: '764093981772'
 }
-
 firebase.initializeApp(firebaseConfig)
-
 const storage = new Storage({
   projectId: 'puppr-8727d',
   keyFilename: 'functions/puppr-8727d-firebase-adminsdk-kfdzh-6324893b05.json'
 })
-
 const bucket = storage.bucket('puppr-8727d.appspot.com')
-
 admin.initializeApp({
   credential: admin.credential.cert('functions/puppr-8727d-firebase-adminsdk-kfdzh-6324893b05.json'),
   storageBucket: 'puppr-8727d.appspot.com'
@@ -49,12 +45,9 @@ admin.initializeApp({
 // Initialise Microsoft Computer Vision API Settings
 
 const microsoftSubscriptionKey = '5c8d000fdc3443a0a47b13c3dfc97b1a'
-
-const uriBase = 'https://uksouth.api.cognitive.microsoft.com/vision/v2.0/analyze'
-
-// Request parameters
+const uriBase = 'https://uksouth.api.cognitive.microsoft.com/vision/v1.0/tag'
 const params = {
-    'visualFeatures': 'Categories,Description,Objects',
+    // 'visualFeatures': 'Categories,Description,Objects',
     'details': '',
     'language': 'en'
 }
@@ -318,8 +311,6 @@ router.post('/posts/verify', (req, res) => {
   }).then(signedUrls => {
     const imageURL = signedUrls[0]
 
-    console.log(imageURL)
-
     // Initialise payload
     const options = {
         uri: uriBase,
@@ -331,31 +322,34 @@ router.post('/posts/verify', (req, res) => {
         }
     }
 
+    let dogDetected = false
+
     // Send image to Microsoft API
-    request.post(options, (err, res, body) => {
+    request.post(options, dogDetected, (err, res, body) => {
       if (err) {
-        console.log('Error: ', err);
-        return;
+        console.log('Error: ', err)
+        return
       }
 
-      // Analyse results to see if image contains dog
+      // Analyse results to see if object detection contains dog
       let jsonResponse = JSON.parse(body)
+      let confidenceThreshold = 0.8
 
-      console.log(jsonResponse.description.tags)
+      for (var i = 0; i < jsonResponse.tags.length; i++) {
+        if (jsonResponse.tags[i].name == 'dog') {
+          if (jsonResponse.tags[i].confidence > confidenceThreshold) {
+            dogDetected = true
+          }
+        }
+      }
+      console.log(jsonResponse.tags)
 
-
-      var tagCheck = jsonResponse.description.tags.includes('dog')
-
-
-      // let jsonResponseString = JSON.stringify(JSON.parse(body), null, '  ');
-      console.log('JSON Response\n');
-      console.log(jsonResponseString);
-
-
-
+      console.log(dogDetected)
     })
 
-    // res.status(200).send({ imageURL: imageURL })
+    console.log('outside')
+    console.log(dogDetected)
+    res.status(200).send()
   })
 
 })

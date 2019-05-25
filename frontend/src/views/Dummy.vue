@@ -77,7 +77,7 @@ export default {
     },
 
     createPost () {
-      ApiService.verifyPost(this.postImage)
+      ApiService.verifyPost(this.user.username, this.postImage)
         .then((res) => {
           console.log('Post verified successfully')
         })

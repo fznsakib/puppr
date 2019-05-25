@@ -113,21 +113,23 @@ export default {
   removeDislike: (username, postID) => apiClient.post(`/dislikes/remove?username=${username}&postID=${postID}`),
 
   // VERIFICATION //
-  verifyPost: (image) => {
+  verifyPost: (username, image) => {
+    // Upload image to firebase as form data
+    const fd = new FormData()
+
+    // Produce name for image specific to user
+    const imageName = `check-${username}.jpg`
+    fd.append('file', image, imageName)
+
+    // Upload image to Firebase
+    axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadProfilePicture', fd, axiosConfig)
+
+    // Upload image to Firebase
     console.log(image)
 
-    // Convert image to binary
-    let reader = new FileReader()
+    // Send binary image to backend
+    return apiClient.post(`/posts/verify`, { username })
 
-    // reader.readAsBinaryString(image)
-    reader.readAsDataURL(image)
-
-    reader.onload = function () {
-      let binaryImage = reader.result
-
-      // Send binary image to backend
-      return apiClient.post(`/posts/verify`, { binaryImage })
-    }
   }
 
 }

@@ -54,12 +54,10 @@ const uriBase = 'https://uksouth.api.cognitive.microsoft.com/vision/v2.0/analyze
 
 // Request parameters
 const params = {
-    'visualFeatures': 'Categories,Description,Color',
+    'visualFeatures': 'Categories,Description,Objects',
     'details': '',
     'language': 'en'
 }
-
-
 
 
 // CORS middleware
@@ -308,39 +306,58 @@ router.post('/dislikes/remove', (req, res) => {
 // VERIFICATION //
 
 router.post('/posts/verify', (req, res) => {
-  let binaryImage = req.body.binaryImage
 
-  // var data = new Blob([binaryImage], {type: 'text/plain'});
+  // Specify image to look at
+  const imageName = `check-${req.body.username}.jpg`
+  const image = bucket.file(imageName)
 
-  const fd = new FormData()
-  fd.append('content', binaryImage)
+  // Get image URL
+  return image.getSignedUrl({
+    action: 'read',
+    expires: '03-09-2491'
+  }).then(signedUrls => {
+    const imageURL = signedUrls[0]
 
-  // console.log(data.buffer)
+    console.log(imageURL)
 
-  // var imageUrl = "https://i.dailymail.co.uk/i/pix/2015/09/01/18/2BE1E88B00000578-3218613-image-m-5_1441127035222.jpg"
-
-  // Initialise payload
-  const options = {
-      uri: uriBase,
-      qs: params,
-      // body: '{"url": ' + '"' + imageUrl + '"}',
-      body: data.buffer,
-      headers: {
-          'Content-Type': 'application/octet-stream',
-          'Ocp-Apim-Subscription-Key' : microsoftSubscriptionKey
-      }
-  }
-
-  // Send image to Microsoft API
-  request.post(options, (err, res, body) => {
-    if (err) {
-      console.log('Error: ', err);
-      return;
+    // Initialise payload
+    const options = {
+        uri: uriBase,
+        qs: params,
+        body: '{"url": ' + '"' + imageURL + '"}',
+        headers: {
+            'Content-Type': 'application/json',
+            'Ocp-Apim-Subscription-Key' : microsoftSubscriptionKey
+        }
     }
-    let jsonResponse = JSON.stringify(JSON.parse(body), null, '  ');
-    console.log('JSON Response\n');
-    console.log(jsonResponse);
+
+    // Send image to Microsoft API
+    request.post(options, (err, res, body) => {
+      if (err) {
+        console.log('Error: ', err);
+        return;
+      }
+
+      // Analyse results to see if image contains dog
+      let jsonResponse = JSON.parse(body)
+
+      console.log(jsonResponse.description.tags)
+
+
+      var tagCheck = jsonResponse.description.tags.includes('dog')
+
+
+      // let jsonResponseString = JSON.stringify(JSON.parse(body), null, '  ');
+      console.log('JSON Response\n');
+      console.log(jsonResponseString);
+
+
+
+    })
+
+    // res.status(200).send({ imageURL: imageURL })
   })
+
 })
 
 app.use(router)

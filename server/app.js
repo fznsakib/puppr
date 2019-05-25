@@ -14,6 +14,7 @@ const FormData = require('form-data');
 const Blob = require('node-blob');
 const uint8 = require('uint8')
 const fs = require('fs');
+const Clarifai = require('clarifai');
 
 const db = new DB('database')
 const app = express()
@@ -42,16 +43,10 @@ admin.initializeApp({
   storageBucket: 'puppr-8727d.appspot.com'
 })
 
-// Initialise Microsoft Computer Vision API Settings
-
-const microsoftSubscriptionKey = '5c8d000fdc3443a0a47b13c3dfc97b1a'
-const uriBase = 'https://uksouth.api.cognitive.microsoft.com/vision/v1.0/tag'
-const params = {
-    // 'visualFeatures': 'Categories,Description,Objects',
-    'details': '',
-    'language': 'en'
-}
-
+// Initialise Clarifai Image Recognition ApiService
+const clarifai = new Clarifai.App({
+ apiKey: '88ec310338ad455b9579c6a5c290d11f'
+});
 
 // CORS middleware
 const allowCrossDomain = function (req, res, next) {
@@ -300,58 +295,36 @@ router.post('/dislikes/remove', (req, res) => {
 
 router.post('/posts/verify', (req, res) => {
 
-  // Specify image to look at
-  const imageName = `check-${req.body.username}.jpg`
-  const image = bucket.file(imageName)
+  let image = req.body.image
 
-  // Get image URL
-  return image.getSignedUrl({
-    action: 'read',
-    expires: '03-09-2491'
-  }).then(signedUrls => {
-    const imageURL = signedUrls[0]
+  // Remove initial part of binary image for API
+  image = image.replace("data:image/jpeg;base64,", "");
+  image = image.replace("data:image/png;base64,", "");
 
-    // Initialise payload
-    const options = {
-        uri: uriBase,
-        qs: params,
-        body: '{"url": ' + '"' + imageURL + '"}',
-        headers: {
-            'Content-Type': 'application/json',
-            'Ocp-Apim-Subscription-Key' : microsoftSubscriptionKey
-        }
-    }
+  clarifai.models.predict(Clarifai.GENERAL_MODEL, {base64: image}).then(
+    function(res) {
 
-    let dogDetected = false
+      let result = res['outputs'][0]['data']['concepts']
+      // console.log(res['outputs'][0]['data']['concepts'])
 
-    // Send image to Microsoft API
-    request.post(options, dogDetected, (err, res, body) => {
-      if (err) {
-        console.log('Error: ', err)
-        return
-      }
+      var dogDetected = false
+      var threshold = 0.75
 
-      // Analyse results to see if object detection contains dog
-      let jsonResponse = JSON.parse(body)
-      let confidenceThreshold = 0.8
-
-      for (var i = 0; i < jsonResponse.tags.length; i++) {
-        if (jsonResponse.tags[i].name == 'dog') {
-          if (jsonResponse.tags[i].confidence > confidenceThreshold) {
-            dogDetected = true
-          }
+      for (var i = 0; i < result.length; i++) {
+        if (result[i].name == 'dog') {
+          if (result[i].value > threshold) dogDetected = true
         }
       }
-      console.log(jsonResponse.tags)
 
       console.log(dogDetected)
-    })
 
-    console.log('outside')
-    console.log(dogDetected)
-    res.status(200).send()
-  })
-
+      return res.status(200).send({ dogDetected })
+    },
+    function(err) {
+      console.log(err)
+      // there was an error
+    }
+  )
 })
 
 app.use(router)

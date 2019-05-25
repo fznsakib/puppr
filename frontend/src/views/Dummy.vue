@@ -63,7 +63,8 @@ export default {
     return {
       posts: null,
       postImage: null,
-      postCaption: ''
+      postImageBinary: null,
+      postCaption: '',
     }
   },
   computed: {
@@ -74,23 +75,33 @@ export default {
   methods: {
     onImageSelect (event) {
       [this.postImage] = event.target.files
+
+      // Convert chosen image to binary
+      var imgReader = new FileReader()
+
+      imgReader.onload = (e) => {
+        this.postImageBinary = e.target.result
+      }
+
+      imgReader.readAsDataURL(this.postImage)
     },
 
     createPost () {
-      ApiService.verifyPost(this.user.username, this.postImage)
+      ApiService.verifyPost(this.postImageBinary)
         .then((res) => {
           console.log('Post verified successfully')
         })
         .catch((err) => {
           console.log(err)
         })
-      ApiService.createPost(this.user.username, this.postImage, this.postCaption)
-        .then((res) => {
-          console.log('Post created successfully.')
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+
+      // ApiService.createPost(this.user.username, this.postImage, this.postCaption)
+      //   .then((res) => {
+      //     console.log('Post created successfully.')
+      //   })
+      //   .catch((err) => {
+      //     console.log(err)
+      //   })
     }
   }
 }

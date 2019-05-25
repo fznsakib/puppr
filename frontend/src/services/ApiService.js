@@ -20,6 +20,19 @@ const axiosConfig = {
   }
 }
 
+
+function toDataURL(image, callback) {
+  var reader = new FileReader();
+
+  reader.onload = function() {
+    callback(reader.result);
+  }
+  reader.readAsDataURL(image);
+  // xhr.open('GET', url);
+  // xhr.responseType = 'blob';
+  // xhr.send();
+}
+
 export default {
   setAuthToken (token) {
     if (token) {
@@ -113,23 +126,7 @@ export default {
   removeDislike: (username, postID) => apiClient.post(`/dislikes/remove?username=${username}&postID=${postID}`),
 
   // VERIFICATION //
-  verifyPost: (username, image) => {
-    // Upload image to firebase as form data
-    const fd = new FormData()
 
-    // Produce name for image specific to user
-    const imageName = `check-${username}.jpg`
-    fd.append('file', image, imageName)
-
-    // Upload image to Firebase
-    axios.post('https://us-central1-puppr-8727d.cloudfunctions.net/uploadProfilePicture', fd, axiosConfig)
-
-    // Upload image to Firebase
-    console.log(image)
-
-    // Send binary image to backend
-    return apiClient.post(`/posts/verify`, { username })
-
-  }
+  verifyPost: (image) => { return apiClient.post(`posts/verify`, { image }) }
 
 }

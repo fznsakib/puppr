@@ -17,6 +17,12 @@ const router = new Router({
       name: 'landing',
       props: false,
       component: () => import(/* webpackChunkName: "landing" */ '@/views/Landing.vue')
+    },
+    {
+      path: '/dummy',
+      name: 'dummy',
+      // props: false,
+      component: () => import(/* webpackChunkName: "landing" */ '@/views/Dummy.vue')
     }
     // {
     //   path: '/register',

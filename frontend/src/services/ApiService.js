@@ -110,6 +110,24 @@ export default {
   removePost: (postID) => apiClient.post(`/posts/${postID}/remove`),
   removeFavourite: (username, postID) => apiClient.post(`/favourites/remove?username=${username}&postID=${postID}`),
   removeLike: (username, postID) => apiClient.post(`/likes/remove?username=${username}&postID=${postID}`),
-  removeDislike: (username, postID) => apiClient.post(`/dislikes/remove?username=${username}&postID=${postID}`)
+  removeDislike: (username, postID) => apiClient.post(`/dislikes/remove?username=${username}&postID=${postID}`),
+
+  // VERIFICATION //
+  verifyPost: (image) => {
+    console.log(image)
+
+    // Convert image to binary
+    let reader = new FileReader()
+
+    // reader.readAsBinaryString(image)
+    reader.readAsDataURL(image)
+
+    reader.onload = function () {
+      let binaryImage = reader.result
+
+      // Send binary image to backend
+      return apiClient.post(`/posts/verify`, { binaryImage })
+    }
+  }
 
 }

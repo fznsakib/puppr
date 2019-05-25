@@ -9,6 +9,11 @@ const bodyParser = require('body-parser')
 const { Storage } = require('@google-cloud/storage')
 const firebase = require('firebase')
 const admin = require('firebase-admin')
+const request = require('request')
+const FormData = require('form-data');
+const Blob = require('node-blob');
+const uint8 = require('uint8')
+const fs = require('fs');
 
 const db = new DB('database')
 const app = express()
@@ -41,7 +46,21 @@ admin.initializeApp({
   storageBucket: 'puppr-8727d.appspot.com'
 })
 
-// var bucket = admin.storage().bucket()
+// Initialise Microsoft Computer Vision API Settings
+
+const microsoftSubscriptionKey = '5c8d000fdc3443a0a47b13c3dfc97b1a'
+
+const uriBase = 'https://uksouth.api.cognitive.microsoft.com/vision/v2.0/analyze'
+
+// Request parameters
+const params = {
+    'visualFeatures': 'Categories,Description,Color',
+    'details': '',
+    'language': 'en'
+}
+
+
+
 
 // CORS middleware
 const allowCrossDomain = function (req, res, next) {
@@ -227,7 +246,7 @@ router.post('/users/:username/bio/update', (req, res) => {
 
 router.post(`/posts/:postID/caption/update`, (req, res) => {
   // Update post's caption in database
-  db.updatePostCaption(req.parms.postID, req.body.caption, (err) => {
+  db.updatePostCaption(req.params.postID, req.body.caption, (err) => {
     if (err) return res.status(500).send('Error updating post caption')
   })
   res.status(200).send()
@@ -284,6 +303,44 @@ router.post('/dislikes/remove', (req, res) => {
     if (err) return res.status(500).send('Error decrementing post dislikes')
   })
   res.status(200).send()
+})
+
+// VERIFICATION //
+
+router.post('/posts/verify', (req, res) => {
+  let binaryImage = req.body.binaryImage
+
+  // var data = new Blob([binaryImage], {type: 'text/plain'});
+
+  const fd = new FormData()
+  fd.append('content', binaryImage)
+
+  // console.log(data.buffer)
+
+  // var imageUrl = "https://i.dailymail.co.uk/i/pix/2015/09/01/18/2BE1E88B00000578-3218613-image-m-5_1441127035222.jpg"
+
+  // Initialise payload
+  const options = {
+      uri: uriBase,
+      qs: params,
+      // body: '{"url": ' + '"' + imageUrl + '"}',
+      body: data.buffer,
+      headers: {
+          'Content-Type': 'application/octet-stream',
+          'Ocp-Apim-Subscription-Key' : microsoftSubscriptionKey
+      }
+  }
+
+  // Send image to Microsoft API
+  request.post(options, (err, res, body) => {
+    if (err) {
+      console.log('Error: ', err);
+      return;
+    }
+    let jsonResponse = JSON.stringify(JSON.parse(body), null, '  ');
+    console.log('JSON Response\n');
+    console.log(jsonResponse);
+  })
 })
 
 app.use(router)

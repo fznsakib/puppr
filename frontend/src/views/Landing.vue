@@ -12,7 +12,7 @@
           <LoginPanel
             v-if="displayLoginPanel"
             @togglePanel="displayLoginPanel = !displayLoginPanel" />
-          <SignUpPanel
+          <RegisterPanel
             v-else
             @togglePanel="displayLoginPanel = !displayLoginPanel" />
         </div>
@@ -23,14 +23,14 @@
 
 <script>
 import LoginPanel from '@/components/landing/LoginPanel.vue'
-import SignUpPanel from '@/components/landing/SignUpPanel.vue'
+import RegisterPanel from '@/components/landing/RegisterPanel.vue'
 import LandingContent from '@/components/landing/LandingContent.vue'
 
 export default {
   name: 'Landing',
   components: {
     LoginPanel,
-    SignUpPanel,
+    RegisterPanel,
     LandingContent
   },
   data() {

@@ -27,8 +27,8 @@ export const actions = {
     const session = this._vm.$session
 
     ApiService.login(userToLogin)
-      .then((res) => {
-        const { accessToken, user } = res.data
+      .then((result) => {
+        const { accessToken, user } = result.data
         ApiService.setAuthToken(accessToken)
 
         session.start()
@@ -48,9 +48,9 @@ export const actions = {
   register({ commit }, userToRegister) {
     const session = this._vm.$session
 
-    ApiService.registerUser(userToRegister)
-      .then((res) => {
-        const { accessToken, user } = res.data
+    ApiService.register(userToRegister)
+      .then((result) => {
+        const { accessToken, user } = result.data
         ApiService.setAuthToken(accessToken)
 
         session.start()
@@ -83,21 +83,21 @@ export const actions = {
     } else {
       commit('UNAUTH')
     }
-  },
-
-  updateProfilePicture ({ commit, state }, image) {
-    const session = this._vm.$session
-    const user = session.get('user')
-
-    ApiService.updateProfilePicture(user.username, image)
-      .then((res) => {
-        user.profilePictureUrl = res.data.profilePictureUrl
-        session.set('user', state.user)
-      })
-      .catch(() => {
-
-      })
   }
+
+  // updateProfilePicture ({ commit, state }, image) {
+  //   const session = this._vm.$session
+  //   const user = session.get('user')
+
+  //   ApiService.updateProfilePicture(user.username, image)
+  //     .then((res) => {
+  //       user.profilePictureUrl = res.data.profilePictureUrl
+  //       session.set('user', state.user)
+  //     })
+  //     .catch(() => {
+
+  //     })
+  // }
   // uploadPost ({ commit, state }, image, caption) {
   //   const session = this._vm.$session
   //   commit('UPLOAD_POST_REQUEST')
@@ -232,6 +232,6 @@ export const actions = {
 }
 
 export const getters = {
-  getAuthStatus: state => state.isLoggedIn,
+  getLoggedInStatus: state => state.isLoggedIn,
   getUser: state => state.user
 }

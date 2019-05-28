@@ -3,11 +3,11 @@
        aria-label="main navigation">
     <div class="container">
       <!-- debug test. Please change back to an a with href inside NavbarBrand -->
-      <NavbarBrand @click.native="isUserSignedIn = !isUserSignedIn" />
+      <NavbarBrand />
 
       <div id="hamburger" class="navbar-menu">
-        <NavbarStart :is-user-signed-in="isUserSignedIn" />
-        <NavbarEnd :is-user-signed-in="isUserSignedIn" />
+        <NavbarStart :is-user-signed-in="isLoggedIn" />
+        <NavbarEnd :is-user-signed-in="isLoggedIn" />
       </div>
     </div>
   </nav>
@@ -18,6 +18,8 @@ import NavbarBrand from '@/components/navbar/NavbarBrand.vue'
 import NavbarStart from '@/components/navbar/NavbarStart.vue'
 import NavbarEnd from '@/components/navbar/NavbarEnd.vue'
 
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'Navbar',
   components: {
@@ -25,10 +27,10 @@ export default {
     NavbarStart,
     NavbarEnd
   },
-  data() {
-    return {
-      isUserSignedIn: true
-    }
+  computed: {
+    ...mapGetters({
+      isLoggedIn: 'auth/getLoggedInStatus'
+    })
   }
 }
 </script>

@@ -5,18 +5,14 @@
         Login
       </h1>
 
-      <form @submit.prevent="login">
+      <form @submit.prevent="submit">
         <!-- Username -->
         <div class="field">
           <label class="label">Username</label>
-          <div
-            class="control has-icons-left"
-            :class="{ 'input-filled': usernameInputHasText }">
-            <input
-              v-model="username"
-              type="text"
-              class="input"
-              autofocus>
+          <div class="control has-icons-left"
+               :class="{ 'input-filled': usernameInputHasText }">
+            <input v-model="userToLogin.username" type="text"
+                   class="input" autofocus>
             <span class="icon is-small is-left">
               <i class="fas fa-user" />
             </span>
@@ -26,13 +22,9 @@
         <!-- Password -->
         <div class="field">
           <label class="label">Password</label>
-          <div
-            class="control has-icons-left"
-            :class="{ 'input-filled': passwordInputHasText }">
-            <input
-              v-model="password"
-              type="password"
-              class="input">
+          <div class="control has-icons-left"
+               :class="{ 'input-filled': passwordInputHasText }">
+            <input v-model="userToLogin.password" type="password" class="input">
             <span class="icon is-small is-left">
               <i class="fas fa-key" />
             </span>
@@ -42,17 +34,12 @@
         <!--Submit -->
         <div class="field is-grouped is-flex">
           <div class="control">
-            <button
-              type="submit"
-              class="button is-black">
+            <button type="submit" class="button is-black">
               Login
             </button>
           </div>
           <div class="control">
-            <button
-              class="button is-text"
-              type="button"
-              @click="togglePanel">
+            <button class="button is-text" type="button" @click="togglePanel">
               Create account
             </button>
           </div>
@@ -63,26 +50,37 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'LoginPanel',
   data() {
     return {
-      username: '',
-      password: ''
+      userToLogin: {
+        username: '',
+        password: ''
+      }
     }
   },
   computed: {
     usernameInputHasText() {
-      return !(this.username === '')
+      return !(this.userToLogin.username === '')
     },
     passwordInputHasText() {
-      return !(this.password === '')
+      return !(this.userToLogin.password === '')
     }
   },
   methods: {
     togglePanel() {
       this.$emit('togglePanel')
-    }
+    },
+    submit() {
+      this.login(this.userToLogin)
+      this.$router.push({ path: '/' })
+    },
+    ...mapActions({
+      login: 'auth/login'
+    })
   }
 }
 /*

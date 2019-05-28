@@ -1,25 +1,20 @@
 <template>
-  <div class="signup">
+  <div class="register">
     <div class="box">
       <h1 class="title is-bold has-text-centered">
-        Sign Up
+        Register
       </h1>
 
-      <form @submit.prevent="signup">
+      <form @submit.prevent="submit">
         <!-- Name -->
         <div class="field">
           <label class="label">
             Full Name
           </label>
 
-          <div
-            class="control has-icons-left"
-            :class="{ 'input-filled': fullnameInputHasText }">
-            <input
-              v-model="fullname"
-              type="text"
-              class="input"
-              autofocus>
+          <div class="control has-icons-left"
+               :class="{ 'input-filled': fullnameInputHasText }">
+            <input v-model="userToRegister.fullname" type="text" class="input" autofocus>
             <span class="icon is-small is-left">
               <i class="fas fa-address-card" />
             </span>
@@ -29,13 +24,9 @@
         <!-- username -->
         <div class="field">
           <label class="label">Username</label>
-          <div
-            class="control has-icons-left"
-            :class="{ 'input-filled': usernameInputHasText }">
-            <input
-              v-model="username"
-              type="text"
-              class="input">
+          <div class="control has-icons-left"
+               :class="{ 'input-filled': usernameInputHasText }">
+            <input v-model="userToRegister.username" type="text" class="input">
             <span class="icon is-small is-left">
               <i class="fas fa-user" />
             </span>
@@ -45,13 +36,9 @@
         <!-- email -->
         <div class="field">
           <label class="label">Email</label>
-          <div
-            class="control has-icons-left"
-            :class="{ 'input-filled': emailInputHasText }">
-            <input
-              v-model="email"
-              type="email"
-              class="input">
+          <div class="control has-icons-left"
+               :class="{ 'input-filled': emailInputHasText }">
+            <input v-model="userToRegister.email" type="email" class="input">
             <span class="icon is-small is-left">
               <i class="fas fa-envelope" />
             </span>
@@ -61,13 +48,9 @@
         <!-- password -->
         <div class="field">
           <label class="label">Password</label>
-          <div
-            class="control has-icons-left"
-            :class="{ 'input-filled': passwordInputHasText }">
-            <input
-              v-model="password"
-              type="password"
-              class="input">
+          <div class="control has-icons-left"
+               :class="{ 'input-filled': passwordInputHasText }">
+            <input v-model="userToRegister.password" type="password" class="input">
             <span class="icon is-small is-left">
               <i class="fas fa-key" />
             </span>
@@ -77,13 +60,9 @@
         <!-- password confirm -->
         <div class="field">
           <label class="label">Confirm Password</label>
-          <div
-            class="control has-icons-left"
-            :class="{ 'input-filled': passwordConfirmInputHasText }">
-            <input
-              v-model="passwordConfirm"
-              type="password"
-              class="input">
+          <div class="control has-icons-left"
+               :class="{ 'input-filled': passwordConfirmInputHasText }">
+            <input v-model="userToRegister.passwordConfirm" type="password" class="input">
             <span class="icon is-small is-left">
               <i class="fas fa-key" />
             </span>
@@ -94,18 +73,14 @@
         <div class="field is-grouped is-flex">
           <!-- sign up button -->
           <div class="control">
-            <button
-              type="submit"
-              class="button is-black">
+            <button type="submit" class="button is-black">
               Sign Up
             </button>
           </div>
           <!-- form toggle => TO login -->
           <div class="control">
-            <button
-              class="button is-text"
-              type="button"
-              @click="togglePanel">
+            <button class="button is-text" type="button"
+                    @click="togglePanel">
               Log in
             </button>
           </div>
@@ -116,45 +91,56 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
-  name: 'SignUpPanel',
+  name: 'RegisterPanel',
   data() {
     return {
-      fullname: '',
-      username: '',
-      email: '',
-      password: '',
-      passwordConfirm: ''
+      userToRegister: {
+        fullname: '',
+        username: '',
+        email: '',
+        password: '',
+        passwordConfirm: ''
+      }
     }
   },
   computed: {
     fullnameInputHasText() {
-      return !(this.fullname === '')
+      return !(this.userToRegister.fullname === '')
     },
     usernameInputHasText() {
-      return !(this.username === '')
+      return !(this.userToRegister.username === '')
     },
     emailInputHasText() {
-      return !(this.email === '')
+      return !(this.userToRegister.email === '')
     },
     passwordInputHasText() {
-      return !(this.password === '')
+      return !(this.userToRegister.password === '')
     },
     passwordConfirmInputHasText() {
-      return !(this.passwordConfirm === '')
+      return !(this.userToRegister.passwordConfirm === '')
     }
   },
   methods: {
     togglePanel() {
       this.$emit('togglePanel')
-    }
+    },
+    submit() {
+      this.register(this.userToRegister)
+      this.$router.push({ path: '/' })
+    },
+    ...mapActions({
+      register: 'auth/register'
+    })
   }
 }
 </script>
 
 <style lang="scss" scoped>
 /* The entire component */
-.signup {
+.register {
   max-width: 27rem;
 }
 

@@ -1,19 +1,15 @@
 <template>
-  <a
-    class="navbar-item has-dropdown avatar"
-    :class="{ 'is-active': isDisplayingMenu }"
-    @click="isDisplayingMenu = !isDisplayingMenu"
-    @mouseleave="isDisplayingMenu = false">
+  <a class="navbar-item has-dropdown avatar" :class="{ 'is-active': isDisplayingMenu }"
+     @click="isDisplayingMenu = !isDisplayingMenu" @mouseleave="isDisplayingMenu = false">
     <!-- username and image -->
     <div class="navbar-item username">
-      {{ username }}
+      {{ user.username }}
     </div>
-    <img :src="avatarImage">
+    <img :src="user.profilePictureURL">
 
     <!-- menu displayed when clicked -->
-    <div
-      class="navbar-dropdown is-boxed is-right">
-      <a class="navbar-item">
+    <div class="navbar-dropdown is-boxed is-right">
+      <a class="navbar-item" @click="goToAccount">
         <i class="fas fa-user" />
         Account
       </a>
@@ -24,23 +20,40 @@
 
       <hr class="navbar-divider">
 
-      <a class="navbar-item">
+      <a class="navbar-item" @click="logoutRequest">
         <i class="fas fa-arrow-circle-left" />
-        Sign Out
+        Logout
       </a>
     </div>
   </a>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   name: 'NavbarAvatar',
   data() {
     return {
-      username: 'ebxn',
-      avatarImage: 'https://picsum.photos/500/500',
       isDisplayingMenu: false
     }
+  },
+  computed: {
+    ...mapGetters({
+      user: 'auth/getUser'
+    })
+  },
+  methods: {
+    logoutRequest() {
+      this.logout()
+      this.$router.push({ path: '/landing' })
+    },
+    goToAccount() {
+      this.$router.push({ path: `/user/${this.user.username}` })
+    },
+    ...mapActions({
+      logout: 'auth/logout'
+    })
   }
 }
 </script>

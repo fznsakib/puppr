@@ -1,4 +1,4 @@
-const AppDAO = require('./dao')
+const DAO = require('./dao')
 const UserRepo = require('./users')
 const PostRepo = require('./posts')
 const CommentRepo = require('./comments')
@@ -6,7 +6,7 @@ const FavoriteRepo = require('./favorites')
 
 class Database {
   constructor(dbFilePath) {
-    this.DAO = new AppDAO(dbFilePath)
+    this.DAO = new DAO(dbFilePath)
 
     this.users = new UserRepo(this.DAO)
     this.users.createTable()
@@ -19,7 +19,9 @@ class Database {
 
     this.favorites = new FavoriteRepo(this.DAO)
     this.favorites.createTable()
+
+    console.log(`Database initialized...`)
   }
 }
 
-module.exports = Database
+module.exports = new Database(`${__dirname}/database`)

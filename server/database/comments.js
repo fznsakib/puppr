@@ -8,29 +8,39 @@ class CommentRepo {
     CREATE TABLE IF NOT EXISTS comments (
       id         integer PRIMARY KEY AUTOINCREMENT,
       body       text,
+      date       datetime,
       postID     integer,
       username   string,
-      date       datetime,
       CONSTRAINT posts_fk FOREIGN KEY (postID)   REFERENCES posts(id),
       CONSTRAINT users_fk FOREIGN KEY (username) REFERENCES users(username))`
     return this.DAO.run(query)
   }
 
-  create(body, postID, username) {
-    let dateAdded = Date.now()
-    const query = `INSERT INTO comments (body, postID, username, date)
-                   VALUES (?,?,?,${dateAdded})`
-    return this.DAO.run(query, [body, postID, username])
+  all() {
+    return this.DAO.all(`SELECT * FROM comments`)
   }
 
-  update(newBody, id) {
-    const query = 'UPDATE comments SET body = ? WHERE id = ?'
-    return this.DAO.run(query, [newBody, id])
+  findOneBy(f, v) {
+    return this.DAO.get(`SELECT * FROM comments WHERE ${f} = ${v}`)
+  }
+
+  findAllBy(f, v) {
+    return this.DAO.all(`SELECT * FROM comments WHERE ${f} = ${v}`)
+  }
+
+  create(body, postID, username) {
+    return this.DAO.run(
+      `INSERT INTO comments (body, date, postID, username)
+       VALUES (${body}, ${Date.now()}, ${postID}, ${username})`
+    )
+  }
+
+  update(id, f, nv) {
+    return this.db.run(`UPDATE comments SET ${f} = ${nv} WHERE id = ${id}`)
   }
 
   destroy(id) {
-    const query = 'DELETE FROM comments WHERE id = ?'
-    return this.DAO.run(query, [id])
+    return this.db.run(`DELETE FROM comments WHERE id = ${id}`)
   }
 }
 

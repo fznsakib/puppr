@@ -6,56 +6,41 @@ class UserRepo {
   createTable() {
     const query = `
     CREATE TABLE IF NOT EXISTS users (
-      fullname          string,
-      username          string PRIMARY KEY UNIQUE,
-      email             string UNIQUE,
-      password          text,
-      bio               text,
-      profilePictureURL string)`
+      username        string PRIMARY KEY UNIQUE,
+      bio             text,
+      date            datetime,
+      email           string UNIQUE,
+      fullname        string,
+      password        text,
+      profileImageURL text)`
     return this.DAO.run(query)
   }
 
-  create(fullname, username, email, hashedPassword) {
-    let profilePictureURL = 'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/close-up-of-dog-sticking-out-tongue-against-blue-royalty-free-image-888244458-1548966956.jpg'
-    const query = `INSERT INTO users (fullname, username, email, password, profilePictureURL) VALUES (?,?,?,?,?)`
-    return this.DAO.run(query, [fullname, username, email, hashedPassword, profilePictureURL])
+  all() {
+    return this.DAO.all(`SELECT * FROM users`)
   }
 
-  updateBio(newBio, username) {
-    const query = 'UPDATE users SET bio = ? WHERE username = ?'
-    return this.DAO.run(query, [newBio, username])
+  findOneBy(f, v) {
+    return this.DAO.get(`SELECT * FROM users WHERE ${f} = ${v}`)
   }
 
-  updateProfilePictureURL(newURL, username) {
-    const query = 'UPDATE users SET profilePictureURL = ? WHERE username = ?'
-    return this.DAO.run(query, [newURL, username])
+  findAllBy(f, v) {
+    return this.DAO.all(`SELECT * FROM users WHERE ${f} = ${v}`)
   }
 
-  destroy(username) {
-    const query = 'DELETE FROM users WHERE username = ?'
-    return this.DAO.run(query, [username])
+  create(username, email, fullname, password) {
+    return this.DAO.run(
+      `INSERT INTO users (username, date, email, fullname, password)
+       VALUES (${username}, ${Date.now()}, ${email}, ${fullname}, ${password})`
+    )
   }
 
-  getByUsername(username) {
-    const query = 'SELECT * FROM users WHERE username = ?'
-    return this.DAO.get(query, username)
+  update(un, f, nv) {
+    return this.db.run(`UPDATE users SET ${f} = ${nv} WHERE username = ${un}`)
   }
 
-  getPosts(username) {
-    const query = 'SELECT * FROM posts WHERE username = ?'
-    return this.DAO.all(query, [username])
-  }
-
-  // SELECT ... FROM favorites WHERE ...
-  getFavorites(username) {
-    const query = ''
-    return this.DAO.all(query)
-  }
-
-  // SELECT ... FROM comments WHERE ...
-  getComments(username) {
-    const query = 'SELECT * FROM comments WHERE username = ?'
-    return this.DAO.all(query, [username])
+  destroy(un) {
+    return this.db.run(`DELETE FROM users WHERE username = ${un}`)
   }
 }
 

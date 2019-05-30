@@ -16,7 +16,7 @@ module.exports = {
     'sourceType': 'module'
   },
   'plugins': [
-    'vue'
+    'vue',
   ],
   'rules': {
     'vue/require-valid-default-prop': 'off',

@@ -1,24 +1,23 @@
-<template>
-  <div class="landing page is-flex">
-    <div class="container">
-      <div class="columns">
-        <!-- left (text) -->
-        <div class="left column is-flex">
-          <LandingContent />
-        </div>
+<template lang="pug">
+div(class='landing page is-flex')
+  div(class='container')
+    div(class='columns')
+      //- left (text)
+        REFACTOR YOUR ROUTES (use the bookmarked link)
+        REFACTOR INTO PUG
+      div(class='left column is-flex')
+        LandingContent
 
-        <!-- right (box) -->
-        <div class="right column is-flex">
-          <LoginPanel
-            v-if="displayLoginPanel"
-            @togglePanel="displayLoginPanel = !displayLoginPanel" />
-          <RegisterPanel
-            v-else
-            @togglePanel="displayLoginPanel = !displayLoginPanel" />
-        </div>
-      </div>
-    </div>
-  </div>
+      //- right (box)
+      div(class='right column is-flex')
+        LoginPanel(
+          v-if='displayLoginPanel',
+          @togglePanel='displayLoginPanel = !displayLoginPanel'
+        )
+        RegisterPanel(
+          v-else,
+          @togglePanel='displayLoginPanel = !displayLoginPanel'
+        )
 </template>
 
 <script>

@@ -4,58 +4,43 @@ class PostRepo {
   }
 
   createTable() {
-    const query = `
+    const q = `
     CREATE TABLE IF NOT EXISTS posts (
       id         integer PRIMARY KEY AUTOINCREMENT,
-      imageURL   string,
       caption    text,
-      username   string,
-      favorites  integer,
       date       datetime,
+      favorites  integer,
+      imageURL   string,
+      username   string,
       CONSTRAINT users_fk FOREIGN KEY (username) REFERENCES users(username))`
-    return this.DAO.run(query)
+    return this.DAO.run(q)
   }
 
-  create(post) {
-    const query = `INSERT INTO posts (imageURL, caption, username, favorites, date)
-                   VALUES (?,?,?,?,datetime("now"))`
-    return this.DAO.run(query, post)
+  all() {
+    return this.DAO.all(`SELECT * FROM posts`)
   }
 
-  updateCaption(id, newCaption) {
-    const query = 'UPDATE posts SET caption = ? WHERE id = ?'
-    return this.db.run(query, [newCaption, id])
+  findOneBy(f, v) {
+    return this.DAO.get(`SELECT * FROM posts WHERE ${f} = ${v}`)
   }
 
-  updateImage(id, newURL) {
-    const query = 'UPDATE posts SET imageURL = ? WHERE id = ?'
-    return this.db.run(query, [newURL, id])
+  findAllBy(f, v) {
+    return this.DAO.all(`SELECT * FROM posts WHERE ${f} = ${v}`)
+  }
+
+  create([ caption, imageURL, username ]) {
+    return this.DAO.run(
+      `INSERT INTO posts (caption, date, favorites, imageURL, username)
+       VALUES (${caption}, ${Date.now()}, 0, ${imageURL}, ${username} )`
+    )
+  }
+
+  update(id, f, nv) {
+    return this.db.run(`UPDATE posts SET ${f} = ${nv} WHERE id = ${id}`)
   }
 
   destroy(id) {
-    const query = 'DELETE FROM posts WHERE id = ?'
-    return this.db.run(query, [id])
-  }
-
-  getAll() {
-    const query = 'SELECT * FROM posts'
-    return this.DAO.all(query)
-  }
-
-  getByID(id) {
-    const query = 'SELECT * FROM posts WHERE id = ?'
-    return this.DAO.get(query, [id])
-  }
-
-  // returns how many favorites a post has
-  getNumFavorites(id) {
-    const query = 'SELECT favorites FROM posts WHERE id = ?'
-    return this.DAO.get(query, [id])
-  }
-
-  getComments(id) {
-    const query = 'SELECT * FROM comments WHERE postID = ?'
-    return this.DAO.all(query, [id])
+    return this.db.run(`DELETE FROM posts WHERE id = ${id}`)
   }
 }
 

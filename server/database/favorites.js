@@ -15,15 +15,31 @@ class FavoriteRepo {
     return this.DAO.run(query)
   }
 
-  create(favoritedPostID, username) {
-    const query = `INSERT INTO favorites (postID, username, date)
-                   VALUES (?,?,datetime("now"))`
-    return this.DAO.run(query, [favoritedPostID, username])
+  all() {
+    return this.DAO.all(`SELECT * FROM favorites`)
   }
 
-  destroy(favoritedPostID, username) {
-    const query = 'DELETE FROM favorites WHERE postID = ? AND username = ?'
-    return this.DAO.run(query, [favoritedPostID, username])
+  findOneBy(f, v) {
+    return this.DAO.get(`SELECT * FROM favorites WHERE ${f} = ${v}`)
+  }
+
+  findAllBy(f, v) {
+    return this.DAO.all(`SELECT * FROM favorites WHERE ${f} = ${v}`)
+  }
+
+  create(postID, username) {
+    return this.DAO.run(
+      `INSERT INTO favorites (postID, username, date)
+       VALUES (${postID}, ${username}, ${Date.now()})`
+    )
+  }
+
+  update(id, f, nv) {
+    return this.db.run(`UPDATE favorites SET ${f} = ${nv} WHERE id = ${id}`)
+  }
+
+  destroy(id) {
+    return this.db.run(`DELETE FROM favorites WHERE id = ${id}`)
   }
 }
 

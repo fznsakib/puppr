@@ -1,0 +1,12 @@
+language: node_js
+sudo: true
+node_js:
+  - 10
+  - 9
+  - 8
+  - 7
+  - 6
+before_script:
+  - cd frontend && npm i && npm run build && cd ..
+script:
+  - cd server && npm i && npm run server && cd ..

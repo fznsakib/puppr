@@ -5,8 +5,8 @@ module.exports = (req, res) => {
 
   db.comments.findAllBy('postID', postID)
     .then((comments) => {
-      if (!comments) return res.status(404).send('comments/getAll: no comment found')
+      if (!comments) return res.status(404).send('posts/comments/getAll: no comment found')
       return res.status(200).send(comments)
     })
-    .catch((err) => res.status(500).send('comments/getAll: ' + err))
+    .catch((err) => res.status(500).send('posts/comments/getAll: ' + err))
 }

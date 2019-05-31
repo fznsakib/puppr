@@ -5,6 +5,6 @@ module.exports = (req, res) => {
   const { body, username } = req.body
 
   db.comments.create(body, postID, username)
-    .then(() => res.status(200).send('comments/create: success'))
-    .catch((err) => res.status(500).send('comments/create: ' + err))
+    .then(() => res.status(200).send('posts/comments/create: success'))
+    .catch((err) => res.status(500).send('posts/comments/create: ' + err))
 }

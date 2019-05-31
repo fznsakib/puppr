@@ -5,8 +5,8 @@ module.exports = (req, res) => {
 
   db.posts.findOneBy('id', postID)
     .then((post) => {
-      if (!post) return res.status(404).send('posts/readOne: no post found')
+      if (!post) return res.status(404).send('posts/getOne: no post found')
       return res.status(200).send(post)
     })
-    .catch((err) => res.status(500).send('posts/readOne: ' + err))
+    .catch((err) => res.status(500).send('posts/getOne: ' + err))
 }

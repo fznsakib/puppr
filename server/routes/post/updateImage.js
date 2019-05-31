@@ -13,7 +13,7 @@ module.exports = (req, res) => {
   bucket.file(newImageName).getSignedUrl({ action: 'read', expires: '12-12-2500' })
     .then((newImageURL) => {
       db.posts.update(postID, 'imageURL', newImageURL)
-        .then(() => res.status(200).send('post/updateImage: success'))
-        .catch((err) => res.status(500).send('post/updateImage: ' + err))
+        .then(() => res.status(200).send('posts/updateImage: success'))
+        .catch((err) => res.status(500).send('posts/updateImage: ' + err))
     })
 }

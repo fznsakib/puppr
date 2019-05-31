@@ -5,8 +5,8 @@ module.exports = (req, res) => {
 
   db.comments.findAllBy('postID', postID)
     .then((favorites) => {
-      if (!favorites) return res.status(404).send('favorites/getAllByPostID: no comment found')
+      if (!favorites) return res.status(404).send('posts/favorites/getAll: no comment found')
       return res.status(200).send(favorites)
     })
-    .catch((err) => res.status(500).send('favorites/getAllByPostID: ' + err))
+    .catch((err) => res.status(500).send('postS/favorites/getAll: ' + err))
 }

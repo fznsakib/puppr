@@ -1,6 +1,6 @@
-import { apiClient } from './api.service'
-import UserFavoriteService from './user/favorite.service'
-import UserPostService from './user/post.service'
+import apiClient from '@/services/api.service'
+import UserFavoriteService from '@/services/user/favorite.service'
+import UserPostService from '@/services/user/post.service'
 
 const UserService = {
   // get

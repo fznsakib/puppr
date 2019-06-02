@@ -17,30 +17,34 @@ class CommentRepo {
   }
 
   all() {
-    return this.DAO.all(`SELECT * FROM comments`)
+    let q = `SELECT * FROM comments`
+    return this.DAO.all(q)
   }
 
   findOneBy(f, v) {
-    return this.DAO.get(`SELECT * FROM comments WHERE ${f} = ${v}`)
+    let q = `SELECT * FROM comments WHERE ${f} = ?`
+    return this.DAO.get(q, [v])
   }
 
   findAllBy(f, v) {
-    return this.DAO.all(`SELECT * FROM comments WHERE ${f} = ${v}`)
+    let q = `SELECT * FROM comments WHERE ${f} = ?`
+    return this.DAO.all(q, [v])
   }
 
   create(body, postID, username) {
-    return this.DAO.run(
-      `INSERT INTO comments (body, date, postID, username)
-       VALUES (${body}, ${Date.now()}, ${postID}, ${username})`
-    )
+    let q = `INSERT INTO comments (body, date, postID, username
+             VALUES (?, ${Date.now()}, ?, ?`
+    return this.DAO.run(q, [body, postID, username])
   }
 
   update(id, f, nv) {
-    return this.db.run(`UPDATE comments SET ${f} = ${nv} WHERE id = ${id}`)
+    let q = `UPDATE comments SET ${f} = ? WHERE id = ?`
+    return this.DAO.run(q, [nv, id])
   }
 
   destroy(id) {
-    return this.db.run(`DELETE FROM comments WHERE id = ${id}`)
+    let q = `DELETE FROM comments WHERE id = ?`
+    return this.DAO.run(q, [id])
   }
 }
 

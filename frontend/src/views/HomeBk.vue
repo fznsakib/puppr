@@ -3,7 +3,8 @@
     <div class="container">
       <div class="box has-text-centered">
         <form @submit.prevent="submitPost">
-          <input type="file" @change="fileSelected">
+          bfile
+          <input type="file" class="egg" @change="fileSelected">
           <br>
           <textarea v-model="postToSubmit.caption"
                     type="text" placeholder="caption" />

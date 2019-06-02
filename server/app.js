@@ -31,7 +31,7 @@ firebase.initializeApp({
 })
 
 firebaseAdmin.initializeApp({
-  credential: firebaseAdmin.credential.cert('functions/puppr-8727d-firebase-adminsdk-kfdzh-6324893b05.json'),
+  credential: firebaseAdmin.credential.cert(`${process.env.PWD}/functions/puppr-8727d-firebase-adminsdk-kfdzh-6324893b05.json`),
   storageBucket: 'puppr-8727d.appspot.com'
 })
 console.log(`Configured Firebase...`)

@@ -17,30 +17,35 @@ class PostRepo {
   }
 
   all() {
-    return this.DAO.all(`SELECT * FROM posts`)
+    let q = `SELECT * FROM posts`
+    return this.DAO.all(q)
   }
 
   findOneBy(f, v) {
-    return this.DAO.get(`SELECT * FROM posts WHERE ${f} = ${v}`)
+    let q = `SELECT * FROM posts WHERE ${f} = ?`
+    return this.DAO.get(q, [v])
   }
 
   findAllBy(f, v) {
-    return this.DAO.all(`SELECT * FROM posts WHERE ${f} = ${v}`)
+    let q = `SELECT * FROM post WHERE ${f} = ?`
+    return this.DAO.all(q, [v])
   }
 
   create([ caption, imageURL, username ]) {
-    return this.DAO.run(
-      `INSERT INTO posts (caption, date, favorites, imageURL, username)
-       VALUES (${caption}, ${Date.now()}, 0, ${imageURL}, ${username} )`
-    )
+    let date = Date.now()
+    let q = `INSERT INTO posts (caption, date, favorites, imageURL, username)
+             VALUES (?, ?, ?, ?, ?)`
+    return this.DAO.run(q, [caption, date, 0, imageURL, username])
   }
 
   update(id, f, nv) {
-    return this.db.run(`UPDATE posts SET ${f} = ${nv} WHERE id = ${id}`)
+    let q = `UPDATE posts SET ${f} = ? WHERE id = ?`
+    return this.DAO.run(q, [nv, id])
   }
 
   destroy(id) {
-    return this.db.run(`DELETE FROM posts WHERE id = ${id}`)
+    let q = `DELETE FROM posts WHERE id = ?`
+    return this.DAO.run(q, [id])
   }
 }
 

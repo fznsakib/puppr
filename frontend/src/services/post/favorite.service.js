@@ -1,4 +1,4 @@
-import { apiClient } from '../api.service'
+import apiClient from '@/services/api.service'
 
 const PostFavoriteService = {
   // post

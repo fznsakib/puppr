@@ -1,17 +1,10 @@
-<template>
-  <div class="landingcontent">
-    <transition name="fade">
-      <img
-        :key="dogImage"
-        :src="dogImage"
-        class="doggo"
-        alt="A good boy">
-    </transition>
+<template lang="pug">
+  div(class="landingContent")
+    //- slideshow animation
+    transition(name="fade")
+      img(:key="dogImage", :src="dogImage", class="dogImage", alt="A good boy")
 
-    <h1 class="title is-bold is-1 has-text-centered">
-      puppr.
-    </h1>
-  </div>
+    h1(class="title is-bold is-1 has-text-centered") puppr.
 </template>
 
 <script>
@@ -48,11 +41,11 @@ export default {
 </script>
 
 <style scoped>
-.landingcontent {
+.landingContent {
   position: absolute;
 }
 
-.doggo {
+.dogImage {
   position: fixed;
   top: 35%;
   left: 28%;

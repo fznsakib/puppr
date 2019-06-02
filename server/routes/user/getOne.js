@@ -5,6 +5,7 @@ module.exports = (req, res) => {
 
   db.users.findOneBy('username', username)
     .then((user) => {
+      console.log(user)
       if (!user) return res.status(404).send('users/getOne: no user found')
       return res.status(200).send(user)
     })

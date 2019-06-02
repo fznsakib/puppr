@@ -1,6 +1,6 @@
 // prefix: /user/:username/posts
-const UserPostsRouter = require('express').Router({ mergeParams: true })
+const UserPostRouter = require('express').Router({ mergeParams: true })
 
-UserPostsRouter.get('/', require('./getAll'))
+UserPostRouter.get('/', require('./getAll'))
 
-export default UserPostsRouter
+module.exports = UserPostRouter

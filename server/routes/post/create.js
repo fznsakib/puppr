@@ -2,7 +2,7 @@ const db = require(`${process.env.PWD}/database/db`)
 const { Storage } = require('@google-cloud/storage')
 const storage = new Storage({
   projectID: 'puppr-8727d',
-  keyFilename: 'functions/puppr-8727d-firebase-adminsdk-kfdzh-6324893b05.json'
+  keyFilename: `${process.env.PWD}/functions/puppr-8727d-firebase-adminsdk-kfdzh-6324893b05.json`
 })
 const bucket = storage.bucket('puppr-8727d.appspot.com')
 

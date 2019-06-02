@@ -1,41 +1,25 @@
 <template lang="pug">
-div(class='landing page is-flex')
-  div(class='container')
-    div(class='columns')
-      //- left (text)
-        REFACTOR YOUR ROUTES (use the bookmarked link)
-        REFACTOR INTO PUG
-      div(class='left column is-flex')
-        LandingContent
+  div(class="landing page is-flex")
+    div(class="container")
+      div(class="columns")
+        //- left (text)
+        div(class="left column is-flex")
+          LandingContent
 
-      //- right (box)
-      div(class='right column is-flex')
-        LoginPanel(
-          v-if='displayLoginPanel',
-          @togglePanel='displayLoginPanel = !displayLoginPanel'
-        )
-        RegisterPanel(
-          v-else,
-          @togglePanel='displayLoginPanel = !displayLoginPanel'
-        )
+        //- right (box)
+        div(class="right column is-flex")
+          LandingPanel
 </template>
 
 <script>
-import LoginPanel from '@/components/landing/LoginPanel.vue'
-import RegisterPanel from '@/components/landing/RegisterPanel.vue'
+import LandingPanel from '@/components/landing/LandingPanel.vue'
 import LandingContent from '@/components/landing/LandingContent.vue'
 
 export default {
   name: 'Landing',
   components: {
-    LoginPanel,
-    RegisterPanel,
+    LandingPanel,
     LandingContent
-  },
-  data() {
-    return {
-      displayLoginPanel: true
-    }
   }
 }
 </script>

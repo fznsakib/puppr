@@ -1,6 +1,6 @@
 // prefix: /user/:username/favorites
-const UserFavoritesRouter = require('express').Router({ mergeParams: true })
+const UserFavoriteRouter = require('express').Router({ mergeParams: true })
 
-UserFavoritesRouter.get('/', require('./getAll'))
+UserFavoriteRouter.get('/', require('./getAll'))
 
-export default UserFavoritesRouter
+module.exports = UserFavoriteRouter

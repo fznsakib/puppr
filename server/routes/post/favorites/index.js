@@ -1,9 +1,9 @@
 // prefix: /post/:postID/favorites
-const FavoriteRouter = require('express').Router({ mergeParams: true })
+const PostFavoriteRouter = require('express').Router({ mergeParams: true })
 
 /* Route Handlers */
-FavoriteRouter.post('/', require('./create'))
-FavoriteRouter.get('/', require('./getAll'))
-FavoriteRouter.delete('/:favoriteID/delete', require('./delete'))
+PostFavoriteRouter.post('/', require('./create'))
+PostFavoriteRouter.get('/', require('./getAll'))
+PostFavoriteRouter.delete('/:favoriteID/delete', require('./delete'))
 
-module.exports = FavoriteRouter
+module.exports = PostFavoriteRouter

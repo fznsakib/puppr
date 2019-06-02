@@ -17,30 +17,34 @@ class UserRepo {
   }
 
   all() {
-    return this.DAO.all(`SELECT * FROM users`)
+    let q = `SELECT * FROM users`
+    return this.DAO.all(q)
   }
 
   findOneBy(f, v) {
-    return this.DAO.get(`SELECT * FROM users WHERE ${f} = ${v}`)
+    let q = `SELECT * FROM users WHERE ${f} = ?`
+    return this.DAO.get(q, [v])
   }
 
   findAllBy(f, v) {
-    return this.DAO.all(`SELECT * FROM users WHERE ${f} = ${v}`)
+    let q = `SELECT * FROM users WHERE ${f} = ?`
+    return this.DAO.all(q, [v])
   }
 
   create(username, email, fullname, password) {
-    return this.DAO.run(
-      `INSERT INTO users (username, date, email, fullname, password)
-       VALUES (${username}, ${Date.now()}, ${email}, ${fullname}, ${password})`
-    )
+    let q = `INSERT INTO users (username, date, email, fullname, password)
+             VALUES(?, ${Date.now()}, ?, ?, ?)`
+    return this.DAO.run(q, [username, email, fullname, password])
   }
 
   update(un, f, nv) {
-    return this.db.run(`UPDATE users SET ${f} = ${nv} WHERE username = ${un}`)
+    let q = `UPDATE users SET ${f} = ? WHERE username = ?`
+    return this.DAO.run(q, [nv, un])
   }
 
   destroy(un) {
-    return this.db.run(`DELETE FROM users WHERE username = ${un}`)
+    let q = `DELETE FROM users WHERE username = ?`
+    return this.DAO.run(q, [un])
   }
 }
 
